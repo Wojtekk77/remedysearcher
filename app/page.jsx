@@ -1,17 +1,25 @@
 import Searcher from "@components/Searcher";
 
 const Home = () => (
-  <section className='w-full flex-center flex-col'>
+  <section className='w-full flex-center flex-col min-h-[73vh]'>
     <h1 className='head_text text-center'>
-      Discover & Share
       <br className='max-md:hidden' />
-      <span className='orange_gradient text-center'> AI-Powered Prompts</span>
+      <span className='orange_gradient text-center'>Remedy Searcher</span>
     </h1>
     <p className='desc text-center'>
-      Promptopia is an open-source AI prompting tool for modern world to
-      discover, create and share creative prompts
+      Remedysearcher to wyszukiwarka leków homeopatycznych wspomagająca dobór leku.
     </p>
-
+    <p className='font-inter text-sm text-gray-500 mt-4 text-center'>
+      Słowa można wpisywać po przecinku np: <br/> <strong>niepokój, drżenie, krwawienie</strong> <br/>
+      lub pełnymi frazami np:<br/>
+      <strong>krwawienie z nosa, zimno, zielona wydzielina</strong> <br/>
+    </p>
+    <p className='font-inter text-sm text-gray-500 mt-4 text-center'>
+      Pamiętaj fraza: <strong>krwawienie z nosa</strong> <br/> da Ci inne wyniki niż: <strong>krwawienie, nos </strong> <br />
+    </p>
+    <p className='font-inter text-sm text-gray-500 mt-4 text-center'>
+      {`Życzę miłego testowania :)`}
+    </p>
     <Searcher />
   </section>
 );

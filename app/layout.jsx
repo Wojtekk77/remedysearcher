@@ -2,10 +2,11 @@ import "@styles/globals.css";
 
 import Nav from "@components/Nav";
 import Provider from "@components/Provider";
+import Footer from '@components/Footer';
 
 export const metadata = {
-  title: "Promptopia",
-  description: "Discover & Share AI Prompts",
+  title: "Remedysearcher",
+  description: "Wyszukiwarka remediów homeopatycznych",
 };
 
 const RootLayout = ({ children }) => (
@@ -20,6 +21,7 @@ const RootLayout = ({ children }) => (
           <Nav />
           {children}
         </main>
+        <Footer />
       </Provider>
     </body>
   </html>

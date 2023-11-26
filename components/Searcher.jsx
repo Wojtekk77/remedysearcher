@@ -4,13 +4,15 @@ import { useState, useEffect } from "react";
 
 import RemedySearchResultCard from "./RemedySearchResultCard";
 
-const RemedySearchResultCardList = ({ data }) => {
+const RemedySearchResultCardList = ({ remedies }) => {
   return (
-    <div className='mt-16 prompt_layout'>
-      {data.map((remedy) => (
+    <div className='mt-1 prompt_layout'>
+      {remedies.map((remedy, i) => (
         <RemedySearchResultCard
-          key={remedy._id}
-          remedyName={remedy.remedyName}
+          key={remedy.remedyName}
+          remedy={remedy}
+          first={i === 0}
+          last={i === remedies.length - 1}
         />
       ))}
     </div>
@@ -58,7 +60,7 @@ const Searcher = () => {
       <form onSubmit={handleSubmit} className='relative w-full text-center'>
         <input
           type='text'
-          placeholder='Search for a tag or a username'
+          placeholder='nadmierna pewność siebie'
           value={searchProps.mind}
           onChange={(e) => setSearchProps({ ...searchProps, mind: e.target.value })}
           required
@@ -69,17 +71,17 @@ const Searcher = () => {
           disabled={submitting}
           className='mt-5 px-5 py-1.5 text-sm bg-primary-orange rounded-full text-white'
         >
-          {submitting ? `Wyszukiwanie...` : 'Wyszukaj Searcher'}
+          {submitting ? `Wyszukiwanie...` : 'Wyszukaj'}
         </button>
       </form>
 
       {/* All Prompts */}
       {remedies?.length ? (
         <RemedySearchResultCardList
-          data={remedies}
+          remedies={remedies}
         />
       ):
-        <p>Nie znaleziono remediów</p> 
+        <p>Zacznij wyszukiwanie</p> 
       }
       {/* // : (
       //   <PromptCardList data={allPosts} handleTagClick={handleTagClick} />
