@@ -32,7 +32,7 @@ const Searcher = () => {
 
 
   const handleSubmit = async (e) => {
-    console.log('handle submit')
+    setIsSubmitting(true);
     e.preventDefault();
     try {
       console.log(searchProps.mind, 'searchProps.mind')
@@ -69,7 +69,7 @@ const Searcher = () => {
         <button
           type='submit'
           disabled={submitting}
-          className='mt-5 px-5 py-1.5 text-sm bg-primary-orange rounded-full text-white'
+          className='mt-5 px-7 py-2 text-sm bg-primary-orange rounded-full text-white'
         >
           {submitting ? `Wyszukiwanie...` : 'Wyszukaj'}
         </button>
