@@ -59,7 +59,7 @@ export const getSearchProps = ({ mind, general, specyfic, positiveModalities, ne
             additionalWordsObj[arrWords[0]] = [...arrWords.slice(1)]
             return arrWords[0];
         }
-        return item.word;
+        return item.word.toLowerCase();
     });
 
     // const wordsFamilyObj = [
