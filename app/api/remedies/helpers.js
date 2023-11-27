@@ -7,7 +7,7 @@ export const convertStringToObject = (words, type = 'mind') => {
         return [];
     }
     // Split the input string by comma and trim each element
-    const elements = words?.split(',').map(element => element.trim());
+    const elements = words?.split(',').map(element => element.trim().toLowerCase());
 
     // Initialize an empty result array
     const result = [];
