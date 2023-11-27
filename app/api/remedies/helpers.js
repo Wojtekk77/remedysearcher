@@ -27,7 +27,7 @@ export const convertStringToObject = (words, type = 'mind') => {
         }
 
         // Remove any numbers from the key and use it as the value
-        const cleanedKey = key.trim().replace(/\d+/g, '');
+        const cleanedKey = key.trim().replace(/\d+/g, '').toLowerCase();
         // Create an object and push it to the result array
         const obj = { word: cleanedKey, value: parsedValue, type }
         if (cleanedKey !== '' && cleanedKey !== ' ') {
