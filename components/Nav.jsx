@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import GoogleButton from 'react-google-button';
 
 const Nav = () => {
   const { data: session } = useSession();
@@ -35,7 +36,7 @@ const Nav = () => {
         {session?.user ? (
           <div className='flex gap-3 md:gap-5'>
             <Link href='/create-prompt' className='black_btn'>
-              Create Post
+              Stwórz komentarz
             </Link>
 
             <button type='button' onClick={signOut} className='outline_btn'>
@@ -54,19 +55,16 @@ const Nav = () => {
           </div>
         ) : (
           <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type='button'
+            {
+              Object.values(providers || [{ name: 'disabled' }]).map((provider) => (
+                <GoogleButton
                   key={provider.name}
-                  onClick={() => {
-                    signIn(provider.id);
-                  }}
-                  className='black_btn'
-                >
-                  Zaloguj
-                </button>
-              ))}
+                  disabled={!providers} // can also be written as disabled={true} for clarity
+                  onClick={() => { signIn(provider.id) }}
+                  label='Zaloguj z Google'
+                />
+              ))
+            }
           </>
         )}
       </div>
@@ -91,14 +89,14 @@ const Nav = () => {
                   className='dropdown_link'
                   onClick={() => setToggleDropdown(false)}
                 >
-                  My Profile
+                  Mój profil
                 </Link>
                 <Link
                   href='/create-prompt'
                   className='dropdown_link'
                   onClick={() => setToggleDropdown(false)}
                 >
-                  Create Prompt
+                  Stwórz komentarz
                 </Link>
                 <button
                   type='button'
@@ -115,19 +113,17 @@ const Nav = () => {
           </div>
         ) : (
           <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type='button'
+            {
+              Object.values(providers || [{ name: 'disabled' }]).map((provider) => (
+                <GoogleButton
                   key={provider.name}
-                  onClick={() => {
-                    signIn(provider.id);
-                  }}
-                  className='black_btn'
-                >
-                  Zaloguj
-                </button>
-              ))}
+                  disabled={!providers} // can also be written as disabled={true} for clarity
+                  onClick={() => { signIn(provider.id) }}
+                  label='Zaloguj z Google'
+                  style={{ borderRadius: 4, height: '50px', width: '240px', }}
+                />
+              ))
+            }
           </>
         )}
       </div>

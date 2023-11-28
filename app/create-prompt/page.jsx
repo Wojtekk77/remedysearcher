@@ -39,7 +39,10 @@ const CreatePrompt = () => {
 
   return (
     <Form
-      type='Create'
+      type='Kometarz'
+      headText='Jeżeli masz pomysł jak usprawnić aplikację, opisz go poniżej. Daj też znać jak według Ciebie sprawuje się wyszukiwarka. Twój komentarz jest dla mnie ważny! :)'
+      textareaHeadText=''
+      tagsHeadText=''
       post={post}
       setPost={setPost}
       submitting={submitting}
