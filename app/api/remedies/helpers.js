@@ -94,9 +94,7 @@ export const getWordsFamiliesWithSentences = async (searchWordsArray, additional
 		{
 			$group: {
 				_id: '$name',
-                name: { $push: '$name' },
 				variations: { $push: '$variations.variations' },
-				descriptions: { $max: '$variations.descriptions' },
 				duplicatedWordsArray: { $sum: 1 },
 			}
 		},
@@ -139,7 +137,6 @@ export const getIntersection = (arrA, arrB) => {
 // wordFamily = [
 //     {
 //       _id: 'pewność',
-//       name: [ 'pewność' ],
 //       variations: [ 'pewność', 'pewny', 'pewnie', 'pewnością' ],
 //       duplicatedWordsArray: 1
 //     }
@@ -147,7 +144,6 @@ export const getIntersection = (arrA, arrB) => {
 // additionalWordsArrOfObj= [
 //     {
 //       _id: 'siebie',
-//       name: [ 'siebie' ],
 //       variations: [ 'siebie', 'se', 'sobą', 'sobie' ],
 //       duplicatedWordsArray: 1
 //     }

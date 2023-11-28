@@ -41,7 +41,7 @@ const RemedyMobileProps = ({ remedy }) => {
     if (typeof remedyValue !== 'object') {
       return null;
     }
-    return <RemedyMobilePropsExpandedDesc key={`${remedyValue.remedyName}_xd`} remedyValue={remedyValue} />
+    return <RemedyMobilePropsExpandedDesc key={`${remedyValue.word}_${remedyValue.remedyName}`} remedyValue={remedyValue} />
   });
   return <div>{remedyProps}</div>
 }

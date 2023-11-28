@@ -18,7 +18,7 @@ try {
         return new Response(JSON.stringify({ remedies: [{ remedyName: 'Nie znaleziono remediów' }] }), { status: 200 })
     }
 
-    console.log(`Get Words Families Time: ${startTimewordsFamilies.getTime() - endTimeWordsFamilies.getTime()}ms`);
+    console.log(`${endTimeWordsFamilies.getTime() - startTimewordsFamilies.getTime()}ms = get Words Families Time`);
 
     const query = { '$and': [] };
     const allWords = [];
@@ -28,8 +28,6 @@ try {
         query['$and'].push({ words: { $in: wordFamily.variations }});
         allWords.push(...wordFamily.variations);
     }
-    console.log(query);
-    // const descs = await Description.find(query);
 
     startTimewordsFamilies = new Date(); 
     const descs = await Description.aggregate([
@@ -52,7 +50,7 @@ try {
     ])
 
     endTimeWordsFamilies = new Date(); 
-    console.log(`Get Description.aggregate Time: ${startTimewordsFamilies.getTime() - endTimeWordsFamilies.getTime()}ms BY WORDS`);
+    console.log(`${endTimeWordsFamilies.getTime() - startTimewordsFamilies.getTime()}ms Description.aggregate`);
 
     const result = {};
     descs.forEach(desc => {
@@ -69,9 +67,9 @@ try {
         });
         result[desc.remedyName] = { ...propertiesObj, totalPoints, remedyName: desc.remedyName };
     });
-    console.log(4)
+
     const savedPoint = Object.values(result).sort((a , b) => b.totalPoints - a.totalPoints).slice(9,10);
-    console.log(5)
+
     Object.entries(result).forEach(([remedyName, valueObj]) => {
         if (savedPoint && valueObj.totalPoints < savedPoint[0]?.totalPoints) {
             delete result[remedyName];
@@ -90,13 +88,12 @@ try {
             });
         }
     })
-    console.log(6)
 
     const arrOfRemedies = Object.values(result).sort((a , b) => b.totalPoints - a.totalPoints);
     // [{ totalPoints, remedyName, [word]: { word, 'krew', remedyId, remedyName, sentenceNumbers: [], usedWords: [], description: '' } }]
 
     const endTime = new Date(); 
-    console.log(`Total Time ${endTime.getTime() - startTime.getTime()}ms`);
+    console.log(`${endTime.getTime() - startTime.getTime()}ms: Total Time`);
     // res.json({ remedies: result });
     return new Response(JSON.stringify({ remedies: arrOfRemedies }), { status: 200 })
     } catch (error) {
