@@ -11,7 +11,7 @@ const DescriptionSchema = new Schema({
   //     of: [Number],
   // },
   wordSentencesAsText: { type: String },
-  // wordSentencesAsArrOfObj: { type: [{ word: { type: String }, sentences: { type: [Number] } }] },
+  wordSentencesAsArrOfObj: { type: [{ word: { type: String }, sentences: { type: [Number] } }] },
   remedyName: { type: String },
   destroyed: { type: Boolean },
 }, {

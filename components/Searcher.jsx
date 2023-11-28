@@ -35,7 +35,6 @@ const Searcher = () => {
     setIsSubmitting(true);
     e.preventDefault();
     try {
-      console.log(searchProps.mind, 'searchProps.mind')
       let response = await fetch("/api/remedies", {
         method: "POST",
         body: JSON.stringify({
@@ -55,12 +54,30 @@ const Searcher = () => {
     }
   };
 
+  const handleScript = async (e) => {
+    setIsSubmitting(true);
+    e.preventDefault();
+    try {
+      let response = await fetch("/api/scripts", {
+        method: "POST",
+        body: JSON.stringify({
+          mind: searchProps.mind,
+        }),
+      });
+      response = await response.json();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section className='feed'>
       <form onSubmit={handleSubmit} className='relative w-full text-center'>
         <input
           type='text'
-          placeholder='nadmierna pewność siebie'
+          placeholder='pewność siebie'
           value={searchProps.mind}
           onChange={(e) => setSearchProps({ ...searchProps, mind: e.target.value })}
           required
@@ -83,6 +100,16 @@ const Searcher = () => {
       ):
         <p>Zacznij wyszukiwanie</p> 
       }
+
+        <button
+          type='submit'
+          disabled={submitting}
+          onClick={handleScript}
+          className='mt-5 px-7 py-2 text-sm bg-primary-orange rounded-full text-white'
+        >
+          {submitting ? `Czekanie na skrypt...` : 'Opdal skrypt'}
+        </button>
+
       {/* // : (
       //   <PromptCardList data={allPosts} handleTagClick={handleTagClick} />
       // )} */}

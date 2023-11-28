@@ -96,8 +96,6 @@ try {
     // [{ totalPoints, remedyName, [word]: { word, 'krew', remedyId, remedyName, sentenceNumbers: [], usedWords: [], description: '' } }]
 
     const endTime = new Date(); 
-
-
     console.log(`Total Time ${endTime.getTime() - startTime.getTime()}ms`);
     // res.json({ remedies: result });
     return new Response(JSON.stringify({ remedies: arrOfRemedies }), { status: 200 })
