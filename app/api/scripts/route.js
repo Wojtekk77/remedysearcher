@@ -1,6 +1,5 @@
 import Description from '@models/description';
 import { connectToDB } from "@utils/database";
-import { createEaseRegexPatternFromArray, getDescProperties, getSearchProps, getWordsFamiliesWithSentences } from './helpers';
 import WordSentence from '@models/descriptionWord';
 import DescriptionSentence from '@models/descriptionSentence';
 
