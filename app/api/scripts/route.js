@@ -35,10 +35,11 @@ try {
         await DescriptionSentence.insertMany(descriptionSentences)
         console.log(counter)
     }
+
     
     
     let endTime = new Date(); 
-    console.log(`Total Time ${endTime.getTime() - startTime.getTime()}ms`);
+    console.log(`Total Time ${endTime.getTime() - startTime.getTime()}ms !`);
     // res.json({ remedies: result });
     return new Response(JSON.stringify({}), { status: 200 })
     } catch (error) {
