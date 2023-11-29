@@ -20,8 +20,8 @@ const Form = ({ type, post, setPost, submitting, handleSubmit, headText='', text
           </span>
 
           <textarea
-            value={post.prompt}
-            onChange={(e) => setPost({ ...post, prompt: e.target.value })}
+            value={post.comment}
+            onChange={(e) => setPost({ ...post, comment: e.target.value })}
             placeholder={`Napisz swój ${type} tutaj`}
             required
             className='form_textarea '
@@ -54,7 +54,7 @@ const Form = ({ type, post, setPost, submitting, handleSubmit, headText='', text
             disabled={submitting}
             className='px-5 py-1.5 text-sm bg-primary-orange rounded-full text-white'
           >
-            {submitting ? `${type}ing...` : type}
+            {submitting ? `Zapisywanie...` : 'Zapisz'}
           </button>
         </div>
       </form>

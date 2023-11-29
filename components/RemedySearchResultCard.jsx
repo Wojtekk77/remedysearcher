@@ -36,7 +36,6 @@ const RemedyMobilePropsExpandedDesc = ({ remedyValue }) => {
 };
 
 const RemedyMobileProps = ({ remedy }) => {
-  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
   const remedyProps = Object.values(remedy).map(remedyValue => {
     if (typeof remedyValue !== 'object') {
       return null;
@@ -64,13 +63,13 @@ const RemedySearchResultCard = ({ remedy, first, last }) => {
   // };
 
   // const handleCopy = () => {
-  //   setCopied(post.prompt);
-  //   navigator.clipboard.writeText(post.prompt);
+  //   setCopied(post.comment);
+  //   navigator.clipboard.writeText(post.comment);
   //   setTimeout(() => setCopied(false), 3000);
   // };
 
   return (
-    <div className='prompt_card'>
+    <div className='comment_card'>
       <div className='flex justify-between items-start gap-5'>
         <div
           className='flex-1 flex justify-start items-center gap-3 cursor-pointer'
@@ -94,7 +93,7 @@ const RemedySearchResultCard = ({ remedy, first, last }) => {
 
       </div>
 
-      {/* <p className='my-4 font-satoshi text-sm text-gray-700'>tu był post prompt czylui chyba tekst</p> */}
+      {/* <p className='my-4 font-satoshi text-sm text-gray-700'>tu był post comment czylui chyba tekst</p> */}
       {/* <p
         className='font-inter text-sm blue_gradient cursor-pointer'
         // onClick={() => handleTagClick && handleTagClick(post.tag)}

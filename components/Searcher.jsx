@@ -6,7 +6,7 @@ import RemedySearchResultCard from "./RemedySearchResultCard";
 
 const RemedySearchResultCardList = ({ remedies }) => {
   return (
-    <div className='mt-1 prompt_layout'>
+    <div className='mt-1 comment_layout'>
       {remedies.map((remedy, i) => (
         <RemedySearchResultCard
           key={remedy.remedyName}
@@ -34,6 +34,7 @@ const Searcher = () => {
   const handleSubmit = async (e) => {
     setIsSubmitting(true);
     e.preventDefault();
+    e.target.blur();
     try {
       let response = await fetch("/api/remedies", {
         method: "POST",
@@ -92,7 +93,7 @@ const Searcher = () => {
         </button>
       </form>
 
-      {/* All Prompts */}
+      {/* All Comments */}
       {remedies?.length ? (
         <RemedySearchResultCardList
           remedies={remedies}
@@ -112,7 +113,7 @@ const Searcher = () => {
 
 
       {/* // : (
-      //   <PromptCardList data={allPosts} handleTagClick={handleTagClick} />
+      //   <CommentCardList data={allPosts} handleTagClick={handleTagClick} />
       // )} */}
     </section>
   );

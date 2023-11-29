@@ -14,7 +14,7 @@ const Footer = () => {
           </p>
 
           <div className='flex flex-row justify-center space-x-4'>
-            <Link href='/create-prompt' className='white_text'>
+            <Link href='/create-comment' className='white_text'>
               Stwórz komentarz
             </Link>
             <Link href='/' className='white_text'>

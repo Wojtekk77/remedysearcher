@@ -97,6 +97,6 @@ try {
     // res.json({ remedies: result });
     return new Response(JSON.stringify({ remedies: arrOfRemedies }), { status: 200 })
     } catch (error) {
-        return new Response("Failed to create a new prompt", { status: 500 });
+        return new Response("Failed to create a new comment", { status: 500 });
     }
 }

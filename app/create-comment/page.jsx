@@ -6,22 +6,22 @@ import { useRouter } from "next/navigation";
 
 import Form from "@components/Form";
 
-const CreatePrompt = () => {
+const CreateComment = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
   const [submitting, setIsSubmitting] = useState(false);
-  const [post, setPost] = useState({ prompt: "", tag: "" });
+  const [post, setPost] = useState({ comment: "", tag: "" });
 
-  const createPrompt = async (e) => {
+  const createComment = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/prompt/new", {
+      const response = await fetch("/api/comment/new", {
         method: "POST",
         body: JSON.stringify({
-          prompt: post.prompt,
+          comment: post.comment,
           userId: session?.user.id,
           tag: post.tag,
         }),
@@ -46,9 +46,9 @@ const CreatePrompt = () => {
       post={post}
       setPost={setPost}
       submitting={submitting}
-      handleSubmit={createPrompt}
+      handleSubmit={createComment}
     />
   );
 };
 
-export default CreatePrompt;
+export default CreateComment;

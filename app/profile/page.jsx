@@ -24,17 +24,17 @@ const MyProfile = () => {
   }, [session?.user.id]);
 
   const handleEdit = (post) => {
-    router.push(`/update-prompt?id=${post._id}`);
+    router.push(`/update-comment?id=${post._id}`);
   };
 
   const handleDelete = async (post) => {
     const hasConfirmed = confirm(
-      "Are you sure you want to delete this prompt?"
+      "Are you sure you want to delete this comment?"
     );
 
     if (hasConfirmed) {
       try {
-        await fetch(`/api/prompt/${post._id.toString()}`, {
+        await fetch(`/api/comment/${post._id.toString()}`, {
           method: "DELETE",
         });
 
@@ -49,8 +49,8 @@ const MyProfile = () => {
 
   return (
     <Profile
-      name='My'
-      desc='Welcome to your personalized profile page. Share your exceptional prompts and inspire others with the power of your imagination'
+      name='Twój Profil'
+      desc='Witaj w panelu użytkownika. Tutaj wyświetlane są Twoje komentarze. Widzisz je tylko Ty i administrator strony.'
       data={myPosts}
       handleEdit={handleEdit}
       handleDelete={handleDelete}
