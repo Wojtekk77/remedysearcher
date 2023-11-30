@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import RemedySearchResultCardList from "./RemedySearchResultCardList";
 import { DataGrid } from '@mui/x-data-grid';
 import RemedySearchResultCard from "./RemedySearchResultCard";
+import { createColumns } from './helpers';
+import { isMobile } from 'react-device-detect';
 
 const rows = [
     { id: 1, col1: 'Hello', col2: 'World' },
@@ -23,7 +25,7 @@ const columns = [
 
 const Searcher = () => {
 
-  const [allPosts, setAllPosts] = useState([]);
+  const [columns, setColumns] = useState([]);
 
   // Search states
   const [remedies, setRemedies] = useState([]);
@@ -74,25 +76,12 @@ const Searcher = () => {
     }
   };
 
+  useEffect(() => {
+		setColumns(createColumns(remedies[0]));
+	}, [remedies]);
+
   return (
     <section className='feed'>
-
-
-
-      <div style={{ height: 300, width: '100%' }}>
-      <DataGrid
-          rows={rows}
-          columns={columns}
-          slots={{
-              columnMenu: <div>hello</div>,
-          }}
-          slotProps={{
-              columnMenu: { background: 'red', counter: rows.length },
-          }}
-      />
-      </div>
-
-
       <form onSubmit={handleSubmit} className='relative w-full text-center'>
         <input
           type='text'
@@ -110,14 +99,24 @@ const Searcher = () => {
           {submitting ? `Wyszukiwanie...` : 'Wyszukaj'}
         </button>
       </form>
+      {
+        !isMobile && (
+          <div style={{ height: 300, width: '100%' }}>
+            <DataGrid
+              rows={remedies}
+              columns={columns}
+              disableColumnMenu={true}
+            />
+          </div>
+        )
+      }
 
-      {/* All Comments */}
-      {remedies?.length ? (
-        <RemedySearchResultCardList
-          remedies={remedies}
-        />
-      ):
-        <p>Zacznij wyszukiwanie</p> 
+      {
+        isMobile && (
+          <RemedySearchResultCardList
+            remedies={remedies}
+          />
+        )
       }
 
         {/* <button
@@ -129,10 +128,6 @@ const Searcher = () => {
           {submitting ? `Czekanie na skrypt...` : 'Opdal skrypt'}
         </button> */}
 
-
-      {/* // : (
-      //   <CommentCardList data={allPosts} handleTagClick={handleTagClick} />
-      // )} */}
     </section>
   );
 };

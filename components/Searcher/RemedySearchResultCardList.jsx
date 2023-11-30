@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import RemedySearchResultCard from './RemedySearchResultCard';
 
 
 const RemedySearchResultCardList = ({ remedies }) => {

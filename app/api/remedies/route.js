@@ -77,7 +77,7 @@ try {
             Object.entries(valueObj).forEach(([property, valueOfProp]) => {
 
                 if (typeof valueOfProp === 'object') {
-
+                    result[remedyName].id = remedyName; // id needed for DataGrid
                     const pattern = createEaseRegexPatternFromArray(valueOfProp.usedWords.sort((a,b) => b.length - a.length));
                     result[remedyName][property].description = valueOfProp.description?.replace(pattern, (match) => {
                         // wordOccurrence += 1;

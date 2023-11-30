@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
-import GoogleButton from 'react-google-button';
+import { GoogleLoginButton } from 'react-social-login-buttons';
+import { isMobile } from 'react-device-detect';
 
 const Nav = () => {
   const { data: session } = useSession();
@@ -19,58 +20,66 @@ const Nav = () => {
     })();
   }, []);
 
-  return (
-    <nav className='flex-between w-full mb-16 pt-3'>
-      <Link href='/' className='flex gap-2 flex-center'>
-        {/* <Image
-          src='/assets/images/logo.png'
-          alt='logo'
-          width={100}
-          height={60}
-          className='object-contain'
-        /> */}
-      </Link>
-
-      {/* Desktop Navigation */}
-      <div className='sm:flex hidden'>
-        {session?.user ? (
-          <div className='flex gap-3 md:gap-5'>
-            <Link href='/create-comment' className='black_btn'>
-              Stwórz komentarz
-            </Link>
-
-            <button type='button' onClick={signOut} className='outline_btn'>
-              Wyloguj
-            </button>
-
-            <Link href='/profile'>
-              <Image
-                src={session?.user.image}
-                width={37}
-                height={37}
-                className='rounded-full'
-                alt='profile'
-              />
-            </Link>
+  if (!isMobile) {
+    return (
+      <nav className='flex-between w-full mb-16 pt-3'>
+        <div className='flex relative'>
+          <Link href='/' className='flex gap-2 flex-center'>
+            {/* <Image
+              src='/assets/images/logo.png'
+              alt='logo'
+              width={100}
+              height={60}
+              className='object-contain'
+            /> */}
+          </Link>
+    
+          {/* Desktop Navigation */}
+          <div className='sm:flex'>
+            {session?.user ? (
+              <div className='flex gap-3 md:gap-5'>
+                <Link href='/create-comment' className='black_btn'>
+                  Stwórz komentarz
+                </Link>
+    
+                <button type='button' onClick={signOut} className='outline_btn'>
+                  Wyloguj
+                </button>
+    
+                <Link href='/profile'>
+                  <Image
+                    src={session?.user.image}
+                    width={37}
+                    height={37}
+                    className='rounded-full'
+                    alt='profile'
+                  />
+                </Link>
+              </div>
+            ) : (
+              <>
+                {
+                  Object.values(providers || [{ name: 'desktop' }]).map((provider) => (
+                    <GoogleLoginButton 
+                      key={provider.name}
+                      disabled={!providers} // can also be written as disabled={true} for clarity
+                      onClick={() => { signIn(provider.id) }}
+                      size='30px'
+                    />
+                  ))
+                }
+              </>
+            )}
           </div>
-        ) : (
-          <>
-            {
-              Object.values(providers || [{ name: 'disabled' }]).map((provider) => (
-                <GoogleButton
-                  key={provider.name}
-                  disabled={!providers} // can also be written as disabled={true} for clarity
-                  onClick={() => { signIn(provider.id) }}
-                  label='Zaloguj z Google'
-                />
-              ))
-            }
-          </>
-        )}
-      </div>
-
+        </div>
+      </nav>
+    )
+  }
+  
+  return (
+    <nav className='flex-between w-full mb-16 pt-3 flex-row-reverse'>
       {/* Mobile Navigation */}
-      <div className='sm:hidden flex relative'>
+      <div className='flex relative'>
         {session?.user ? (
           <div className='flex'>
             <Image
@@ -114,13 +123,12 @@ const Nav = () => {
         ) : (
           <>
             {
-              Object.values(providers || [{ name: 'disabled' }]).map((provider) => (
-                <GoogleButton
+              Object.values(providers || [{ name: 'mobile' }]).map((provider) => (
+                <GoogleLoginButton 
                   key={provider.name}
                   disabled={!providers} // can also be written as disabled={true} for clarity
                   onClick={() => { signIn(provider.id) }}
-                  label='Zaloguj z Google'
-                  style={{ borderRadius: 4, height: '50px', width: '240px', }}
+                  size='30px'
                 />
               ))
             }
