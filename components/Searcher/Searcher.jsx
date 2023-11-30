@@ -1,23 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
+import RemedySearchResultCardList from "./RemedySearchResultCardList";
+import { DataGrid } from '@mui/x-data-grid';
 import RemedySearchResultCard from "./RemedySearchResultCard";
 
-const RemedySearchResultCardList = ({ remedies }) => {
-  return (
-    <div className='mt-1 comment_layout'>
-      {remedies.map((remedy, i) => (
-        <RemedySearchResultCard
-          key={remedy.remedyName}
-          remedy={remedy}
-          first={i === 0}
-          last={i === remedies.length - 1}
-        />
-      ))}
-    </div>
-  );
-};
+const rows = [
+    { id: 1, col1: 'Hello', col2: 'World' },
+    { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
+    { id: 3, col1: 'MUI', col2: 'is Amazing', col3: { name: 'inside of obj' } },
+];
+
+const columns = [
+    { field: 'col1', headerName: 'Column 1', width: 150 },
+    { field: 'col2', headerName: 'Column 2', width: 150, renderCell: ({ row }) => (<p>{row.col2}</p>), },
+    { field: 'col3', headerName: 'Custom column 3', width: 150, valueGetter: (params) => {
+      console.log(params);
+      return `${params.row.col3?.name}_my ui`;
+    }, },
+];
+
 
 const Searcher = () => {
 
@@ -26,7 +28,6 @@ const Searcher = () => {
   // Search states
   const [remedies, setRemedies] = useState([]);
   const [searchProps, setSearchProps] = useState({ mind: "", general: "", specyfic: "", positiveModalities: "", negativeModalities: "" });
-  const [searchTimeout, setSearchTimeout] = useState(null);
   const [submitting, setIsSubmitting] = useState(false);
 
 
@@ -75,6 +76,23 @@ const Searcher = () => {
 
   return (
     <section className='feed'>
+
+
+
+      <div style={{ height: 300, width: '100%' }}>
+      <DataGrid
+          rows={rows}
+          columns={columns}
+          slots={{
+              columnMenu: <div>hello</div>,
+          }}
+          slotProps={{
+              columnMenu: { background: 'red', counter: rows.length },
+          }}
+      />
+      </div>
+
+
       <form onSubmit={handleSubmit} className='relative w-full text-center'>
         <input
           type='text'

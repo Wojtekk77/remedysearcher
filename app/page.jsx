@@ -1,4 +1,4 @@
-import Searcher from "@components/Searcher";
+import Searcher from "@components/Searcher/Searcher";
 
 const Home = () => (
   <section className='w-full flex-center flex-col min-h-[73vh]'>
