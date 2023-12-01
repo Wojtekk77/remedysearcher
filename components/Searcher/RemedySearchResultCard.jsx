@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCollapse } from 'react-collapsed'
@@ -119,4 +119,4 @@ const RemedySearchResultCard = ({ remedy, first, last }) => {
   );
 };
 
-export default RemedySearchResultCard;
+export default React.memo(RemedySearchResultCard);

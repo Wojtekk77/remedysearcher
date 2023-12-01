@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React from 'react';
 import RemedySearchResultCard from './RemedySearchResultCard';
-
 
 const RemedySearchResultCardList = ({ remedies }) => {
 
@@ -12,10 +11,10 @@ const RemedySearchResultCardList = ({ remedies }) => {
             <div className='mt-1 comment_layout'>
                 {remedies.map((remedy, i) => (
                     <RemedySearchResultCard
-                    key={remedy.remedyName}
-                    remedy={remedy}
-                    first={i === 0}
-                    last={i === remedies.length - 1}
+                        key={`${remedy.remedyName}_${i}`}
+                        remedy={remedy}
+                        first={i === 0}
+                        last={i === remedies.length - 1}
                     />
                 ))}
             </div>
@@ -23,4 +22,4 @@ const RemedySearchResultCardList = ({ remedies }) => {
     );
 };
 
-export default RemedySearchResultCardList;
+export default React.memo(RemedySearchResultCardList);

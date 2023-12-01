@@ -33,9 +33,14 @@ export const createColumns = (remedy) => {
 		columns.push({
             key: `${key}_${i}`,
 			id: `${key}_${i}`,
+            field: key,
 			headerName: key,
             renderCell: ({ row }) => {
                 return (<p>{row[key]?.sentenceNumbers?.length}</p>)
+            },
+            sortComparator: (a, b, c) => {
+                console.log(a, b, c, 'a, b, c')
+                return parseInt(a?.sentenceNumbers?.length) - parseInt(b?.sentenceNumbers?.length);
             },
 			// Cell: ({ wordWithObj, cell, state, value }) => {
 			// 	if (value?.description) {
@@ -55,18 +60,12 @@ export const createColumns = (remedy) => {
 		})
 	})
 
-	// columns.push({
-	// 	Header: 'Suma punktów',
-	// 	accessor: 'totalPoints',
-	// 	Cell: ({ row, value, cell, state }) => {
-	// 		return (
-	// 			// console.log()
-	// 			// <Link href={`/remedies/${row.original?.remedy?._id}`}>
-	// 				<div style={{ textAlign: 'center' }}><h6>{value}</h6></div>
-	// 			// </Link>
-	// 		);
-	// 	},
-	// },)
-    console.log(columns, 'columns')
+	columns.push({
+        key: 'totalPoints',
+        id: 'totalPoints',
+        field: 'totalPoints',
+        headerName: 'Suma pkt',
+	})
+
 	return columns;
 }

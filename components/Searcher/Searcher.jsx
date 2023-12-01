@@ -5,6 +5,8 @@ import RemedySearchResultCardList from "./RemedySearchResultCardList";
 import { DataGrid } from '@mui/x-data-grid';
 import RemedySearchResultCard from "./RemedySearchResultCard";
 import { createColumns } from './helpers';
+import useWindowDimensions from '@hooks/useWindowDimensions';
+import { ClientOnly } from '@components/ClientOnly';
 import { isMobile } from 'react-device-detect';
 
 const rows = [
@@ -24,15 +26,13 @@ const columns = [
 
 
 const Searcher = () => {
-
+  const { height, width } = useWindowDimensions();
   const [columns, setColumns] = useState([]);
 
   // Search states
   const [remedies, setRemedies] = useState([]);
   const [searchProps, setSearchProps] = useState({ mind: "", general: "", specyfic: "", positiveModalities: "", negativeModalities: "" });
   const [submitting, setIsSubmitting] = useState(false);
-
-
 
   const handleSubmit = async (e) => {
     setIsSubmitting(true);
@@ -80,6 +80,8 @@ const Searcher = () => {
 		setColumns(createColumns(remedies[0]));
 	}, [remedies]);
 
+
+
   return (
     <section className='feed'>
       <form onSubmit={handleSubmit} className='relative w-full text-center'>
@@ -99,24 +101,28 @@ const Searcher = () => {
           {submitting ? `Wyszukiwanie...` : 'Wyszukaj'}
         </button>
       </form>
-      {
-        !isMobile && (
-          <div style={{ height: 300, width: '100%' }}>
-            <DataGrid
-              rows={remedies}
-              columns={columns}
-              disableColumnMenu={true}
-            />
-          </div>
-        )
-      }
 
       {
-        isMobile && (
-          <RemedySearchResultCardList
-            remedies={remedies}
-          />
-        )
+        <div>
+          <ClientOnly>
+            {
+              !isMobile ? (
+                <div style={{ width: '100%' }}>
+                  <DataGrid
+                    rows={remedies}
+                    columns={columns}
+                    disableColumnMenu={true}
+                    style={{ minWidth: 800 }}
+                  />
+                </div>
+              ) : (
+                <RemedySearchResultCardList
+                  remedies={remedies}
+                />
+              )
+            }
+          </ClientOnly>
+        </div>
       }
 
         {/* <button

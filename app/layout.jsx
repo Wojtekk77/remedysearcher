@@ -1,6 +1,6 @@
 import "@styles/globals.css";
 
-import Nav from "@components/Nav";
+import Nav from "@components/Nav/Nav";
 import Provider from "@components/Provider";
 import Footer from '@components/Footer';
 
