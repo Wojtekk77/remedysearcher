@@ -8,6 +8,21 @@
 
 // https://mui.com/x/react-data-grid/column-definition/#rendering-cells
 // Using renderCell, requires paying attention to the following points. If the type of the value returned by valueGetter does not correspond to the column's type, you should:
+import DOMPurify from 'dompurify';
+
+import CustomizedDialogs from '@components/Dialog';
+import {
+	FaBeer,
+	FaBrain,
+	FaHandPointRight,
+	FaSadTear,
+	FaSmileBeam,
+    FaChevronDown,
+    FaChevronUp,
+    SquareCaretDown,
+    FaExternalLinkAlt
+} from 'react-icons/fa';
+
 
 // handle sorting by providing sortComparator to the column.
 // set a valueFormatter providing a representation for the value to be used when exporting the data.
@@ -20,6 +35,7 @@ export const createColumns = (remedy) => {
             key: 'remedyName',
 			headerName: 'Nazwa',
 			field: 'remedyName',
+            minWidth: 180,
             // renderCell: ({ row }) => (<p>{row.remedyName}</p>),
 		},
 	];
@@ -36,27 +52,37 @@ export const createColumns = (remedy) => {
             field: key,
 			headerName: key,
             renderCell: ({ row }) => {
-                return (<p>{row[key]?.sentenceNumbers?.length}</p>)
+                return (
+                    <div className='flex flex-row cursor-pointer'>
+                        <CustomizedDialogs 
+                            icon={<FaExternalLinkAlt className='mt-0.5 ml-2' />}
+                            value={row[key]?.sentenceNumbers?.length}
+                            dialogText={DOMPurify.sanitize(row[key]?.description)}
+                            dialogHeader={`${row[key]?.remedyName}: ${key}`}
+                        />
+                    </div>
+
+                )
             },
-            sortComparator: (a, b, c) => {
-                console.log(a, b, c, 'a, b, c')
+            sortComparator: (a, b) => {
                 return parseInt(a?.sentenceNumbers?.length) - parseInt(b?.sentenceNumbers?.length);
             },
-			// Cell: ({ wordWithObj, cell, state, value }) => {
-			// 	if (value?.description) {
-			// 		// return value?.description;
-			// 		return findSentencedAndHighlight({
-			// 			text: value?.description,
-			// 			usedWords: value?.usedWords,
-			// 			state,
-			// 			word: value?.word,
-			// 			wordOccurrence: value?.sentenceNumbers?.length,
-			// 		}); //`${accessor}: ${value?.sentenceNumbers?.length}`; 
-			// 	}
-			// 	// console.log(value, 'VALUE IN CREATOR')
-			// }, //value.sentenceNumbers.length, // findSentencedAndHighlight({ text: cell.value, wordsFamily: { [key]: wordsFamily[key] }, state }),
-			// // Filter: SliderColumnFilter,
-			// filter: 'equals',
+            width: 80,
+            minWidth: parseInt(key.length * 8),
+            renderHeader: () => {
+                const keys = key.split(' ')
+                if (keys.length > 2) {
+                    return (
+                        <div style={{ lineHeight: "1.5em" }}>
+                            <span>{`${keys[0]} ${keys[1]}`}</span>
+                            <br />
+                            <span>{keys.slice(2).join(' ')}</span>
+                        </div>
+                    )
+                }
+
+                return <div className="break-normal leading-6">{key}</div>
+            },
 		})
 	})
 
