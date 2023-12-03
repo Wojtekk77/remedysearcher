@@ -19,8 +19,8 @@ const RemedyMobilePropsExpandedDesc = ({ remedyValue }) => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
-    <div key={`${remedyValue.remedyName}_${remedyValue.word}`}>
-      <button {...getToggleProps()}>
+    <div key={`${remedyValue.remedyName}_${remedyValue.word}`} >
+      <button {...getToggleProps()} className='justify-between w-full'>
         {isExpanded 
           ? <div className='flex justify-between items-start gap-6'>{`${remedyValue.word}: ${remedyValue.sentenceNumbers?.length}`}<FaChevronUp style={{marginTop: 5}} /></div>
           : <div className='flex justify-between items-start gap-6'>{`${remedyValue.word}: ${remedyValue.sentenceNumbers?.length}`}<FaChevronDown style={{marginTop: 5}} /></div>
@@ -75,8 +75,8 @@ const RemedySearchResultCard = ({ remedy, first, last }) => {
           className='flex-1 flex justify-start items-center gap-3 cursor-pointer'
           // onClick={handleProfileClick}
         >
-          <div className='full-width'>
-            <div className='full-width grid grid-cols-1 gap-4 flex-1 flex'>
+          <div className='w-full'>
+            <div className='w-full grid grid-cols-1 gap-4 flex-1 flex'>
               <h3 className='font-satoshi font-semibold text-gray-900'>
                 {remedyName}: {totalPoints}
               </h3>

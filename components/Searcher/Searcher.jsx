@@ -114,6 +114,7 @@ const Searcher = () => {
                       columns={columns}
                       disableColumnMenu={true}
                       style={{ minWidth: 800 }}
+                      hideFooter={true}
                     />
                   </div>
                 ) : (

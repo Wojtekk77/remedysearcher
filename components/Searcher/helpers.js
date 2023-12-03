@@ -69,7 +69,7 @@ export const createColumns = (remedy) => {
                 return parseInt(a?.sentenceNumbers?.length) - parseInt(b?.sentenceNumbers?.length);
             },
             width: 80,
-            minWidth: parseInt(key.length * 8),
+            minWidth: parseInt(key.length * 10),
             renderHeader: () => {
                 const keys = key.split(' ')
                 if (keys.length > 2) {
@@ -93,6 +93,5 @@ export const createColumns = (remedy) => {
         field: 'totalPoints',
         headerName: 'Suma pkt',
 	})
-    console.log(columns);
 	return columns;
 }

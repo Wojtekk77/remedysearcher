@@ -16,7 +16,7 @@ try {
 
     if (!wordsFamilies.length) {
         return new Response(JSON.stringify({
-            remedies: [{ totalPoints: 0, remedyName: 'Nie znaloziono', NieZnaleziono: { id: 'someId', word: 'Nie', remedyId: 'id', remedyName:'Nie znaleziono', sentenceNumbers: [], usedWords: [], description: '' } }],
+            remedies: [{ totalPoints: 0, remedyName: 'Nie znaloziono remediów', id: 'Nie znaleziono remediów' }],
         }), { status: 200 })
     }
 
@@ -93,7 +93,6 @@ try {
 
     const arrOfRemedies = Object.values(result).sort((a , b) => b.totalPoints - a.totalPoints);
     // [{ totalPoints, remedyName, [word]: { word, 'krew', remedyId, remedyName, sentenceNumbers: [], usedWords: [], description: '' } }]
-
     const endTime = new Date(); 
     console.log(`${endTime.getTime() - startTime.getTime()}ms: Total Time`);
     // res.json({ remedies: result });

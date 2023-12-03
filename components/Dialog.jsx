@@ -61,7 +61,7 @@ export default function CustomizedDialogs({ icon, value, dialogText, dialogHeade
         </IconButton>
         <DialogContent dividers>
           <Typography gutterBottom>
-            <div dangerouslySetInnerHTML={{__html: dialogText}}></div>
+            <p style={{ userSelect: 'none' }} dangerouslySetInnerHTML={{__html: dialogText}}></p>
           </Typography>
           {/* <Typography gutterBottom>
             Praesent commodo cursus magna, vel scelerisque nisl consectetur et.

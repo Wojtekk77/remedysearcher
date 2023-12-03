@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    appDir: true,
+    // appDir: true, // no experimental in next 14 :D
     serverComponentsExternalPackages: ["mongoose"],
   },
   images: {
