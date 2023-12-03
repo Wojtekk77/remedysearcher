@@ -38,16 +38,18 @@ const CreateComment = () => {
   };
 
   return (
-    <Form
-      type='Kometarz'
-      headText='Jeżeli masz pomysł jak usprawnić aplikację, opisz go poniżej. Daj też znać jak według Ciebie sprawuje się wyszukiwarka. Twój komentarz jest dla mnie ważny! :)'
-      textareaHeadText=''
-      tagsHeadText=''
-      post={post}
-      setPost={setPost}
-      submitting={submitting}
-      handleSubmit={createComment}
-    />
+    <div className='min-w-full' style={{ minHeight: '73vh' }}>
+      <Form
+        type='Kometarz'
+        headText='Jeżeli masz pomysł jak usprawnić aplikację, opisz go poniżej. Daj też znać jak według Ciebie sprawuje się wyszukiwarka. Twój komentarz jest dla mnie ważny! :)'
+        textareaHeadText=''
+        tagsHeadText=''
+        post={post}
+        setPost={setPost}
+        submitting={submitting}
+        handleSubmit={createComment}
+      />
+    </div>
   );
 };
 

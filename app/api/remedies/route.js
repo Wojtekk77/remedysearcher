@@ -1,14 +1,19 @@
 import Description from '@models/description';
 import { connectToDB } from "@utils/database";
+import Statistics from '@models/statistics';
+import mongoose from 'mongoose';
 import { createEaseRegexPatternFromArray, getDescProperties, getSearchProps, getWordsFamiliesWithSentences } from './helpers';
 
 export const POST = async (request) => {
-    const { mind, general, specyfic, positiveModalities, negativeModalities } = await request.json();
+    const jsonRequest = await request.json();
+    const { mind, general, specyfic, positiveModalities, negativeModalities, userId } = jsonRequest;
     const startTime = new Date(); 
     const [searchWordsArray, additionalWordsObj, additionalWordsArr] = getSearchProps({mind, general, specyfic, positiveModalities, negativeModalities});
 
 try {
     await connectToDB();
+    await Statistics.create({ user: userId  ? new mongoose.Types.ObjectId(userId) : undefined, query: mind });
+
     let startTimewordsFamilies = new Date(); 
     let wordsFamilies = await getWordsFamiliesWithSentences(searchWordsArray, additionalWordsArr);
  

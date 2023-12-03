@@ -8,6 +8,7 @@ import { createColumns } from './helpers';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import { ClientOnly } from '@components/ClientOnly';
 import { isMobile } from 'react-device-detect';
+import { useSession } from 'next-auth/react';
 
 const rows = [
     { id: 1, col1: 'Hello', col2: 'World' },
@@ -28,7 +29,7 @@ const columns = [
 const Searcher = () => {
 
   const [columns, setColumns] = useState([]);
-
+  const { data: session } = useSession();
   // Search states
   const [remedies, setRemedies] = useState([]);
   const [searchProps, setSearchProps] = useState({ mind: "", general: "", specyfic: "", positiveModalities: "", negativeModalities: "" });
@@ -43,6 +44,7 @@ const Searcher = () => {
         method: "POST",
         body: JSON.stringify({
           mind: searchProps.mind,
+          userId: session?.user.id,
           // general: form.data.general,
           // specyfic: form.data.specyfic,
           // positiveModalities: form.data.positiveModalities,

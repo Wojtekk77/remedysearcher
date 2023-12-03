@@ -5,12 +5,12 @@ import Provider from "@components/Provider";
 import Footer from '@components/Footer';
 
 export const metadata = {
-  title: "Remedysearcher",
+  title: "RemedySearcher",
   description: "Wyszukiwarka remediów homeopatycznych",
 };
 
 const RootLayout = ({ children }) => (
-  <html lang='en'>
+  <html lang='pl'>
     <body>
       <Provider>
         <div className='main'>

@@ -9,7 +9,7 @@ const Footer = () => {
            <b>Jeżeli chiałbyś/chciałabyś wesprzeć moją pracę proszę napisz maila na adres</b> wojtek@remedysearcher.pl
           </p>
           <p className="text-sm text-gray-500 sm:text-center dark:text-gray-400 py-5">
-              © 2023 <a href="https://remedysearcher.vercel.app" className="hover:underline">RemedySearcher™</a>
+              © 2023 <a href="/" className="hover:underline">RemedySearcher™</a>
           </p>
 
           <div className='flex flex-row justify-center space-x-4'>
