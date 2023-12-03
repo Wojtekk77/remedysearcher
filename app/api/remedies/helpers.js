@@ -80,14 +80,28 @@ export const getWordsFamiliesWithSentences = async (searchWordsArray, additional
 				name: { $in:  [...searchWordsArray, ...additionalWordsArr] }
 			},
 		},
-		{
-			$lookup: {
-				from: 'polishwordarrays',
-				localField: 'variations',
-				foreignField: '_id',
-				as: 'variations',
-			},
-		},
+		// {
+		// 	$lookup: {
+		// 		from: 'polishwordarrays',
+		// 		localField: 'variations',
+		// 		foreignField: '_id',
+		// 		as: 'variations',
+		// 	},
+		// },
+        { $lookup:
+            {
+              from: "polishwordarrays",
+              let: { name: '$name' },
+              pipeline: [
+                   { $match:
+                       { 
+                            $expr: { $in: [ "$$name", "$variations"] },
+                       }
+                   }
+               ],
+               as: "variations"
+               }
+        },
 		{ 
 			$unwind: { path: '$variations', preserveNullAndEmptyArrays: true },
 		},
