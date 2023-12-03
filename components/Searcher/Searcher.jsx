@@ -26,7 +26,7 @@ const columns = [
 
 
 const Searcher = () => {
-  const { height, width } = useWindowDimensions();
+
   const [columns, setColumns] = useState([]);
 
   // Search states
@@ -106,20 +106,22 @@ const Searcher = () => {
         <div>
           <ClientOnly>
             {
-              !isMobile ? (
-                <div style={{ width: '100%' }}>
-                  <DataGrid
-                    rows={remedies}
-                    columns={columns}
-                    disableColumnMenu={true}
-                    style={{ minWidth: 800 }}
+              remedies?.length ? (
+                !isMobile ? (
+                  <div style={{ width: '100%' }}>
+                    <DataGrid
+                      rows={remedies}
+                      columns={columns}
+                      disableColumnMenu={true}
+                      style={{ minWidth: 800 }}
+                    />
+                  </div>
+                ) : (
+                  <RemedySearchResultCardList
+                    remedies={remedies}
                   />
-                </div>
-              ) : (
-                <RemedySearchResultCardList
-                  remedies={remedies}
-                />
-              )
+                )
+              ) : null
             }
           </ClientOnly>
         </div>

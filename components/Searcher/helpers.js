@@ -32,6 +32,7 @@ export const createColumns = (remedy) => {
 	// }
 	const columns = [
 		{
+            id: 'remedyNameMain',
             key: 'remedyName',
 			headerName: 'Nazwa',
 			field: 'remedyName',
@@ -92,6 +93,6 @@ export const createColumns = (remedy) => {
         field: 'totalPoints',
         headerName: 'Suma pkt',
 	})
-
+    console.log(columns);
 	return columns;
 }

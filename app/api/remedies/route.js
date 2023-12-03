@@ -15,7 +15,9 @@ try {
     let endTimeWordsFamilies = new Date(); 
 
     if (!wordsFamilies.length) {
-        return new Response(JSON.stringify({ remedies: [{ remedyName: 'Nie znaleziono remediów' }] }), { status: 200 })
+        return new Response(JSON.stringify({
+            remedies: [{ totalPoints: 0, remedyName: 'Nie znaloziono', NieZnaleziono: { id: 'someId', word: 'Nie', remedyId: 'id', remedyName:'Nie znaleziono', sentenceNumbers: [], usedWords: [], description: '' } }],
+        }), { status: 200 })
     }
 
     console.log(`${endTimeWordsFamilies.getTime() - startTimewordsFamilies.getTime()}ms = get Words Families Time`);
