@@ -86,7 +86,7 @@ const Searcher = () => {
 
   return (
     <section className='feed'>
-      <form onSubmit={handleSubmit} className='relative w-full text-center'>
+      <form onSubmit={handleSubmit} className='relative w-full text-center mb-3'>
         <input
           type='text'
           placeholder='pewność siebie'

@@ -7,7 +7,7 @@ const RemedySearchResultCardList = ({ remedies }) => {
 
     return (
         <>
-            <div className='mt-1 comment_layout'>
+            <div className='comment_layout'>
                 {remedies.map((remedy, i) => (
                     <RemedySearchResultCard
                         key={`${remedy.remedyName}_${i}`}

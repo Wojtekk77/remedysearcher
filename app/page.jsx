@@ -1,13 +1,13 @@
 import Searcher from "@components/Searcher/Searcher";
 
 const Home = () => (
-  <section className='w-full flex-center flex-col min-h-[73vh]'>
+  <section className='w-full flex-col min-h-[73vh]'>
     <h1 className='head_text text-center'>
       <br className='max-md:hidden' />
       <span className='orange_gradient text-center'>Remedy Searcher</span>
     </h1>
-    <p className='desc text-center'>
-      Remedysearcher to wyszukiwarka leków homeopatycznych wspomagająca dobór leku.
+    <p className='text-lg text-gray-500 mt-4 text-center'>
+      Remedysearcher to wyszukiwarka leków homeopatycznych.
     </p>
     <p className='font-inter text-sm text-gray-500 mt-4 text-center'>
       Słowa można wpisywać po przecinku np: <br/> <strong>niepokój, drżenie, krwawienie</strong> <br/>
