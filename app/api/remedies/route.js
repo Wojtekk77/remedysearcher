@@ -8,11 +8,10 @@ export const POST = async (request) => {
     const jsonRequest = await request.json();
     const { mind, general, specyfic, positiveModalities, negativeModalities, userId } = jsonRequest;
     const startTime = new Date(); 
-    const [searchWordsArray, additionalWordsObj, additionalWordsArr] = getSearchProps({mind, general, specyfic, positiveModalities, negativeModalities});
+const [searchWordsArray, additionalWordsObj, additionalWordsArr] = getSearchProps({mind, general, specyfic, positiveModalities, negativeModalities});
 
 try {
     await connectToDB();
-    await Statistics.create({ user: userId  ? new mongoose.Types.ObjectId(userId) : undefined, query: mind });
 
     let startTimewordsFamilies = new Date(); 
     let wordsFamilies = await getWordsFamiliesWithSentences(searchWordsArray, additionalWordsArr);
@@ -20,6 +19,7 @@ try {
     let endTimeWordsFamilies = new Date(); 
 
     if (!wordsFamilies.length) {
+        await Statistics.create({ user: userId  ? new mongoose.Types.ObjectId(userId) : undefined, query: mind, results: 0 });
         return new Response(JSON.stringify({
             remedies: [{ totalPoints: 0, remedyName: 'Nie znaloziono remediów', id: 'Nie znaleziono remediów' }],
         }), { status: 200 })
@@ -98,6 +98,7 @@ try {
 
     const arrOfRemedies = Object.values(result).sort((a , b) => b.totalPoints - a.totalPoints);
     // [{ totalPoints, remedyName, [word]: { word, 'krew', remedyId, remedyName, sentenceNumbers: [], usedWords: [], description: '' } }]
+    await Statistics.create({ user: userId  ? new mongoose.Types.ObjectId(userId) : undefined, query: mind, results: arrOfRemedies.length });
     const endTime = new Date(); 
     console.log(`${endTime.getTime() - startTime.getTime()}ms: Total Time`);
     // res.json({ remedies: result });
