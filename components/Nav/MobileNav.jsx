@@ -64,14 +64,23 @@ const MobileNav = ({ providers }) => {
         ) : (
           <div>
             {
-              Object.values(providers || [{ name: 'mobile' }]).map((provider) => (
+              Object.values(providers || {}).length ? (
+                Object.values(providers).map((provider) => (
+                  <GoogleLoginButton 
+                    key={provider.name}
+                    disabled={!providers} // can also be written as disabled={true} for clarity
+                    onClick={() => { signIn(provider.id) }}
+                    size='30px'
+                  />
+                ))
+              ) : (
                 <GoogleLoginButton 
-                  key={provider.name}
-                  disabled={!providers} // can also be written as disabled={true} for clarity
-                  onClick={() => { signIn(provider.id) }}
+                  key={'no providers'}
+                  disabled={true} // can also be written as disabled={true} for clarity
+                  onClick={() => {console.log('wait for providers')}}
                   size='30px'
                 />
-              ))
+              )
             }
           </div>
         )}

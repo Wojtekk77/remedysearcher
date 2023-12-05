@@ -130,14 +130,14 @@ const Searcher = () => {
         </div>
       }
 
-        {/* <button
+        <button
           type='submit'
           disabled={submitting}
           onClick={handleScript}
           className='mt-5 px-7 py-2 text-sm bg-primary-orange rounded-full text-white'
         >
           {submitting ? `Czekanie na skrypt...` : 'Opdal skrypt'}
-        </button> */}
+        </button>
 
     </section>
   );

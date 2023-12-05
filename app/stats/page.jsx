@@ -97,8 +97,8 @@ const Statistics = () => {
       >
         <BarPlot />
         <LinePlot />
-        <ChartsXAxis label="Years" position="bottom" axisId="years" />
-        <ChartsYAxis label="Results" position="left" axisId="eco" />
+        <ChartsXAxis label="Dzień" position="bottom" axisId="years" />
+        <ChartsYAxis label="Ilość zapytań" position="left" axisId="eco" />
         {/* <ChartsYAxis label="PIB" position="right" axisId="pib" /> */}
       </ChartContainer>
     ) || null
