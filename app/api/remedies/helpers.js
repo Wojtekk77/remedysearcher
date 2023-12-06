@@ -1,4 +1,5 @@
 import PolishWords from '@models/polishWords';
+import { sanitizedGetBetter, sanitizedGetWorse } from '../scripts/route';
 
 // type = 'mind', 'general', 'specyfic', 'modalities'
 export const convertStringToObject = (words, type = 'mind') => {
@@ -228,4 +229,56 @@ export const getDescProperties = (desc, wordsFamilies, additionalWordsObj = {}, 
 }
 
 
+export const highlightText = ({ usedWords, text, color }) => {
 
+    const pattern = createEaseRegexPatternFromArray(usedWords.sort((a,b) => b.length - a.length));
+    const highlightedText = text?.replace(pattern, (match) => {
+        // wordOccurrence += 1;
+        return `<span style="color:${color}; font-weight:bold">${match}</span>`;
+    });
+    return highlightedText
+}
+
+export const getModalities = ({ desc, modality = 'poprawia' }) => {
+    const property = { word: modality, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' };
+    let modalitiesWords = [];
+    if (modality === 'poprawia') {
+        modalitiesWords = sanitizedGetBetter;
+    }
+    else {
+        modalitiesWords = sanitizedGetWorse;
+    }
+
+    
+    modalitiesWords.forEach(modalityWord => {
+        if (desc.wordSentences[modalityWord]?.length) { // if description uses one of variationWords
+
+            property.sentenceNumbers.push(...desc.wordSentences[modalityWord]); // assign number of sentences where variationWord exists (word: [1,2,3,4])
+            property.usedWords.push(modalityWord);
+        }
+    });
+
+    property.sentenceNumbers = [...new Set(property.sentenceNumbers)].sort();
+    property.usedWords = [...new Set(property.usedWords)].sort();
+
+    property.sentenceNumbers.forEach(sentenceNumber => {
+        property.description += `${desc.sentences[sentenceNumber]}. `;
+    });
+
+
+    return property; 
+}
+
+
+// const desc = descs.find(d => d.remedyName = remedyName);
+// console.log(desc, 'desc')
+// const positiveModalities = getModalities({ desc, modality: 'poprawia' });
+// const negativeModalities = getModalities({ desc, modality: 'pogarsza' });
+// // let property = { word: 'poprawia', remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' };
+// // console.log(desc.remedyName, 'desc.remedyName')
+
+// positiveModalities.description = highlightText({ usedWords: positiveModalities.usedWords, text: positiveModalities.description, color: '#32CD32' })
+// negativeModalities.description = highlightText({ usedWords: negativeModalities.usedWords, text: negativeModalities.description, color: '#DC143C' })
+
+// result[remedyName][positiveModalities.word] = positiveModalities;
+// result[remedyName][negativeModalities.word] = negativeModalities;

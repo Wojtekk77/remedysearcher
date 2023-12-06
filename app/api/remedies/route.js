@@ -2,7 +2,7 @@ import Description from '@models/description';
 import { connectToDB } from "@utils/database";
 import Statistics from '@models/statistics';
 import mongoose from 'mongoose';
-import { createEaseRegexPatternFromArray, getDescProperties, getSearchProps, getWordsFamiliesWithSentences } from './helpers';
+import { getDescProperties, getModalities, getSearchProps, getWordsFamiliesWithSentences, highlightText } from './helpers';
 
 export const POST = async (request) => {
     const jsonRequest = await request.json();
@@ -77,22 +77,28 @@ try {
 
     const savedPoint = Object.values(result).sort((a , b) => b.totalPoints - a.totalPoints).slice(9,10);
 
-    Object.entries(result).forEach(([remedyName, valueObj]) => {
+    Object.entries(result).forEach(([remedyName, valueObj], i) => {
         if (savedPoint && valueObj.totalPoints < savedPoint[0]?.totalPoints) {
             delete result[remedyName];
         } else {
             Object.entries(valueObj).forEach(([property, valueOfProp]) => {
-
                 if (typeof valueOfProp === 'object') {
                     result[remedyName].id = remedyName; // id needed for DataGrid
-                    const pattern = createEaseRegexPatternFromArray(valueOfProp.usedWords.sort((a,b) => b.length - a.length));
-                    result[remedyName][property].description = valueOfProp.description?.replace(pattern, (match) => {
-                        // wordOccurrence += 1;
-                        const color = '#aa9922';
-                        return `<span style="color:${color}; font-weight:bold">${match}</span>`;
-                    });
+                    result[remedyName][property].description = highlightText({ usedWords: valueOfProp.usedWords, text: valueOfProp.description, color: '#aa9922' })
                 }
             });
+
+            const desc = descs.find(d => d.remedyName === remedyName);
+
+            const positiveModalities = getModalities({ desc, modality: 'poprawia' });
+            const negativeModalities = getModalities({ desc, modality: 'pogarsza' });
+
+            positiveModalities.description = highlightText({ usedWords: positiveModalities.usedWords, text: positiveModalities.description, color: '#32CD32' })
+            negativeModalities.description = highlightText({ usedWords: negativeModalities.usedWords, text: negativeModalities.description, color: '#DC143C' })
+
+            result[remedyName][positiveModalities.word] = positiveModalities;
+            result[remedyName][negativeModalities.word] = negativeModalities;
+            
         }
     })
 
