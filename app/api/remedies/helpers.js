@@ -1,5 +1,5 @@
+import { sanitizedGetBetter, sanitizedGetWorse } from '@app/constants';
 import PolishWords from '@models/polishWords';
-import { sanitizedGetBetter, sanitizedGetWorse } from '../scripts/route';
 
 // type = 'mind', 'general', 'specyfic', 'modalities'
 export const convertStringToObject = (words, type = 'mind') => {
