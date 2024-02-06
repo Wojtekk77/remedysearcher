@@ -41,68 +41,83 @@ const Statistics = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const isAdmin = session?.user?.isAdmin;
+  const [submitting, setIsSubmitting] = useState(false);
 
   const [statistics, setStatistics] = useState([]);
 
-  useEffect(() => {
+  const handleScript = async (e) => {
+    setIsSubmitting(true);
+    e.preventDefault();
+    try {
+      let response = await fetch("/api/stats", {
+        method: "POST",
+        body: JSON.stringify({}),
+      });
+      const data = await response.json();
+      setStatistics(data.statistics);
 
-    if (isAdmin) {
-      const getStatistics = async () => {
-        const response = await fetch('/api/stats');
-        const data = await response.json();
-  
-        setStatistics(data.statistics);
-      };
-  
-      getStatistics();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
-
-  }, [isAdmin]);
-
+  };
 
   const XaxisData = statistics?.map(s => `${s._id.year}-${s._id.month}-${s._id.day}`) || [];
   const YaxisSeries = statistics?.map(s => `${s.count}`) || [];
 
   return (
-    statistics?.length && (
-      <ChartContainer
-        series={[
-          {
-            type: 'bar',
-            stack: '',
-            yAxisKey: 'eco',
-            data: YaxisSeries,
-          }
-        ]}
-        width={500}
-        height={400}
-        xAxis={[
-          {
-            id: 'years',
-            data: XaxisData,
-            scaleType: 'band',
-            valueFormatter: (value) => value.toString(),
-          },
-        ]}
-        yAxis={[
-          {
-            id: 'eco',
-            scaleType: 'linear',
-          },
-          // {
-          //   id: 'pib',
-          //   scaleType: 'log',
-          // },
-        ]}
+    <>
+      {
+        statistics?.length && (
+          <ChartContainer
+            series={[
+              {
+                type: 'bar',
+                stack: '',
+                yAxisKey: 'eco',
+                data: YaxisSeries,
+              }
+            ]}
+            width={500}
+            height={400}
+            xAxis={[
+              {
+                id: 'years',
+                data: XaxisData,
+                scaleType: 'band',
+                valueFormatter: (value) => value.toString(),
+              },
+            ]}
+            yAxis={[
+              {
+                id: 'eco',
+                scaleType: 'linear',
+              },
+              // {
+              //   id: 'pib',
+              //   scaleType: 'log',
+              // },
+            ]}
+          >
+            <BarPlot />
+            <LinePlot />
+            <ChartsXAxis label="Dzień" position="bottom" axisId="years" />
+            <ChartsYAxis label="Ilość zapytań" position="left" axisId="eco" />
+            {/* <ChartsYAxis label="PIB" position="right" axisId="pib" /> */}
+          </ChartContainer>
+        ) || null
+      }
+      <button
+        type='submit'
+        disabled={submitting}
+        onClick={handleScript}
+        className='mt-5 px-7 py-2 text-sm bg-primary-orange rounded-full text-white'
       >
-        <BarPlot />
-        <LinePlot />
-        <ChartsXAxis label="Dzień" position="bottom" axisId="years" />
-        <ChartsYAxis label="Ilość zapytań" position="left" axisId="eco" />
-        {/* <ChartsYAxis label="PIB" position="right" axisId="pib" /> */}
-      </ChartContainer>
-    ) || null
-  );
+        {submitting ? `Czekanie...` : 'Odśwież wyniki'}
+      </button> 
+  </>
+  )
 };
 
 export default Statistics;

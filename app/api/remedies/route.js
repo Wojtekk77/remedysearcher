@@ -12,13 +12,12 @@ const [searchWordsArray, additionalWordsObj, additionalWordsArr] = getSearchProp
 
 try {
     await connectToDB();
-
     let startTimewordsFamilies = new Date(); 
-    let wordsFamilies = await getWordsFamiliesWithSentences(searchWordsArray, additionalWordsArr);
+    let rawWordsFamilies = await getWordsFamiliesWithSentences(searchWordsArray, additionalWordsArr);
  
     let endTimeWordsFamilies = new Date(); 
 
-    if (!wordsFamilies.length) {
+    if (!rawWordsFamilies.length) {
         await Statistics.create({ user: userId  ? new mongoose.Types.ObjectId(userId) : undefined, query: mind, results: 0 });
         return new Response(JSON.stringify({
             remedies: [{ totalPoints: 0, remedyName: 'Nie znaloziono remediów', id: 'Nie znaleziono remediów' }],
@@ -29,11 +28,39 @@ try {
 
     const query = { '$and': [] };
     const allWords = [];
-    for (const wordFamily of wordsFamilies) {
+    const wordsFamilies = [];
+    const additionalFullObj = {};
+    const primaryFullObj = {};
+
+    for (const wordFamily of rawWordsFamilies) {
 
         wordFamily.variations = wordFamily.variations.filter(word => word !== 'się');
         query['$and'].push({ words: { $in: wordFamily.variations }});
         allWords.push(...wordFamily.variations);
+
+
+        if (searchWordsArray.includes(wordFamily._id)) {
+            if (!additionalWordsObj[wordFamily._id]?.length || (searchWordsArray.filter(item => item === wordFamily._id)).length > additionalWordsObj[wordFamily._id]?.length) {
+                wordsFamilies.push({ _id: wordFamily._id, primaryWord: wordFamily._id });
+            }
+            primaryFullObj[wordFamily._id] = wordFamily;
+        }
+
+        if (additionalWordsArr.includes(wordFamily._id)) {
+            additionalFullObj[wordFamily._id] = wordFamily;
+        }
+       
+        if (additionalWordsObj[wordFamily._id]?.length) {
+            additionalWordsObj[wordFamily._id].forEach(arrayOfAdditionalWord => {
+                wordsFamilies.push({
+                    // ...wordFamily,
+                    _id: `${wordFamily._id} ${arrayOfAdditionalWord.join(' ')}`,
+                    additionalWords: arrayOfAdditionalWord,
+                    primaryWord: wordFamily._id,
+                })
+            })
+        }
+
     }
 
     startTimewordsFamilies = new Date(); 
@@ -43,17 +70,54 @@ try {
             $match: query,
         },
         {
+            $limit: 50,
+        },
+        // {
+        //     $lookup: {
+        //         from: 'descriptioncommonwords',
+        //         localField: '_id',
+        //         foreignField: 'description',
+        //         as: 'descCommonWords',
+        //     },
+        // },
+        {
+            $lookup:
+               {
+                 from: "descriptioncommonwords",
+                 let: { descId: "$_id" },
+                 pipeline: [
+                    { $match:
+                       { $expr:
+                          { $and:
+                             [
+                               { $eq: [ "$description",  "$$descId" ] },
+                            //    { $gte: [ "$instock", "$$order_qty" ] }
+                             ]
+                          }
+                       }
+                    },
+                    { $sort: { points: -1 } },
+                    { $limit: 20 }
+                    // { $project: { stock_item: 0, _id: 0 } }
+                 ],
+                 as: "descCommonWords"
+               }
+        },
+        {
+            $match: {
+                'descCommonWords.useful': { $ne: false },
+            }
+        },
+        {
             $project: {
                 _id: 1,
                 sentences: 1,
                 remedyName: 1,
                 remedy: 1,
                 wordSentencesAsText: 1,
+                descCommonWords: 1,
             }
         },
-        {
-            $limit: 50,
-        }
     ])
 
     endTimeWordsFamilies = new Date(); 
@@ -62,7 +126,8 @@ try {
     const result = {};
     descs.forEach(desc => {
         desc.wordSentences = JSON.parse(desc.wordSentencesAsText);
-        const propertiesObj = getDescProperties(desc, wordsFamilies, additionalWordsObj, additionalWordsArr);
+        // ęę tutaj nie bedziemy chieli przekazac rawWordFamilies a wordsFamilies, gdzie _id = ból_gardła, ból_slowo_slowo2
+        const propertiesObj = getDescProperties(desc, wordsFamilies, additionalFullObj, primaryFullObj);
         //escape early if one of 'properties' has empty sentence array
         if (Object.values(propertiesObj).some(obj => obj.sentenceNumbers?.length === 0)) {
             return;
@@ -70,7 +135,7 @@ try {
 
         let totalPoints = 0;
         Object.values(propertiesObj).forEach(obj => {
-            totalPoints += obj.sentenceNumbers?.length || 0 
+            totalPoints += obj.points || 0;
         });
         result[desc.remedyName] = { ...propertiesObj, totalPoints, remedyName: desc.remedyName };
     });
@@ -98,6 +163,8 @@ try {
 
             result[remedyName][positiveModalities.word] = positiveModalities;
             result[remedyName][negativeModalities.word] = negativeModalities;
+            // console.log(desc.descCommonWords);
+            result[remedyName]['Objawy kluczowe'] = { descId: desc._id, descCommonWords: desc.descCommonWords, totalPoints: 1 };
             
         }
     })

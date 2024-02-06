@@ -23,6 +23,18 @@ const MobileNav = ({ providers }) => {
             >
              Wyszukiwarka
             </Link>
+            {
+              session?.user?.isAdmin && (
+                <Link
+                  href='/stats'
+                  className='orange_button mr-5 '
+                  onClick={() => setToggleDropdown(false)}
+                >
+                  Statystyki
+                </Link>
+              )
+            }
+
             <Link
               href='/create-comment'
               className='orange_button mr-5'

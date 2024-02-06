@@ -54,10 +54,14 @@ export const getSearchProps = ({ mind, general, specyfic, positiveModalities, ne
         ...mindArr, ...generalArr, ...specyficArr, ...positiveModalitiesArr, ...negativeModalitiesArr
     ].map(item => { 
         if (item.word.includes(' ')) {
-
             const arrWords = item.word.split(' ')
             additionalWordsArr.push(...arrWords.slice(1));
-            additionalWordsObj[arrWords[0]] = [...arrWords.slice(1)]
+
+            if (!additionalWordsObj[arrWords[0]]) {
+                additionalWordsObj[arrWords[0]] = []; 
+            }
+
+            additionalWordsObj[arrWords[0]].push([...arrWords.slice(1)])
             return arrWords[0];
         }
         return item.word.toLowerCase();
@@ -150,10 +154,10 @@ export const getIntersection = (arrA, arrB) => {
 //     }
 // ]
 
-export const getWordFamilyProperies = (desc, wordFamily, additionalWordsArrOfObj) => {
+export const getWordFamilyProperies = (desc, wordFamily, additionalFullObj, primaryFullObj) => {
 
-    const property = { word: wordFamily._id, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' };
-    wordFamily.variations.forEach(variationWord => {
+    const property = { word: wordFamily.primaryWord, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '', descCommonWords: desc.descCommonWords };
+    primaryFullObj[wordFamily.primaryWord].variations.forEach(variationWord => {
     
         if (desc.wordSentences[variationWord]?.length) { // if description uses one of variationWords
             property.sentenceNumbers.push(...desc.wordSentences[variationWord]); // assign number of sentences where variationWord exists (word: [1,2,3,4])
@@ -164,18 +168,19 @@ export const getWordFamilyProperies = (desc, wordFamily, additionalWordsArrOfObj
     });
 
     const additionalProperties = [];
-    if (additionalWordsArrOfObj.length) {
+    if (wordFamily.additionalWords?.length) {
 
-        additionalWordsArrOfObj.forEach((additionalWordFamily) => {
+        wordFamily.additionalWords.forEach((additionalWordName) => {
 
-            const additionalPorp = { word: additionalWordFamily._id, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' };
+            const additionalPorp = { word: additionalWordName, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' };
             // additionalWordFamily = { _id: 'żółć', variations: [żółć1, żółć2] }
-            additionalWordFamily.variations.forEach(variationWord => {
+            additionalFullObj[additionalWordName].variations.forEach(variationWord => {
                 if (desc.wordSentences[variationWord]?.length) { // if description uses one of variationWords
                     additionalPorp.sentenceNumbers.push(...desc.wordSentences[variationWord]); // assign number of sentences where variationWord exists (word: [1,2,3,4])
                     additionalPorp.usedWords.push(variationWord);
                 }
             });
+
             additionalProperties.push(additionalPorp);
             const propertySentecesIntesection = getIntersection(property.sentenceNumbers, additionalPorp.sentenceNumbers);
             property.sentenceNumbers = propertySentecesIntesection;
@@ -183,7 +188,7 @@ export const getWordFamilyProperies = (desc, wordFamily, additionalWordsArrOfObj
         });
     }
 
-
+    property.points = property.sentenceNumbers?.length || 0;
     property.sentenceNumbers = [...new Set(property.sentenceNumbers)].sort();
     property.usedWords = [...new Set(property.usedWords)].sort();
     property.sentenceNumbers.forEach(sentenceNumber => {
@@ -193,7 +198,7 @@ export const getWordFamilyProperies = (desc, wordFamily, additionalWordsArrOfObj
     return property
 }
 
-export const getDescProperties = (desc, wordsFamilies, additionalWordsObj = {}, additionalWordsArr) => {
+export const getDescProperties = (desc, wordsFamilies, additionalFullObj, primaryFullObj) => {
 
     // propertiesObj = { 
         // żółć1: { word: wordFamily._id, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' } 
@@ -201,25 +206,24 @@ export const getDescProperties = (desc, wordsFamilies, additionalWordsObj = {}, 
     // }
     const propertiesObj = { totalPoints: 0 };
     wordsFamilies.forEach((wordFamily) => {
-
         let propertyName = wordFamily._id;
         // word will be processed in one of base words
-        if (additionalWordsArr.includes(wordFamily._id)) {
-            return;
-        }
+        // if (additionalFullObj[wordFamily._id]._id && !primaryFullObj[wordFamily._id]._id) {
+        //     return;
+        // }
 
-        let additionalWordsArrOfObj = [];
-        if (additionalWordsObj[wordFamily._id]?.length) {
-            additionalWordsArrOfObj = wordsFamilies.filter(obj => additionalWordsObj[wordFamily._id].includes(obj._id))
-            // console.log(additionalWordsArrOfObj, 'in additionalWordsArrOfObj');
-            propertyName += ` ${additionalWordsObj[wordFamily._id].join(' ')}`;
-        }
+        // let additionalWordsArrOfObj = [];
+        // if (additionalWordsObj[wordFamily._id]?.length) {
+        //     additionalWordsArrOfObj = wordsFamilies.filter(obj => additionalWordsObj[wordFamily._id].includes(obj._id))
+        //     // console.log(additionalWordsArrOfObj, 'in additionalWordsArrOfObj');
+        //     // propertyName += ` ${additionalWordsObj[wordFamily._id].join(' ')}`;
+        // }
 
         // wordFamily = {
         //   _id: 'żółć',
         //   variations: ['żółć1', 'żółć2', 'żółć3']
         // } // additionalWordsArrOfObj is the [wordFamily]
-        const property = getWordFamilyProperies(desc, wordFamily, additionalWordsArrOfObj);
+        const property = getWordFamilyProperies(desc, wordFamily, additionalFullObj, primaryFullObj);
         property.word = propertyName;
         // property = { word: wordFamily._id, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' }
 
@@ -258,6 +262,7 @@ export const getModalities = ({ desc, modality = 'poprawia' }) => {
         }
     });
 
+    property.points = property.sentenceNumbers?.length || 0;
     property.sentenceNumbers = [...new Set(property.sentenceNumbers)].sort();
     property.usedWords = [...new Set(property.usedWords)].sort();
 

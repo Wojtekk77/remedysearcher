@@ -19,7 +19,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function CustomizedDialogs({ icon, value, dialogText, dialogHeader }) {
+export default function CustomizedDialogs({ icon, value, dangerouslySetText, dialogHeader, dialogBody }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -61,8 +61,9 @@ export default function CustomizedDialogs({ icon, value, dialogText, dialogHeade
         </IconButton>
         <DialogContent dividers>
           <Typography gutterBottom>
-            <p style={{ userSelect: 'none' }} dangerouslySetInnerHTML={{__html: dialogText}}></p>
+            <p style={{ userSelect: 'none' }} dangerouslySetInnerHTML={{__html: dangerouslySetText}}></p>
           </Typography>
+          {dialogBody}
           {/* <Typography gutterBottom>
             Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
             Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.

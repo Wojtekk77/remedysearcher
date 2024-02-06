@@ -2,6 +2,7 @@ import { Schema, model, models } from 'mongoose';
 
 const PolishWordArraySchema = new Schema({
   variations: { type: [String] },
+  representativeWord: { type: String },
   // descriptions: { type: [Schema.Types.ObjectId] },
   hasDescReference: { type: Boolean },
   destroyed: { type: Boolean },

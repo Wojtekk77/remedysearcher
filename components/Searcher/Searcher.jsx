@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import RemedySearchResultCardList from "./RemedySearchResultCardList";
 import { DataGrid } from '@mui/x-data-grid';
 import RemedySearchResultCard from "./RemedySearchResultCard";
@@ -78,8 +78,44 @@ const Searcher = () => {
     }
   };
 
+  const setDescCommWord = async (e) => {
+    setIsSubmitting(true);
+    e.preventDefault();
+    try {
+      let response = await fetch("/api/scripts", {
+        method: "POST",
+        body: JSON.stringify({
+          mind: searchProps.mind,
+        }),
+      });
+      response = await response.json();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const markDescCommWord = useCallback(async (dcwId, isUseful) => {
+    console.log(dcwId, 'dcwId');
+    try {
+      let response = await fetch("/api/descCommWords", {
+        method: "POST",
+        body: JSON.stringify({
+          id: dcwId,
+          isUseful,
+        }),
+      });
+      response = await response.json();
+    } catch (error) {
+      console.log(error);
+    } finally {
+
+    }
+  }, []);
+
   useEffect(() => {
-		setColumns(createColumns(remedies[0]));
+		setColumns(createColumns(remedies[0], markDescCommWord));
 	}, [remedies]);
 
 

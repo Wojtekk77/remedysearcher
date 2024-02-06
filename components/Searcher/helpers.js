@@ -10,7 +10,7 @@
 // Using renderCell, requires paying attention to the following points. If the type of the value returned by valueGetter does not correspond to the column's type, you should:
 import DOMPurify from 'dompurify';
 
-import CustomizedDialogs from '@components/Dialog';
+import CustomizedDialogs from '@components/Dialogs/Dialog';
 import {
 	FaBeer,
 	FaBrain,
@@ -22,11 +22,12 @@ import {
     SquareCaretDown,
     FaExternalLinkAlt
 } from 'react-icons/fa';
+import { Button } from '@mui/material';
 
 
 // handle sorting by providing sortComparator to the column.
 // set a valueFormatter providing a representation for the value to be used when exporting the data.
-export const createColumns = (remedy) => {
+export const createColumns = (remedy, markDescCommWord) => {
 	// {
 	// 		żółć3: { remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' }
 	// }
@@ -43,8 +44,8 @@ export const createColumns = (remedy) => {
 
 	Object.entries(remedy || {})?.forEach(([key, value], i) => {
 		// key = 'żółć',
-		// value = { word: 'żółć', usedWords: [żółć, żółci, żółcią], description: 'text', type: 'mind' }
-		if (typeof value !== 'object') { // totalPoints and remedyName will be taken differently
+		// value = { word: 'żółć', usedWords: [żółć, żółci, żółcią], description: 'text', type: 'mind', descCommonWords: [] }
+		if (typeof value !== 'object' || key === 'Objawy kluczowe') { // totalPoints and remedyName will be taken differently
 			return;
 		}
 		columns.push({
@@ -55,10 +56,10 @@ export const createColumns = (remedy) => {
             renderCell: ({ row }) => {
                 return (
                     <div className='flex flex-row cursor-pointer'>
-                        <CustomizedDialogs 
+                        <CustomizedDialogs
                             icon={<FaExternalLinkAlt className='mt-0.5 ml-2' />}
-                            value={row[key]?.sentenceNumbers?.length}
-                            dialogText={DOMPurify.sanitize(row[key]?.description)}
+                            value={row[key]?.points}
+                            dangerouslySetText={DOMPurify.sanitize(row[key]?.description)}
                             dialogHeader={`${row[key]?.remedyName}: ${key}`}
                         />
                     </div>
@@ -85,13 +86,47 @@ export const createColumns = (remedy) => {
                 return <div className="break-normal leading-6">{key}</div>
             },
 		})
-	})
+	});
+	columns.push({
+        key: 'commDescWord',
+        id: 'commDescWord',
+        width: 140,
+        renderCell: ({ row }) => {
+            // console.log(props, 'props');
+            const keySyndroms = row['Objawy kluczowe'];
+            const reactElement = keySyndroms.descCommonWords
+                .map(dcw => ({text: `${dcw.points}: ${dcw.words.join(', ')}`, dcw }) ).map(i => {
+                        return (
+                            <div>
+                                <Button style={{ color: 'green' }} onClick={() => markDescCommWord(i.dcw._id, true)}>OK</Button>
+                                <Button style={{ color: 'red' }} onClick={() => markDescCommWord(i.dcw._id, false )}>Zbędne</Button>
+                                <span style={{ color: i.dcw?.useful ? 'green' : 'red '}}>{i.text}</span>
+                            </div>
+                        );
+                    });
+            // const reactElement = <p>{text.join('\n')}<br /></p>
+            // console.log(reactElement, 'reactElement')
+            // console.log(keySyndroms)
+            return (
+                <div className='flex flex-row cursor-pointer'>
+                    <CustomizedDialogs
+                        icon={<FaExternalLinkAlt className='mt-0.5 ml-2' />}
+                        // value={row[key]?.points}
+                        dialogBody={reactElement}
+                        dialogHeader="Objawy kluczowe"
+                    />
+                </div>
 
+            )
+        },
+        headerName: 'Objawy kluczowe',
+	});
 	columns.push({
         key: 'totalPoints',
         id: 'totalPoints',
         field: 'totalPoints',
         headerName: 'Suma pkt',
-	})
+	});
+
 	return columns;
 }
