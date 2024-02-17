@@ -60,6 +60,7 @@ export const POST = async (request) => {
                         day: { $dayOfMonth: "$createdAt" }
                     },
                     count: { $sum: 1 },
+                    results: { $push: "$results" },
                     // documents: { $push: "$$ROOT" } // Optional: If you want to include the full documents in the result
                     queries: { $push: '$query' },
                 }

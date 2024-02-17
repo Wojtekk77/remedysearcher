@@ -10,7 +10,9 @@ export const POST = async (request) => {
 
 try {
     await connectToDB();
-    await DescriptionCommonWords.updateOne({ _id: new mongoose.Types.ObjectId(id) }, { $set: { useful: isUseful } });
+    // await DescriptionCommonWords.updateOne({ _id: new mongoose.Types.ObjectId(id) }, { $set: { useful: isUseful } });
+    const descCommWord = await DescriptionCommonWords.findById(new mongoose.Types.ObjectId(id));
+    await DescriptionCommonWords.updateMany({ polishWordArray: descCommWord.polishWordArray }, { $set: { useful: isUseful } });
     // ęę dodaj jeszcze logike, ze jak słowo wywalicz w jednym remedium to we wszystkich innych również
     let endTime = new Date(); 
     // console.log(`${endTime.getTime() - startTime.getTime()}ms: Total Time`);

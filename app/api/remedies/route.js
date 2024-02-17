@@ -17,23 +17,15 @@ try {
  
     let endTimeWordsFamilies = new Date(); 
 
-    if (!rawWordsFamilies.length) {
-        await Statistics.create({ user: userId  ? new mongoose.Types.ObjectId(userId) : undefined, query: mind, results: 0 });
-        return new Response(JSON.stringify({
-            remedies: [{ totalPoints: 0, remedyName: 'Nie znaloziono remediów', id: 'Nie znaleziono remediów' }],
-        }), { status: 200 })
-    }
-
-    console.log(`${endTimeWordsFamilies.getTime() - startTimewordsFamilies.getTime()}ms = get Words Families Time`);
-
     const query = { '$and': [] };
     const allWords = [];
     const wordsFamilies = [];
     const additionalFullObj = {};
     const primaryFullObj = {};
+    const existedWords = [];
 
     for (const wordFamily of rawWordsFamilies) {
-
+        existedWords.push(wordFamily._id);
         wordFamily.variations = wordFamily.variations.filter(word => word !== 'się');
         query['$and'].push({ words: { $in: wordFamily.variations }});
         allWords.push(...wordFamily.variations);
@@ -60,8 +52,27 @@ try {
                 })
             })
         }
-
     }
+
+    // find words that does NOT exists in DB
+    const notExistedWords = [...searchWordsArray, ...additionalWordsArr].filter(searchedWord => !existedWords.includes(searchedWord)) || [];
+
+    console.log(`${endTimeWordsFamilies.getTime() - startTimewordsFamilies.getTime()}ms = get Words Families Time`);
+
+    if (existedWords.length === 0) {
+        return new Response(JSON.stringify({
+            remedies: [],
+            warning: {
+                notExistedWordsMessage: 'Wszystkie słowa których wyszukujesz nie istnieją w bazie! Sprawdź pisownię lub użyj synonimów i wyszukaj jeszcze raz.',
+                notExistedWords,
+            },
+        }), { status: 200 })
+    }
+
+
+
+
+
 
     startTimewordsFamilies = new Date(); 
     const descs = await Description.aggregate([
@@ -70,7 +81,7 @@ try {
             $match: query,
         },
         {
-            $limit: 50,
+            $limit: 30,
         },
         // {
         //     $lookup: {
@@ -90,7 +101,8 @@ try {
                        { $expr:
                           { $and:
                              [
-                               { $eq: [ "$description",  "$$descId" ] },
+                               { $eq: [ "$description", "$$descId" ] },
+                               { $ne: [ "$useful", false ] },
                             //    { $gte: [ "$instock", "$$order_qty" ] }
                              ]
                           }
@@ -103,11 +115,12 @@ try {
                  as: "descCommonWords"
                }
         },
-        {
-            $match: {
-                'descCommonWords.useful': { $ne: false },
-            }
-        },
+        // ponizszy match eleiminuje cały lek! - dobre do testowania
+        // {
+        //     $match: {
+        //         'descCommonWords.useful': { $ne: false },
+        //     }
+        // },
         {
             $project: {
                 _id: 1,
@@ -120,14 +133,18 @@ try {
         },
     ])
 
+
     endTimeWordsFamilies = new Date(); 
     console.log(`${endTimeWordsFamilies.getTime() - startTimewordsFamilies.getTime()}ms Description.aggregate`);
 
     const result = {};
     descs.forEach(desc => {
+
         desc.wordSentences = JSON.parse(desc.wordSentencesAsText);
+
         // ęę tutaj nie bedziemy chieli przekazac rawWordFamilies a wordsFamilies, gdzie _id = ból_gardła, ból_slowo_slowo2
         const propertiesObj = getDescProperties(desc, wordsFamilies, additionalFullObj, primaryFullObj);
+
         //escape early if one of 'properties' has empty sentence array
         if (Object.values(propertiesObj).some(obj => obj.sentenceNumbers?.length === 0)) {
             return;
@@ -137,9 +154,10 @@ try {
         Object.values(propertiesObj).forEach(obj => {
             totalPoints += obj.points || 0;
         });
-        result[desc.remedyName] = { ...propertiesObj, totalPoints, remedyName: desc.remedyName };
-    });
 
+        result[desc.remedyName] = { ...propertiesObj, totalPoints, remedyName: desc.remedyName };
+
+    });
     const savedPoint = Object.values(result).sort((a , b) => b.totalPoints - a.totalPoints).slice(9,10);
 
     Object.entries(result).forEach(([remedyName, valueObj], i) => {
@@ -173,10 +191,44 @@ try {
     // [{ totalPoints, remedyName, [word]: { word, 'krew', remedyId, remedyName, sentenceNumbers: [], usedWords: [], description: '' } }]
     await Statistics.create({ user: userId  ? new mongoose.Types.ObjectId(userId) : undefined, query: mind, results: arrOfRemedies.length });
     const endTime = new Date(); 
+
+    let notExistedWordsMessage = '';
+    if (notExistedWords.length) {
+        if (notExistedWords.length === 1) {
+            notExistedWordsMessage = 'Pominięte słowo - słowo którego szukasz nie istnieje w naszym słowniku. Zobacz czy jest napisane poprawnie oraz czy zawiera polskie znaki.';
+        }
+        else {
+            notExistedWordsMessage = 'Pominięte słowa - słowa których szukasz nie istnieją w naszym słowniku. Zobacz czy są napisane poprawnie oraz czy zawierają polskie znaki.';
+        }
+    }
+    let notInMMMessage = '';
+    if (!arrOfRemedies?.length) {
+        if (existedWords.length === 1) {
+            notInMMMessage = 'Słowo nie występuje w Materii Medica. Użyj synonimu. Przykładowo "zatkany nos" zamnień na "nieżyt nosa".';
+        }
+        else {
+            notInMMMessage = 'Kombinacja słów nie występuje w jednym leku z Materii Medica. Usuń któreś ze słów i wyszukaj jeszcze raz.';
+        }
+    }
+
+    let manyRemedies = '';
+    if (descs.length >= 30) {
+        manyRemedies = 'Więcej niż 30 remediów pasuje do Twojego wyszukiwania, wyświetliliśmy tylko około 10 z nich. Dodaj słowa kluczowe aby zawęzić wyszukiwanie :)';
+    }
+
     console.log(`${endTime.getTime() - startTime.getTime()}ms: Total Time`);
-    // res.json({ remedies: result });
-    return new Response(JSON.stringify({ remedies: arrOfRemedies }), { status: 200 })
+
+    return new Response(JSON.stringify({
+        remedies: arrOfRemedies || [],
+        warning: {
+            notExistedWordsMessage,
+            notExistedWords,
+            notInMMMessage,
+            manyRemedies,
+            notInMMWords: arrOfRemedies.length === 0 ? existedWords : null,
+        },
+    }), { status: 200 })
     } catch (error) {
-        return new Response("Failed to create a new comment", { status: 500 });
+        return new Response("Failed to get remedies", { status: 500 });
     }
 }

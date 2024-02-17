@@ -27,7 +27,7 @@ import { Button } from '@mui/material';
 
 // handle sorting by providing sortComparator to the column.
 // set a valueFormatter providing a representation for the value to be used when exporting the data.
-export const createColumns = (remedy, markDescCommWord) => {
+export const createColumns = (remedy, markDescCommWord, user) => {
 	// {
 	// 		żółć3: { remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' }
 	// }
@@ -89,37 +89,46 @@ export const createColumns = (remedy, markDescCommWord) => {
 	});
 	columns.push({
         key: 'commDescWord',
-        id: 'commDescWord',
-        width: 140,
+        id: 'commDescWordId',
+        field: 'commDescWord',
+        headerName: 'Objawy kluczowe',
+        width: 300,
         renderCell: ({ row }) => {
-            // console.log(props, 'props');
             const keySyndroms = row['Objawy kluczowe'];
-            const reactElement = keySyndroms.descCommonWords
-                .map(dcw => ({text: `${dcw.points}: ${dcw.words.join(', ')}`, dcw }) ).map(i => {
+            const firstThreeWords = keySyndroms?.descCommonWords.slice(0, 4).map(dcw => dcw.words[0]).join(', ')
+            const reactElement = keySyndroms?.descCommonWords
+                .map(dcw => ({ text: `${dcw.points}: ${dcw.words.join(', ')}`, dcw }) )
+                    .map(i => {
                         return (
-                            <div>
-                                <Button style={{ color: 'green' }} onClick={() => markDescCommWord(i.dcw._id, true)}>OK</Button>
-                                <Button style={{ color: 'red' }} onClick={() => markDescCommWord(i.dcw._id, false )}>Zbędne</Button>
-                                <span style={{ color: i.dcw?.useful ? 'green' : 'red '}}>{i.text}</span>
+                            <div key={`${i.dcw?._id}`}>
+                                {
+                                    user?.isAdmin && (
+                                        <>
+                                            <Button style={{ color: 'green' }} onClick={() => markDescCommWord(i.dcw._id, true)}>OK</Button>
+                                            <Button style={{ color: 'red' }} onClick={() => markDescCommWord(i.dcw._id, false )}>Zbędne</Button>
+                                        </>
+                                    )
+                                }
+                                <span style={{ color: i.dcw?.useful ? 'green' : i.dcw?.useful === false ? 'red' : 'grey' }}>{i.text}</span>
                             </div>
                         );
                     });
-            // const reactElement = <p>{text.join('\n')}<br /></p>
-            // console.log(reactElement, 'reactElement')
-            // console.log(keySyndroms)
             return (
                 <div className='flex flex-row cursor-pointer'>
-                    <CustomizedDialogs
-                        icon={<FaExternalLinkAlt className='mt-0.5 ml-2' />}
-                        // value={row[key]?.points}
-                        dialogBody={reactElement}
-                        dialogHeader="Objawy kluczowe"
-                    />
+                    <div className='flex flex-row cursor-pointer'>
+                        <CustomizedDialogs
+                            icon={<FaExternalLinkAlt className='mt-0.5 ml-2' />}
+                            value={firstThreeWords} // w przyszlosci moze kilka pierwszych slow kluczowych?
+                            // dangerouslySetText={DOMPurify.sanitize(reactElement)}
+                            dialogBody={<div>{reactElement}</div>}
+
+                            dialogHeader={`Objawy kluczowe: ${row.remedyName}`}
+                        />
+                    </div>
                 </div>
 
             )
         },
-        headerName: 'Objawy kluczowe',
 	});
 	columns.push({
         key: 'totalPoints',

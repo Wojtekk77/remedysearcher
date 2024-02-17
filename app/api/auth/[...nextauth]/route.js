@@ -4,8 +4,8 @@ import GoogleProvider from 'next-auth/providers/google';
 import User from '@models/user';
 import { connectToDB } from '@utils/database';
 
-console.log('clientId:', process.env.GOOGLE_ID,
-  'clientSecret:', process.env.GOOGLE_CLIENT_SECRET)
+// console.log('clientId:', process.env.GOOGLE_ID,
+//   'clientSecret:', process.env.GOOGLE_CLIENT_SECRET)
 
 const handler = NextAuth({
   providers: [
@@ -30,7 +30,7 @@ const handler = NextAuth({
 
         // check if user already exists
         const userExists = await User.findOne({ email: profile.email });
-        console.log(userExists, 'userExists')
+        // console.log(userExists, 'userExists')
         // if not, create a new document and save user in MongoDB
         if (!userExists) {
           await User.create({

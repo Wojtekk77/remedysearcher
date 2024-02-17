@@ -3,27 +3,11 @@
 import { useState, useEffect, useCallback } from "react";
 import RemedySearchResultCardList from "./RemedySearchResultCardList";
 import { DataGrid } from '@mui/x-data-grid';
-import RemedySearchResultCard from "./RemedySearchResultCard";
 import { createColumns } from './helpers';
-import useWindowDimensions from '@hooks/useWindowDimensions';
 import { ClientOnly } from '@components/ClientOnly';
 import { isMobile } from 'react-device-detect';
 import { useSession } from 'next-auth/react';
-
-const rows = [
-    { id: 1, col1: 'Hello', col2: 'World' },
-    { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
-    { id: 3, col1: 'MUI', col2: 'is Amazing', col3: { name: 'inside of obj' } },
-];
-
-const columns = [
-    { field: 'col1', headerName: 'Column 1', width: 150 },
-    { field: 'col2', headerName: 'Column 2', width: 150, renderCell: ({ row }) => (<p>{row.col2}</p>), },
-    { field: 'col3', headerName: 'Custom column 3', width: 150, valueGetter: (params) => {
-      console.log(params);
-      return `${params.row.col3?.name}_my ui`;
-    }, },
-];
+import { FaExclamationTriangle } from 'react-icons/fa';
 
 
 const Searcher = () => {
@@ -32,8 +16,10 @@ const Searcher = () => {
   const { data: session } = useSession();
   // Search states
   const [remedies, setRemedies] = useState([]);
+  const [warning, setWarning] = useState({});
   const [searchProps, setSearchProps] = useState({ mind: "", general: "", specyfic: "", positiveModalities: "", negativeModalities: "" });
   const [submitting, setIsSubmitting] = useState(false);
+  const [scriptSubmitting, setScripetSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     setIsSubmitting(true);
@@ -53,6 +39,7 @@ const Searcher = () => {
       });
       response = await response.json();
       setRemedies(response.remedies);
+      setWarning(response.warning);
     } catch (error) {
       console.log(error);
     } finally {
@@ -61,43 +48,22 @@ const Searcher = () => {
   };
 
   const handleScript = async (e) => {
-    setIsSubmitting(true);
+    setScripetSubmitting(true);
     e.preventDefault();
     try {
       let response = await fetch("/api/scripts", {
         method: "POST",
-        body: JSON.stringify({
-          mind: searchProps.mind,
-        }),
+        body: JSON.stringify({}),
       });
       response = await response.json();
     } catch (error) {
       console.log(error);
     } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const setDescCommWord = async (e) => {
-    setIsSubmitting(true);
-    e.preventDefault();
-    try {
-      let response = await fetch("/api/scripts", {
-        method: "POST",
-        body: JSON.stringify({
-          mind: searchProps.mind,
-        }),
-      });
-      response = await response.json();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false);
+      setScripetSubmitting(false);
     }
   };
 
   const markDescCommWord = useCallback(async (dcwId, isUseful) => {
-    console.log(dcwId, 'dcwId');
     try {
       let response = await fetch("/api/descCommWords", {
         method: "POST",
@@ -115,7 +81,7 @@ const Searcher = () => {
   }, []);
 
   useEffect(() => {
-		setColumns(createColumns(remedies[0], markDescCommWord));
+		setColumns(createColumns(remedies[0], markDescCommWord, session?.user));
 	}, [remedies]);
 
 
@@ -142,6 +108,40 @@ const Searcher = () => {
 
       {
         <div>
+            {
+              warning.manyRemedies && (
+                <div className='alert-background flex-column' style={{ marginBottom: '15px' }}>
+                  <div className='text-sm text-gray-900 flex text-center' style={{ alignItems: 'center'}}>
+                    <div className='mr-5'><FaExclamationTriangle/></div> {warning.manyRemedies}
+                  </div>
+                </div>
+              )
+            }
+            {
+              warning.notExistedWordsMessage && (
+
+                <div className='alert-background flex-column' style={{ marginBottom: '15px' }}>
+                  <div className='text-lg text-gray-900 flex' style={{ alignItems: 'center'}}>
+                    <FaExclamationTriangle />
+                    { warning.notExistedWordsMessage && <p className='text-center pl-2'>{warning.notExistedWords.join(', ')}</p> }
+                  </div>
+                  <p className='text-sm text-gray-600'>{warning.notExistedWordsMessage}</p>
+                </div>
+              )
+            }
+            
+            {
+              warning.notInMMMessage && (
+                <div className='alert-background flex-column'>
+                  <div className='text-lg text-gray-900 flex' style={{ alignItems: 'center'}}>
+                    <FaExclamationTriangle />
+                    { warning.notInMMMessage && <p className='text-center pl-2'>{warning.notInMMWords.join(', ')}</p> }
+                  </div>
+                  <p className='text-sm text-gray-600'>{warning.notInMMMessage}</p>
+                </div>
+              )
+            }
+          
           <ClientOnly>
             {
               remedies?.length ? (
@@ -168,11 +168,11 @@ const Searcher = () => {
 
         {/* <button
           type='submit'
-          disabled={submitting}
+          disabled={scriptSubmitting}
           onClick={handleScript}
           className='mt-5 px-7 py-2 text-sm bg-primary-orange rounded-full text-white'
         >
-          {submitting ? `Czekanie na skrypt...` : 'Opdal skrypt'}
+          {scriptSubmitting ? `Czekanie na skrypt...` : 'Opdal skrypt'}
         </button> */}
 
     </section>

@@ -60,19 +60,8 @@ export default function CustomizedDialogs({ icon, value, dangerouslySetText, dia
           {/* <CloseIcon /> */}
         </IconButton>
         <DialogContent dividers>
-          <Typography gutterBottom>
-            <p style={{ userSelect: 'none' }} dangerouslySetInnerHTML={{__html: dangerouslySetText}}></p>
-          </Typography>
+          <div style={{ userSelect: 'none' }} dangerouslySetInnerHTML={{__html: dangerouslySetText}}></div>
           {dialogBody}
-          {/* <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus
-            magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec
-            ullamcorper nulla non metus auctor fringilla.
-          </Typography> */}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose}>

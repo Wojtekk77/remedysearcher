@@ -171,6 +171,10 @@ export const getWordFamilyProperies = (desc, wordFamily, additionalFullObj, prim
     if (wordFamily.additionalWords?.length) {
 
         wordFamily.additionalWords.forEach((additionalWordName) => {
+            // skip the words like "z", "bo"
+            if (additionalWordName.length <= 2 && additionalWordName !== 'lub') {
+                return;
+            }
 
             const additionalPorp = { word: additionalWordName, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' };
             // additionalWordFamily = { _id: 'żółć', variations: [żółć1, żółć2] }
