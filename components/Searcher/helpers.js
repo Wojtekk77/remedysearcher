@@ -117,7 +117,7 @@ export const createColumns = (remedy, markDescCommWord, user) => {
         width: 300, 
         renderCell: ({ row }) => {
             const keySyndroms = row['Objawy kluczowe'];
-            const firstThreeWords = getThreeFirstWordsFromDescCommWords(keySyndroms?.descCommonWords, 4)
+            const firstThreeWords = getFirstsWordsFromDescCommWords(keySyndroms?.descCommonWords, 4)
             const reactElement = getDescCommWordsDialogBody({ descCommonWords: keySyndroms?.descCommonWords, user })
             return (
                 <div className='flex flex-row cursor-pointer'>
