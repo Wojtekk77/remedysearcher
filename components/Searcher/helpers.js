@@ -24,7 +24,29 @@ import {
 } from 'react-icons/fa';
 import { Button } from '@mui/material';
 
+export const getDescCommWordsDialogBody = ({ descCommonWords, user }) => {
+    const reactElement = descCommonWords.map(dcw => ({ text: `${dcw.points}: ${dcw.words.join(', ')}`, dcw }) )
+            .map(i => {
+                return (
+                    <div key={`${i.dcw?._id}`}>
+                        {
+                            user?.isAdmin && (
+                                <>
+                                    <Button style={{ color: 'green' }} onClick={() => markDescCommWord(i.dcw._id, true)}>OK</Button>
+                                    <Button style={{ color: 'red' }} onClick={() => markDescCommWord(i.dcw._id, false )}>Zbędne</Button>
+                                </>
+                            )
+                        }
+                        <span style={{ color: i.dcw?.useful ? 'green' : i.dcw?.useful === false ? 'red' : 'grey' }}>{i.text}</span>
+                    </div>
+                );
+            });
+    return reactElement;
+}
 
+export const getFirstsWordsFromDescCommWords = (descCommonWords, numberOfWords = 4) => {
+    return descCommonWords.slice(0, numberOfWords).map(dcw => dcw.words[0]).join(', ');
+}
 // handle sorting by providing sortComparator to the column.
 // set a valueFormatter providing a representation for the value to be used when exporting the data.
 export const createColumns = (remedy, markDescCommWord, user) => {
@@ -92,27 +114,11 @@ export const createColumns = (remedy, markDescCommWord, user) => {
         id: 'commDescWordId',
         field: 'commDescWord',
         headerName: 'Objawy kluczowe',
-        width: 300,
+        width: 300, 
         renderCell: ({ row }) => {
             const keySyndroms = row['Objawy kluczowe'];
-            const firstThreeWords = keySyndroms?.descCommonWords.slice(0, 4).map(dcw => dcw.words[0]).join(', ')
-            const reactElement = keySyndroms?.descCommonWords
-                .map(dcw => ({ text: `${dcw.points}: ${dcw.words.join(', ')}`, dcw }) )
-                    .map(i => {
-                        return (
-                            <div key={`${i.dcw?._id}`}>
-                                {
-                                    user?.isAdmin && (
-                                        <>
-                                            <Button style={{ color: 'green' }} onClick={() => markDescCommWord(i.dcw._id, true)}>OK</Button>
-                                            <Button style={{ color: 'red' }} onClick={() => markDescCommWord(i.dcw._id, false )}>Zbędne</Button>
-                                        </>
-                                    )
-                                }
-                                <span style={{ color: i.dcw?.useful ? 'green' : i.dcw?.useful === false ? 'red' : 'grey' }}>{i.text}</span>
-                            </div>
-                        );
-                    });
+            const firstThreeWords = getThreeFirstWordsFromDescCommWords(keySyndroms?.descCommonWords, 4)
+            const reactElement = getDescCommWordsDialogBody({ descCommonWords: keySyndroms?.descCommonWords, user })
             return (
                 <div className='flex flex-row cursor-pointer'>
                     <div className='flex flex-row cursor-pointer'>

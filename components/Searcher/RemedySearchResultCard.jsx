@@ -14,34 +14,58 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from 'react-icons/fa';
+import { getDescCommWordsDialogBody, getFirstsWordsFromDescCommWords } from './helpers';
 
-const RemedyMobilePropsExpandedDesc = ({ remedyValue }) => {
+const RemedyMobilePropsExpandedDesc = ({ word, points, description }) => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
-    <div key={`${remedyValue.remedyName}_${remedyValue.word}`} >
+    <div>
       <button {...getToggleProps()} className='justify-between w-full'>
         {isExpanded 
-          ? <div className='flex justify-between items-start gap-6'>{`${remedyValue.word}: ${remedyValue.sentenceNumbers?.length}`}<FaChevronUp style={{marginTop: 5}} /></div>
-          : <div className='flex justify-between items-start gap-6'>{`${remedyValue.word}: ${remedyValue.sentenceNumbers?.length}`}<FaChevronDown style={{marginTop: 5}} /></div>
+          ? <div className='flex justify-between items-start gap-6'>{`${word}: ${points}`}<FaChevronUp style={{marginTop: 5}} /></div>
+          : <div className='flex justify-between items-start gap-6'>{`${word}: ${points}`}<FaChevronDown style={{marginTop: 5}} /></div>
         }
       </button>
       <section {...getCollapseProps()}>
         {
-          <div {...getToggleProps()} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(remedyValue.description) }} />
+          <div {...getToggleProps()} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }} />
         }
       </section>
     </div>
   )
 };
 
-const RemedyMobileProps = ({ remedy }) => {
+const RemedyMobileProps = ({ remedy, user }) => {
   const remedyProps = Object.values(remedy).map(remedyValue => {
-    if (typeof remedyValue !== 'object') {
+    if (typeof remedyValue !== 'object' && remedyValue.descCommonWords?.length) {
+      // const words = getFirstsWordsFromDescCommWords(remedyValue.descCommonWords);
+      // const expandBody = getDescCommWordsDialogBody({ descCommonWords: remedyValue.descCommonWords, user });
+      // return (
+      //   <RemedyMobilePropsExpandedDesc
+      //     key={`${remedyValue.word}_${remedyValue.remedyName}_${remedyValue.descCommonWords[0]?._id}`}
+      //     remedyValue={remedyValue}
+      //     word="Słowa kluczowe"
+      //     points={words}
+      //     description={expandBody}
+      //   />
+      // )
       return null;
     }
-    return <RemedyMobilePropsExpandedDesc key={`${remedyValue.word}_${remedyValue.remedyName}`} remedyValue={remedyValue} />
+    if (typeof remedyValue !== 'object' || !remedyValue.description) {
+      return null;
+    }
+    return (
+      <RemedyMobilePropsExpandedDesc
+        key={`${remedyValue.word}_${remedyValue.remedyName}`}
+        remedyValue={remedyValue}
+        word={remedyValue.word}
+        points={remedyValue.sentenceNumbers?.length}
+        description={remedyValue.description}
+      />
+    )
   });
+  remedyProps.push()
   return <div>{remedyProps}</div>
 }
 
@@ -82,7 +106,7 @@ const RemedySearchResultCard = ({ remedy, first, last }) => {
               </h3>
             </div>
             <div>
-              <RemedyMobileProps remedy={remedy} />
+              <RemedyMobileProps remedy={remedy} user={session?.user} />
               {/* <p className='font-inter text-sm text-gray-500'>
                 jakis tekst inter
               </p> */}
