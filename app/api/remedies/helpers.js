@@ -172,13 +172,13 @@ export const getWordFamilyProperies = (desc, wordFamily, additionalFullObj, prim
 
         wordFamily.additionalWords.forEach((additionalWordName) => {
             // skip the words like "z", "bo"
-            if (additionalWordName.length <= 2 && additionalWordName !== 'lub') {
+            if (additionalWordName.length <= 2 || additionalWordName === 'lub') {
                 return;
             }
 
             const additionalPorp = { word: additionalWordName, remedyId: desc.remedy, remedyName: desc.remedyName, sentenceNumbers: [], usedWords: [], description: '' };
             // additionalWordFamily = { _id: 'żółć', variations: [żółć1, żółć2] }
-            additionalFullObj[additionalWordName].variations.forEach(variationWord => {
+            additionalFullObj[additionalWordName]?.variations?.forEach(variationWord => {
                 if (desc.wordSentences[variationWord]?.length) { // if description uses one of variationWords
                     additionalPorp.sentenceNumbers.push(...desc.wordSentences[variationWord]); // assign number of sentences where variationWord exists (word: [1,2,3,4])
                     additionalPorp.usedWords.push(variationWord);

@@ -55,11 +55,11 @@ try {
     }
 
     // find words that does NOT exists in DB
-    const notExistedWords = [...searchWordsArray, ...additionalWordsArr].filter(searchedWord => !existedWords.includes(searchedWord)) || [];
+    const notExistedWords = [...searchWordsArray, ...additionalWordsArr].filter(searchedWord => !existedWords.includes(searchedWord) && searchedWord.length > 2) || [];
 
     console.log(`${endTimeWordsFamilies.getTime() - startTimewordsFamilies.getTime()}ms = get Words Families Time`);
 
-    if (existedWords.length === 0) {
+    if (!existedWords.length) {
         return new Response(JSON.stringify({
             remedies: [],
             warning: {
@@ -69,6 +69,15 @@ try {
         }), { status: 200 })
     }
 
+    if (!wordsFamilies.length) {
+        return new Response(JSON.stringify({
+            remedies: [],
+            warning: {
+                notExistedWordsMessage: 'Pierwsze słowo którego szukasz nie istnieje w słowniku - popraw je i wyszukaj ponownie :)',
+                notExistedWords,
+            },
+        }), { status: 200 })
+    }
 
 
 
