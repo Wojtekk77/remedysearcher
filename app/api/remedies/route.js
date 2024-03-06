@@ -90,7 +90,7 @@ try {
             $match: query,
         },
         {
-            $limit: 30,
+            $limit: 50,
         },
         // {
         //     $lookup: {
@@ -221,7 +221,7 @@ try {
     }
 
     let manyRemedies = '';
-    if (descs.length >= 30) {
+    if (arrOfRemedies.length >= 30) {
         manyRemedies = 'Więcej niż 30 remediów pasuje do Twojego wyszukiwania, wyświetliliśmy tylko około 10 z nich. Dodaj słowa kluczowe aby zawęzić wyszukiwanie :)';
     }
 
