@@ -8,9 +8,13 @@
   Note: The styles for this gradient grid background is heavily inspired by the creator of this amazing site (https://dub.sh) – all credits go to them! 
 */
 
+
+.body {
+  min-height: 92vh;
+}
+
 .main {
   width: 100vw;
-  min-height: '100vh';
   position: fixed;
   display: flex;
   justify-content: center;
@@ -43,7 +47,7 @@
 
 .gradient {
   height: fit-content;
-  z-index: 3;
+  z-index: -1;
   width: 100%;
   max-width: 1200px;
   background-image: radial-gradient(
@@ -75,7 +79,14 @@
 /* Tailwind Styles */
 
 .app {
-  @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
+  @apply
+  flex
+  items-center
+  flex-col
+  max-w-7xl
+  mx-auto 
+  sm:px-16
+  px-6
 }
 
 .black_btn {
@@ -95,7 +106,11 @@
 }
 
 .head_text {
-  @apply mt-4 text-4xl font-extrabold leading-[1.15] text-black sm:text-4xl;
+  @apply mb-4 text-4xl font-extrabold leading-[1.15] text-black sm:text-4xl;
+}
+
+.head_text_sidebar {
+  @apply text-4xl font-extrabold leading-[1.15] text-black sm:text-4xl;
 }
 
 .orange_gradient {
@@ -111,7 +126,7 @@
 }
 
 .desc {
-  @apply mt-5 text-lg text-gray-600 sm:text-xl max-w-2xl;
+  @apply text-lg text-gray-600 sm:text-xl max-w-2xl;
 }
 
 .search_input {
@@ -132,7 +147,16 @@
 
 /* Feed Component */
 .feed {
-  @apply mt-7 mx-auto w-full max-w-xl flex justify-center items-center flex-col gap-2;
+  @apply
+  mt-7
+  mx-auto
+  w-full
+  max-w-xl
+  flex
+  justify-center
+  items-center
+  flex-col
+  gap-2;
 }
 
 /* Form Component */
@@ -184,3 +208,110 @@
   padding: 10px 10px 10px 10px;
   margin-top: 0px;
 }
+
+.sidebar {
+  width: 230px;
+  height: 80vh;
+  border-right: 1px solid #bbb;
+  box-shadow: 10px 0px 5px #aaa;
+  position: absolute;
+  border-radius: 0px 15px 15px 0px;
+  top: 5vh;
+  background-color:rgba(100, 100, 200, 0.3);
+  padding: 20px 0px 20px 0px;
+  transition: 0.4s ease-in-out;
+  z-index: 99999;
+  /* border-radius: 0px 20px 0px 0px; */
+}
+
+.sidebar:hover {
+  background-color:rgba(100, 100, 200, 0.4);
+  transition: 0.4s ease-in-out;
+}
+
+.aside {
+  @apply hidden lg:block;
+}
+
+.logo {
+  @apply mb-4 text-center;
+}
+
+.sidebar_button {
+  @apply
+  py-3
+  text-sm
+  text-zinc-100
+  ease-in-out duration-200
+  hover:bg-amber-500/50
+  text-sm
+  font-inter
+  flex
+  items-center
+  w-full
+  px-4
+  leading-[1rem];
+}
+
+.sidebarLink {
+  background-color:rgba(100, 100, 200, 0.1);
+}
+
+.list_link {
+  @apply
+  py-3
+  text-sm
+  ease-in-out duration-200
+  text-sm
+  font-inter
+  flex
+  items-center
+  w-full
+  px-4
+  leading-[1rem];
+}
+
+.active {
+  @apply bg-amber-500/30;
+}
+
+.login_image {
+  @apply cursor-pointer;
+}
+
+.box {
+  min-height: calc(100vh - 80px);
+  padding-top: 4rem;
+}
+
+.listItem:before {
+  content:"• ";
+}
+
+.listItem {
+  @apply
+  mb-1
+}
+
+.dosage{
+  @apply
+  mb-6
+}
+
+.clinical_description {
+  @apply
+  mb-6
+}
+
+.formControlLabel {
+  @apply
+  text-sm
+}
+
+.footer {
+  /* clear: both; */
+  position: relative;
+  /* height: 80px;
+  margin-top: -80px; */
+}
+

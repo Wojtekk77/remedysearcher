@@ -40,7 +40,7 @@ const CreateComment = () => {
   return (
     <div className='min-w-full' style={{ minHeight: '73vh' }}>
       <Form
-        type='Kometarz'
+        type='Komentarz'
         headText='Jeżeli masz pomysł jak usprawnić aplikację, opisz go poniżej. Daj też znać jak według Ciebie sprawuje się wyszukiwarka. Twój komentarz jest dla mnie ważny! :)'
         textareaHeadText=''
         tagsHeadText=''

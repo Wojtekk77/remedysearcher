@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 import DescriptionCommonWords from '@models/descriptionCommonWords';
 import { createDescCommWords } from './createDescCommWords';
 import { insertManyDescCommWordsFromLocal } from './insertManyDescCommWordsFromLocal.js';
+import { createNewRemedies } from './createNewRemedies';
+import { createClinicalSyndroms } from './createClinicalSyndroms';
 
 // get the most common word variations from description
 export const POST = async (request) => {
@@ -16,7 +18,9 @@ try {
     await connectToDB();
 
     let startTime = new Date(); 
-	await insertManyDescCommWordsFromLocal();
+	// await insertManyDescCommWordsFromLocal();
+    // await createNewRemedies();
+    await createClinicalSyndroms();
 
     let endTime = new Date(); 
 	

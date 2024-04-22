@@ -3,6 +3,7 @@ import "@styles/globals.css";
 import Nav from "@components/Nav/Nav";
 import Provider from "@components/Provider";
 import Footer from '@components/Footer';
+import SidebarNav from '@components/SidebarNav/SidebarNav';
 
 export const metadata = {
   title: "RemedySearcher",
@@ -11,15 +12,17 @@ export const metadata = {
 
 const RootLayout = ({ children }) => (
   <html lang='pl'>
-    <body>
+    <body className="body">
+    <div className='gradient' />
       <Provider>
-        <div className='main'>
-          <div className='gradient' />
-        </div>
-
-        <main className='app'>
+        <aside className='aside'>
+          <SidebarNav />
+        </aside>
+        <main className='app' >
           <Nav />
-          {children}
+          <div className='box'>
+            {children}
+          </div>
         </main>
         <Footer />
       </Provider>

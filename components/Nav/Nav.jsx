@@ -19,14 +19,14 @@ const Nav = () => {
   }, []);
 
   return (
-    <>
+    <div className="md:hidden">
       <MobileNav providers={providers} />
       {/* <ClientOnly>
-        {
+        { // for now use mobile nav as it works fine on desktop and mobile
           isMobile ? <MobileNav providers={providers} /> : <DesktopNav providers={providers} />
         }
       </ClientOnly> */}
-    </>
+    </div>
   )
 };
 

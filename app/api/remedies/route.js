@@ -54,6 +54,7 @@ try {
         }
     }
 
+    // pozbądź się "additional Words" jeżeli nie istnieje w słowniku
     // find words that does NOT exists in DB
     const notExistedWords = [...searchWordsArray, ...additionalWordsArr].filter(searchedWord => !existedWords.includes(searchedWord) && searchedWord.length > 2) || [];
 
@@ -90,7 +91,7 @@ try {
             $match: query,
         },
         {
-            $limit: 50,
+            $limit: 200,
         },
         // {
         //     $lookup: {
@@ -221,8 +222,8 @@ try {
     }
 
     let manyRemedies = '';
-    if (arrOfRemedies.length >= 30) {
-        manyRemedies = 'Więcej niż 30 remediów pasuje do Twojego wyszukiwania, wyświetliliśmy tylko około 10 z nich. Dodaj słowa kluczowe aby zawęzić wyszukiwanie :)';
+    if (arrOfRemedies.length >= 20) {
+        manyRemedies = 'Więcej niż 20 remediów pasuje do Twojego wyszukiwania, wyświetliliśmy tylko około 10 z nich. Dodaj słowa kluczowe aby zawęzić wyszukiwanie :)';
     }
 
     console.log(`${endTime.getTime() - startTime.getTime()}ms: Total Time`);

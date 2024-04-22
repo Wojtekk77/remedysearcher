@@ -19,8 +19,8 @@ export const createCombinationOfDescCommWords = async () => {
         counter += 1;
 
 		const descCommWords = await DescriptionCommonWords.find({ description: desc._id });
-		console.log(descCommWords.length, desc.remedyName, 'descCommWords.length')
-		console.log('========================================================================')
+		// console.log(descCommWords.length, desc.remedyName, 'descCommWords.length')
+		// console.log('========================================================================')
 		for (let i = 0; i < descCommWords.length - 1; i+=1) {
 			const intersection = getIntersection(descCommWords[i].sentences, descCommWords[i+1].sentences);
 			const wordsIntersection = getIntersection(descCommWords[i].words, descCommWords[i+1].words);
@@ -29,10 +29,10 @@ export const createCombinationOfDescCommWords = async () => {
 				const id = `${descCommWords[i].description.toString()}`;
 				const obj = { description: descCommWords[i].description, sentences: intersection, words: [descCommWords[i].words, descCommWords[i+1].words], descName: descCommWords[i].descName, points: intersection.length };
 				// decsCommWordObj.push({ [id]: {} })
-				console.log(obj.words, obj.points, desc.remedyName)
+				// console.log(obj.words, obj.points, desc.remedyName)
 			}
 		}
-		console.log('zostaw to do momentu az usuniesz "zbędne słowa pojedyncze"')
+		// console.log('zostaw to do momentu az usuniesz "zbędne słowa pojedyncze"')
 		// // console.log('grouped');
 		// let sortedArr = Object.entries(variationsObj).sort((a, b) =>  b[1].points - a[1].points);
 		// // sortedArr = sortedArr.slice(0, 100);

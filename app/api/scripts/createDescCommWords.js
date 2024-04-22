@@ -23,7 +23,7 @@ export const createDescCommWords = async (request) => {
 	for await (const desc of cursor) {
         counter += 1;
 
-		console.log(desc.remedyName)
+		// console.log(desc.remedyName)
 		const variationsObj = {};
 		const wordSentences = JSON.parse(desc.wordSentencesAsText);
 		for (const [word, sentences] of Object.entries(wordSentences)) {

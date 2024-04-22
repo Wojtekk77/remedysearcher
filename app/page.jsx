@@ -18,7 +18,6 @@ const Home = () => (
       Pamiętaj fraza: <strong>krwawienie z nosa</strong> <br/> da Ci inne wyniki niż: <strong>krwawienie, nos </strong> <br />
     </p>
     <p className='font-inter text-sm text-gray-500 mt-4 text-center'>
-      {`Życzę miłego testowania :)`}
     </p>
     <Searcher />
   </section>

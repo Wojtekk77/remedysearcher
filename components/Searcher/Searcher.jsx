@@ -87,7 +87,7 @@ const Searcher = () => {
 
 
   return (
-    <section className='feed'>
+    <div className='feed'>
       <form onSubmit={handleSubmit} className='relative w-full text-center mb-3'>
         <input
           type='text'
@@ -146,15 +146,14 @@ const Searcher = () => {
             {
               remedies?.length ? (
                 !isMobile ? (
-                  <div style={{ width: '100%' }}>
-                    <DataGrid
-                      rows={remedies}
-                      columns={columns}
-                      disableColumnMenu={true}
-                      style={{ minWidth: 800 }}
-                      hideFooter={true}
-                    />
-                  </div>
+                  <DataGrid
+                    rows={remedies}
+                    columns={columns}
+                    disableColumnMenu={true}
+                    style={{ minWidth: 800 }}
+                    hideFooter={true}
+                    autoHeight={true}
+                  />
                 ) : (
                   <RemedySearchResultCardList
                     remedies={remedies}
@@ -172,10 +171,10 @@ const Searcher = () => {
           onClick={handleScript}
           className='mt-5 px-7 py-2 text-sm bg-primary-orange rounded-full text-white'
         >
-          {scriptSubmitting ? `Czekanie na skrypt...` : 'Opdal skrypt'}
+          {scriptSubmitting ? `Czekanie na skrypt...` : 'Odpal skrypt'}
         </button> */}
 
-    </section>
+    </div>
   );
 };
 

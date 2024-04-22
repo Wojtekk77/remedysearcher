@@ -23,6 +23,7 @@ import {
     FaExternalLinkAlt
 } from 'react-icons/fa';
 import { Button } from '@mui/material';
+import { capitalizeFirstLetter } from '@utils';
 
 export const getDescCommWordsDialogBody = ({ descCommonWords, user }) => {
     const reactElement = descCommonWords.map(dcw => ({ text: `${dcw.points}: ${dcw.words.join(', ')}`, dcw }) )
@@ -60,7 +61,7 @@ export const createColumns = (remedy, markDescCommWord, user) => {
 			headerName: 'Nazwa',
 			field: 'remedyName',
             minWidth: 180,
-            // renderCell: ({ row }) => (<p>{row.remedyName}</p>),
+            renderCell: ({ value }) => capitalizeFirstLetter(value),
 		},
 	];
 
