@@ -114,7 +114,7 @@ const SidebarNav = ({}) => {
               <div><FaAngleRight className='text-lg font-light' /></div>
             </Link>
           </li>
-          { !session?.user?.isAdmin && (
+          { session?.user?.isAdmin && (
             <li className={currentPath == '/stats' ? 'active' : ''}>
               <Link href='/stats' className='sidebar_button' >
                 <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
