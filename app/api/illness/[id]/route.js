@@ -32,7 +32,7 @@ export const GET = async (request, { params }) => {
                 }
             },
             {
-                $sort: { 'remedyObj.name': 1 }
+                $sort: { 'remedy.name': 1 }
             },
         ]);
         const illness = await Illness.findById(params.id);

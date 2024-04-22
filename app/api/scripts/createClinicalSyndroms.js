@@ -29,7 +29,7 @@ try {
                         for (let i = 0; i < remedyObj.mainSymptoms.length; i++) {
                             const existingSymptom = await Symptom.findOne({ remedy: remedy._id, description: remedyObj.mainSymptoms[i], illness: illness._id })
                             if (!existingSymptom?._id) {
-                                await Symptom.create({ description: remedyObj.mainSymptoms[i], remedy: remedy._id, illness: illness._id, order: i, isMainSymptop: true })
+                                await Symptom.create({ description: remedyObj.mainSymptoms[i], remedy: remedy._id, illness: illness._id, order: i, isMainSymptom: true })
                             }
                         }
                     }
@@ -38,7 +38,7 @@ try {
                         for (let i = 0; i < remedyObj.confirmingSymptoms.length; i++) {
                             const existingSymptom = await Symptom.findOne({ remedy: remedy._id, description: remedyObj.confirmingSymptoms[i], illness: illness._id })
                             if (!existingSymptom?._id) {
-                                await Symptom.create({ description: remedyObj.confirmingSymptoms[i], remedy: remedy._id, illness: illness._id, order: i, isMainSymptop: false })
+                                await Symptom.create({ description: remedyObj.confirmingSymptoms[i], remedy: remedy._id, illness: illness._id, order: i, isMainSymptom: false })
                             }
                         }
                     }
