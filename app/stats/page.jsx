@@ -37,7 +37,7 @@ const Statistics = () => {
   const XaxisData = statistics?.map(s => `${s._id.year}-${s._id.month}-${s._id.day}`) || [];
   const YaxisSeries = statistics?.map(s => `${s.count}`) || [];
   const YaxisSeriesQueries = statistics?.map(s => (
-    <p style={{ borderBottom: 'solid 1px black'}}>
+    <p key={`${s._id.year}-${s._id.month}-${s._id.day}`} style={{ borderBottom: 'solid 1px black'}}>
       {`${s._id.year}-${s._id.month}-${s._id.day} (${(s.count)}): ${s.queries?.join(', ')}` || ''}
     </p>)
   ) || [];
