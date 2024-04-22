@@ -6,9 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import { GoogleLoginButton } from 'react-social-login-buttons';
-import { isMobile } from 'react-device-detect';
-import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { IconButton } from '@mui/material';
 import { FaAngleRight, FaChartBar, FaExternalLinkAlt, FaPersonBooth, FaRegComments, FaSearch, FaSignOutAlt } from 'react-icons/fa';
 
 
