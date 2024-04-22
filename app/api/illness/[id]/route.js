@@ -18,21 +18,21 @@ export const GET = async (request, { params }) => {
                     from: 'remedies',
                     localField: 'remedy',
                     foreignField: '_id',
-                    as: 'remedy',
+                    as: 'remedyObj',
                 }
             },
             { 
-                $unwind: { path: '$remedy', preserveNullAndEmptyArrays: true },
+                $unwind: { path: '$remedyObj', preserveNullAndEmptyArrays: true },
             },
             {
                 $group: {
-                    _id: '$remedy._id',
+                    _id: '$remedy',
                     symptoms: { $push: { _id: '$_id', description: '$description', order: '$order', isMainSymptom: '$isMainSymptom' } },
-                    remedy: { $max: '$remedy' },
+                    remedy: { $max: '$remedyObj' },
                 }
             },
             {
-                $sort: { 'remedy.name': 1 }
+                $sort: { 'remedyObj.name': 1 }
             },
         ]);
         const illness = await Illness.findById(params.id);

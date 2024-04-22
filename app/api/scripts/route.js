@@ -19,7 +19,7 @@ try {
 
     let startTime = new Date(); 
 	// await insertManyDescCommWordsFromLocal();
-    // await createNewRemedies();
+    await createNewRemedies();
     await createClinicalSyndroms();
 
     let endTime = new Date(); 

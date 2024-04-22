@@ -40,7 +40,7 @@ export const createNewRemedies = async (request) => {
         } 
         
         let endTime = new Date(); 
-        console.log(`Total Time ${endTime.getTime() - startTime.getTime()}ms !`);
+        console.log(`New remedies created! Total Time ${endTime.getTime() - startTime.getTime()}ms !`);
         // res.json({ remedies: result });
         return new Response(JSON.stringify({}), { status: 200 })
     } catch (error) {
