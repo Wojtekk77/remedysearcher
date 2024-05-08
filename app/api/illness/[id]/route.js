@@ -27,14 +27,52 @@ export const GET = async (request, { params }) => {
             {
                 $group: {
                     _id: '$remedy',
-                    symptoms: { $push: { _id: '$_id', description: '$description', order: '$order', isMainSymptom: '$isMainSymptom' } },
+                    mainSymptoms: {
+                        $push: {
+                            $cond:[
+                                { $eq: ['$isMainSymptom', true] },
+                                { _id: '$_id', description: '$description', order: '$order', isMainSymptom: '$isMainSymptom' },
+                                '$$REMOVE' // not push null or undefined to the list
+                            ]
+                        },
+                    },
+                    confirmSymptoms: {
+                        $push: {
+                            $cond:[
+                                { $ne: ['$isMainSymptom', true] },
+                                { _id: '$_id', description: '$description', order: '$order', isMainSymptom: '$isMainSymptom' },
+                                '$$REMOVE' // not push null or undefined to the list
+                            ]
+                        },
+                    },
                     remedy: { $max: '$remedyObj' },
                 }
             },
             {
                 $sort: { 'remedy.name': 1 }
             },
+            // {
+            //     $project: {
+            //         _id: 1,
+            //         remedy:1 ,
+            //         confirmSymptoms: {
+            //             $reduce: {
+            //                 input: '$confirmSymptoms',
+            //                 initialValue: '',
+            //                 in: { $concat: [ '$$value', '$$this' ] }
+            //             }
+            //         },
+            //         mainSymptoms: {
+            //             $reduce: {
+            //                 input: '$mainSymptoms',
+            //                 initialValue: '',
+            //                 in: { $concat: [ '$$value', '$$this' ] }
+            //             }
+            //         }
+            //     }
+            // }
         ]);
+        console.log(remedyWithSymptoms, 'remedyWithSymptoms')
         const illness = await Illness.findById(params.id);
 
         const endTime = new Date(); 

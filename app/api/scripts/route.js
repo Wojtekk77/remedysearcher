@@ -10,6 +10,7 @@ import { createDescCommWords } from './createDescCommWords';
 import { insertManyDescCommWordsFromLocal } from './insertManyDescCommWordsFromLocal.js';
 import { createNewRemedies } from './createNewRemedies';
 import { createClinicalSyndroms } from './createClinicalSyndroms';
+import { convertTextByOpenAI } from './convertTextByOpenAI';
 
 // get the most common word variations from description
 export const POST = async (request) => {
@@ -19,8 +20,9 @@ try {
 
     let startTime = new Date(); 
 	// await insertManyDescCommWordsFromLocal();
-    await createNewRemedies();
-    await createClinicalSyndroms();
+    // await createNewRemedies();
+    // await createClinicalSyndroms();
+    // await convertTextByOpenAI();
 
     let endTime = new Date(); 
 	

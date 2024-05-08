@@ -23,11 +23,11 @@ function createColumns({ customProps }) {
       id: 'mainSyndroms',
       key: 'mainSyndroms',
       headerName: 'Objawy ogólne',
-      field: 'symptoms',
+      field: 'mainSymptoms',
       minWidth: 500,
       renderCell: ({ value }) => {
         
-        const mainSymptoms = <div className="mb-2 mt-2">{value?.filter(s => s.isMainSymptom).map(ms => {
+        const mainSymptoms = <div className="mb-2 mt-2">{value.map(ms => {
           if (ms.description?.length <= 6) {
             return <div className="pl-6">{ms.description}</div>
           }  
@@ -59,9 +59,9 @@ function createColumns({ customProps }) {
       field: 'confirmSymptoms',
       minWidth: 500,
       sortable: false,
-      renderCell: ({ row }) => {
+      renderCell: ({ value }) => {
 
-        const confirmSymptoms = <div className="mb-2 mt-2">{row.symptoms?.filter(s => !s.isMainSymptom).map(ms => {
+        const confirmSymptoms = <div className="mb-2 mt-2">{value.map(ms => {
           
           if (ms.description?.length <= 6) {
             return <div>{ms.description}</div>
