@@ -51,28 +51,7 @@ export const GET = async (request, { params }) => {
             {
                 $sort: { 'remedy.name': 1 }
             },
-            // {
-            //     $project: {
-            //         _id: 1,
-            //         remedy:1 ,
-            //         confirmSymptoms: {
-            //             $reduce: {
-            //                 input: '$confirmSymptoms',
-            //                 initialValue: '',
-            //                 in: { $concat: [ '$$value', '$$this' ] }
-            //             }
-            //         },
-            //         mainSymptoms: {
-            //             $reduce: {
-            //                 input: '$mainSymptoms',
-            //                 initialValue: '',
-            //                 in: { $concat: [ '$$value', '$$this' ] }
-            //             }
-            //         }
-            //     }
-            // }
         ]);
-        console.log(remedyWithSymptoms, 'remedyWithSymptoms')
         const illness = await Illness.findById(params.id);
 
         const endTime = new Date(); 
