@@ -5,110 +5,123 @@ import { useSearchParams } from "next/navigation";
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomToolbar } from '../page';
 import { capitalizeFirstLetter } from '@utils';
-import { Checkbox, FormControlLabel } from '@mui/material';
+import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import { useSession } from 'next-auth/react';
+import FormDialog from '@components/Dialogs/FromDialog';
+
+export const descriptionCell = ({ value, field, AIGeneratedText, customProps }) => {
+  const desc = <div className="mb-2 mt-2">{value.map(ms => {
+      if (ms[field]?.length <= 6 || ms['description']?.length <= 6) {
+        return <div key={`${ms._id}_${field}`} className="pl-6" onClick={() => {customProps?.isAdmin && customProps.openEditDialog({ fieldToUpdate: field, ...ms })}}>{ms[field]}</div>
+      }  
+      return (
+        <div key={`${ms._id}_${field}`} onClick={() => {customProps?.isAdmin && customProps.openEditDialog({ fieldToUpdate: field, ...ms })}}>
+          <FormControlLabel 
+            control={<><Checkbox sx={{ '&.MuiCheckbox-root': { padding: '4px', paddingRight: '8px' }}} /></>}
+            // label={ms.description}
+            label={<p className="formControlLabel">{ms[field]}</p>}
+          />
+          
+        </div>
+      )
+    })
+  }
+  </div>
+  return desc
+}
+
+export const AIKeys = ['id', 'key', 'headerName', 'field'];
+
+const illness = {
+  id: 'illness',
+  key: 'illness',
+  headerName: 'Remedium',
+  field: 'remedy',
+  minWidth: 200,
+  valueGetter: ({ value }) => {
+    return capitalizeFirstLetter(value?.name);
+  },
+};
+
+const getSymptoms = ({ column, field: fieldRaw, headerName, AIGeneratedText, minWidth, customProps }) => {
+
+  const obj = {
+    id: column + (AIGeneratedText || ''),
+    key: column + (AIGeneratedText || ''),
+    headerName,
+    field: column + (AIGeneratedText || ''),
+    minWidth: minWidth || 500,
+    sortable: false,
+    renderCell: ({ row }) => {
+
+      const value = row[column];
+      const field = fieldRaw + (AIGeneratedText || '');
+      
+      return descriptionCell({ value, field, AIGeneratedText, customProps}) 
+  
+      // return mainSymptoms
+      // const link = `/wyszukiwarka-kliniczna/${row._id}`
+      // return  <Link href={link} className='list_link' ><div>{value}</div><div><FaAngleRight className='text-lg font-light' /></div></Link>
+    },
+    
+  };
+
+  return obj;
+
+};
 
 function createColumns({ customProps }) {
+
   return [
-    {
-      id: 'illness',
-      key: 'illness',
-      headerName: 'Remedium',
-      field: 'remedy',
-      minWidth: 200,
-      valueGetter: ({ value }) => {
-        return capitalizeFirstLetter(value?.name);
-      },
-    },
-    {
-      id: 'mainSyndroms',
-      key: 'mainSyndroms',
-      headerName: 'Objawy ogólne',
-      field: 'mainSymptoms',
-      minWidth: 500,
-      renderCell: ({ value }) => {
-        
-        const mainSymptoms = <div className="mb-2 mt-2">{value.map(ms => {
-          if (ms.description?.length <= 6) {
-            return <div className="pl-6">{ms.description}</div>
-          }  
-            return (
-              <div>
-                <FormControlLabel 
-                  key={ms._id}
-                  control={<Checkbox sx={{ '&.MuiCheckbox-root': { padding: '4px', paddingRight: '8px' }}} />}
-                  // label={ms.description}
-                  label={<p className="formControlLabel">{ms.description}</p>}
-                >
-                </FormControlLabel>
-              </div>
-            )
-          })
-        }
-        </div>
-
-        return mainSymptoms
-        // const link = `/wyszukiwarka-kliniczna/${row._id}`
-        // return  <Link href={link} className='list_link' ><div>{value}</div><div><FaAngleRight className='text-lg font-light' /></div></Link>
-      },
-      sortable: false,
-    },
-    {
-      id: 'confirmSyndroms',
-      key: 'confirmSyndroms',
-      headerName: 'Objawy potwierdzające',
-      field: 'confirmSymptoms',
-      minWidth: 500,
-      sortable: false,
-      renderCell: ({ value }) => {
-
-        const confirmSymptoms = <div className="mb-2 mt-2">{value.map(ms => {
-          
-          if (ms.description?.length <= 6) {
-            return <div>{ms.description}</div>
-          }  
-
-          return (
-              <div>
-                <FormControlLabel 
-                  key={ms._id}
-                  control={<Checkbox sx={{ '&.MuiCheckbox-root': { padding: '4px', paddingRight: '8px' }}} />}
-                  // label={ms.description}
-                  label={<p className="formControlLabel">{ms.description}</p>}
-                >
-                </FormControlLabel>
-              </div>
-            )
-          })
-        }
-        </div>
-        return confirmSymptoms
-        // const link = `/wyszukiwarka-kliniczna/${row._id}`
-        // return  <Link href={link} className='list_link' ><div>{value}</div><div><FaAngleRight className='text-lg font-light' /></div></Link>
-      },
-    },
+    illness,
+    getSymptoms({ column: 'mainSymptoms', field: 'description', headerName: 'Objawy ogólne', minWidth: 500, customProps  }),
+    ...(customProps.isAdmin ? [ getSymptoms({ column: 'mainSymptoms', field: 'description', headerName: 'Objawy ogólne AI', minWidth: 100, AIGeneratedText: 'AI', customProps }) ] : []),
+    getSymptoms({ column: 'confirmSymptoms', field: 'description', headerName: 'Objawy potwierdzające', minWidth: 500, customProps  }),
+    ...(customProps.isAdmin ? [ getSymptoms({ column: 'confirmSymptoms', field: 'description', headerName: 'Objawy potwierdzające AI', minWidth: 100, AIGeneratedText: 'AI', customProps }) ] : []),
+    
   ];
 }
 
 const Illness = ({ params }) => {
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.isAdmin;
+
   const searchParams = useSearchParams();
   const userName = searchParams.get("name");
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogData, setDialogData] = useState({});
 
   const [illness, setIllness] = useState({});
   const [remedyWithSymptoms, setRemedyWithSymptoms] = useState([]);
   const [remedyRank, setRemedyRank] = useState({});
 
+
+  const openEditDialog = useCallback((data) => {
+    setDialogOpen(true)
+    setDialogData(data)
+  }, [setDialogOpen])
+
   const updateRemedyRank = useCallback((remedyName, point) => {
     remedyRank[remedyName] += point;
   }, [])
 
-  useEffect(() => {
-    const fetchIllness = async () => {
-      const response = await fetch(`/api/illness/${params?.id}`);
-      const data = await response.json();
+  const fetchIllness = async () => {
+    const response = await fetch(`/api/illness/${params?.id}`);
+    const data = await response.json();
 
-      setIllness(data.illness);
-      setRemedyWithSymptoms(data.remedyWithSymptoms);
-    };
+    setIllness(data.illness);
+    setRemedyWithSymptoms(data.remedyWithSymptoms);
+  };
+
+  useEffect(() => {
+    // const fetchIllness = async () => {
+    //   const response = await fetch(`/api/illness/${params?.id}`);
+    //   const data = await response.json();
+
+    //   setIllness(data.illness);
+    //   setRemedyWithSymptoms(data.remedyWithSymptoms);
+    // };
     
     if (params?.id) fetchIllness();
 
@@ -119,9 +132,12 @@ const Illness = ({ params }) => {
     return createColumns({
       customProps: {
         updateRemedyRank,
+        isAdmin,
+        setDialogOpen,
+        openEditDialog,
       }
     });
-  }, []);
+  }, [isAdmin, updateRemedyRank]);
 
   return (
     <div>
@@ -167,6 +183,7 @@ const Illness = ({ params }) => {
             }}
           />
         </div>
+        { dialogOpen && isAdmin && <FormDialog open={dialogOpen} setOpen={setDialogOpen} data={dialogData} model={'symptoms'} refetchParent={fetchIllness} /> }
     </div>
   );
 };

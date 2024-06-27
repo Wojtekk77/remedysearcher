@@ -31,7 +31,7 @@ export const GET = async (request, { params }) => {
                         $push: {
                             $cond:[
                                 { $eq: ['$isMainSymptom', true] },
-                                { _id: '$_id', description: '$description', order: '$order', isMainSymptom: '$isMainSymptom' },
+                                { _id: '$_id', description: '$description', descriptionAI: '$descriptionAI', order: '$order', isMainSymptom: '$isMainSymptom' },
                                 '$$REMOVE' // not push null or undefined to the list
                             ]
                         },
@@ -40,7 +40,7 @@ export const GET = async (request, { params }) => {
                         $push: {
                             $cond:[
                                 { $ne: ['$isMainSymptom', true] },
-                                { _id: '$_id', description: '$description', order: '$order', isMainSymptom: '$isMainSymptom' },
+                                { _id: '$_id', description: '$description', descriptionAI: '$descriptionAI', order: '$order', isMainSymptom: '$isMainSymptom' },
                                 '$$REMOVE' // not push null or undefined to the list
                             ]
                         },

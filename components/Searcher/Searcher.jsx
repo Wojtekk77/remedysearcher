@@ -165,14 +165,19 @@ const Searcher = () => {
         </div>
       }
 
-        {/* <button
+      { session?.user?.email === 'wojtek.wojtkiewiczlt@gmail.com' && (
+
+        <button
           type='submit'
           disabled={scriptSubmitting}
           onClick={handleScript}
           className='mt-5 px-7 py-2 text-sm bg-primary-orange rounded-full text-white'
         >
           {scriptSubmitting ? `Czekanie na skrypt...` : 'Odpal skrypt'}
-        </button> */}
+        </button>
+      )
+      }
+      
 
     </div>
   );
