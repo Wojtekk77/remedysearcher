@@ -75,9 +75,9 @@ function createColumns({ customProps }) {
   return [
     illness,
     getSymptoms({ column: 'mainSymptoms', field: 'description', headerName: 'Objawy ogólne', minWidth: 500, customProps  }),
-    ...(customProps.isAdmin ? [ getSymptoms({ column: 'mainSymptoms', field: 'description', headerName: 'Objawy ogólne AI', minWidth: 100, AIGeneratedText: 'AI', customProps }) ] : []),
+    ...(customProps.isAdmin ? [ getSymptoms({ column: 'mainSymptoms', field: 'description', headerName: 'Objawy ogólne AI', minWidth: 300, AIGeneratedText: 'AI', customProps }) ] : []),
     getSymptoms({ column: 'confirmSymptoms', field: 'description', headerName: 'Objawy potwierdzające', minWidth: 500, customProps  }),
-    ...(customProps.isAdmin ? [ getSymptoms({ column: 'confirmSymptoms', field: 'description', headerName: 'Objawy potwierdzające AI', minWidth: 100, AIGeneratedText: 'AI', customProps }) ] : []),
+    ...(customProps.isAdmin ? [ getSymptoms({ column: 'confirmSymptoms', field: 'description', headerName: 'Objawy potwierdzające AI', minWidth: 300, AIGeneratedText: 'AI', customProps }) ] : []),
     
   ];
 }
