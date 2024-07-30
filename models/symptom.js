@@ -4,8 +4,9 @@ const SymptomSchema = new Schema({
   remedy: { type: Schema.Types.ObjectId, required: true },
   illness: { type: Schema.Types.ObjectId, required: true },
   description: { type: String, required: true },
-  descriptionAI: { type: String, required: true },
+  descriptionAI: { type: String },
   isMainSymptom: { type: Boolean },
+    // order it's a field that told how to sort symptoms
   order: { type: Number, required: true },
   destroyed: { type: Boolean },
 }, {

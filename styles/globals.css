@@ -315,3 +315,39 @@
   margin-top: -80px; */
 }
 
+.editSmallBtn {
+  background-color:rgba(120, 120, 120, 0.4);
+  transition: 0.4s ease-in-out;
+}
+
+.editSmallBtn:hover {
+  background-color:rgba(100, 100, 100, 0.9);
+  transition: 0.4s ease-in-out;
+}
+
+.shortName:hover {
+  background-color:rgba(100, 100, 100, 0.1);
+  transition: 0.2s ease-in-out;
+}
+
+
+.pagination {
+  display: flex;
+  /* letter-spacing: 1rem; */
+  margin-top: 1rem;
+  align-items: center;
+}
+.page {
+  padding: 5px;
+  transition: 0.5s ease-in-out;
+}
+
+.page:hover {
+  padding: 5px;
+  transition: 0.5s ease-in-out;
+  font-weight: bold;
+}
+
+.activePage {
+  font-weight: bold;
+}

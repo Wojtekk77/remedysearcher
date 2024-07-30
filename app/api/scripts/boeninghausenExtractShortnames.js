@@ -1,7 +1,7 @@
 import { appendTextToFile } from './helpers';
 
 import Remedy from '@models/remedy';
-import { jsonLeftRight } from './kent/jsonLeftRight';
+import { jsonLeftRight } from './AICreated/jsonLeftRight';
 
 
 export const boeninghausenExtractShortnames = async (request) => {

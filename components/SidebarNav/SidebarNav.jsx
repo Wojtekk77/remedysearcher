@@ -112,13 +112,22 @@ const SidebarNav = ({}) => {
             </Link>
           </li>
           { session?.user?.isAdmin && (
-            <li className={currentPath == '/stats' ? 'active' : ''}>
-              <Link href='/stats' className='sidebar_button' >
-                <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
-                <div className="grow">Statystyki</div>
-                <div><FaAngleRight className='text-lg font-light' /></div>
-              </Link>
-            </li>
+            <>
+              <li className={currentPath == '/stats' ? 'active' : ''}>
+                <Link href='/stats' className='sidebar_button' >
+                  <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
+                  <div className="grow">Statystyki</div>
+                  <div><FaAngleRight className='text-lg font-light' /></div>
+                </Link>
+              </li>
+              <li className={currentPath == '/imageAI' ? 'active' : ''}>
+                <Link href='/imageAI' className='sidebar_button' >
+                  <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
+                  <div className="grow">Images AI</div>
+                  <div><FaAngleRight className='text-lg font-light' /></div>
+                </Link>
+              </li>
+            </>
           )}
         </ul>
       </div>

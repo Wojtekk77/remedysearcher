@@ -458,7 +458,7 @@ export const arrayOfRemedyNamesAndShortNames = [
 { shortName: 'Nat-m', name: 'Natrium muriaticum' },
 { shortName: 'Nat-n', name: 'Natrium nitricum' },
 { shortName: 'Nat-p', name: 'Natrium phosphoricum' },
-{ shortName: 'Vat-s', name: 'Natrium sulphuricum' },
+{ shortName: 'Nat-s', name: 'Natrium sulphuricum' },
 { shortName: 'Nicc-s', name: 'Niccolum sulph' },
 { shortName: 'Nicc', name: 'Niccolum' },
 { shortName: 'Nit-ac', name: 'Nitricum acidum' },
@@ -652,5 +652,3 @@ export const arrayOfRemedyNamesAndShortNames = [
 { shortName: 'Zing', name: 'Zingiber' },
 { shortName: 'Ziz', name: 'Zizia aurea' },
 ];
-
-

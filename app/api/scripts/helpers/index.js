@@ -8,6 +8,7 @@ import OpenAI from "openai";
  * catalogPath - The name of the catalog (directory).
  * returns {Promise<Array<{name: string, path: string}>>} - A promise that resolves to an array of file objects with name and path properties.
  */
+// 'app/api/scripts/leftRightSide'
 export async function getFilesFromCatalog(catalogPath) {
     const normalizedPath = path.normalize(`${__dirname}/../../../../../${catalogPath}`);
 

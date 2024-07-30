@@ -12,10 +12,10 @@ import FormDialog from '@components/Dialogs/FromDialog';
 export const descriptionCell = ({ value, field, AIGeneratedText, customProps }) => {
   const desc = <div className="mb-2 mt-2">{value.map(ms => {
       if (ms[field]?.length <= 6 || ms['description']?.length <= 6) {
-        return <div key={`${ms._id}_${field}`} className="pl-6" onClick={() => {customProps?.isAdmin && customProps.openEditDialog({ fieldToUpdate: field, ...ms })}}>{ms[field]}</div>
+        return <div key={`${ms._id}_${field}`} className="pl-6" onClick={() => {customProps?.isAdmin && customProps.openEditDialog({ ...ms, ...(!ms.descriptionAI && { descriptionAI: '' }) })}}>{ms[field]}</div>
       }  
       return (
-        <div key={`${ms._id}_${field}`} onClick={() => {customProps?.isAdmin && customProps.openEditDialog({ fieldToUpdate: field, ...ms })}}>
+        <div key={`${ms._id}_${field}`} onClick={() => {customProps?.isAdmin && customProps.openEditDialog({ ...ms, ...(!ms.descriptionAI && { descriptionAI: '' }) })}}>
           <FormControlLabel 
             control={<><Checkbox sx={{ '&.MuiCheckbox-root': { padding: '4px', paddingRight: '8px' }}} /></>}
             // label={ms.description}
@@ -183,7 +183,7 @@ const Illness = ({ params }) => {
             }}
           />
         </div>
-        { dialogOpen && isAdmin && <FormDialog open={dialogOpen} setOpen={setDialogOpen} data={dialogData} model={'symptoms'} refetchParent={fetchIllness} /> }
+        { dialogOpen && isAdmin && <FormDialog open={dialogOpen} setOpen={setDialogOpen} data={dialogData} modelName='symptom' refetchParent={fetchIllness} disabledFields={['description']}/> }
     </div>
   );
 };

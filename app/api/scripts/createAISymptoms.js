@@ -1,5 +1,5 @@
 import Remedy from '@models/remedy';
-import { jsonLeftRight } from './kent/jsonLeftRight';
+import { jsonLeftRight } from './AICreated/jsonLeftRight';
 import Illness from '@models/illness';
 import { aiSymptoms } from './json/aiSymptoms';
 import { appendTextToFile, processTextArrayOfObj } from './helpers';

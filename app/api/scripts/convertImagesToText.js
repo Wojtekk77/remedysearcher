@@ -5,26 +5,19 @@ import OpenAI from "openai";
 import { appendTextToFile, base64_encode, getFilesFromCatalog } from './helpers';
 import { arrayOfRemedyNamesAndShortNames } from './kent/shortname-fullname';
 
-export const convertImageToText = async (request) => {
+// it will automatically save in scripts
+export const convertImagesToText = async (text = `The photo shows sorted alphabetically words. List them in javascript array.`, saveFileName = 'newFile.js', catalogPath = 'app/api/scripts/AIImageToConvert', savePath = 'app/api/scripts/AICreated' ) => {
     const openai = new OpenAI();
     console.log('CONVERT IMAGE TO TEXT')
-    let chatHistory = [
-        { role: "system", content: "You are a helpful assistant." },
-      ];
 
     try {
         
         console.log('in try')
-        const arrOfFiles = await getFilesFromCatalog('app/api/scripts/leftRightSide');
-        // console.log(arrOfFiles, 'arrOfFiles');
+        const arrOfFiles = await getFilesFromCatalog(catalogPath);
+
         for (const file of arrOfFiles) {
-            // const file = arrOfFiles[0];
             console.log(file.name)
             const base64Image = base64_encode(file.path);
-            // console.log('1')
-            // await appendTextToFile('app/api/scripts/leftRightSide', 'leftRightSide.js', 'noo nakurwaim')
-            // console.log('text appended to: ')
-            // return new Response(JSON.stringify({}), { status: 200 })
 
             const response = await openai.chat.completions.create({
                 model: "gpt-4o",
@@ -34,7 +27,7 @@ export const convertImageToText = async (request) => {
                     content: [
                         { 
                             type: "text",
-                            text: `The photo shows sorted alphabetically words. Can you please list them in javascript array?` 
+                            text,
                         },
                         {
                         type: "image_url",
@@ -52,7 +45,7 @@ export const convertImageToText = async (request) => {
 
             // console.log(response.choices[0], 'response.choices[0]');
             const sideName = file.name.replaceAll('.jpg', '');
-            appendTextToFile('app/api/scripts', 'leftRightSide.js', `${response.choices[0].message.content.replaceAll('words', sideName)} \n \n`)
+            appendTextToFile(savePath, saveFileName, `${response.choices[0].message.content.replaceAll('words', sideName)} \n \n`)
 
         }
 

@@ -456,7 +456,7 @@ export const remedyShortnames = [
 'Nat-m',
 'Nat-n',
 'Nat-p',
-'Vat-s',
+'Nat-s',
 'Nicc-s',
 'Nicc',
 'Nit-ac',
