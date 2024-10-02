@@ -2,9 +2,10 @@ import { Schema, model, models } from 'mongoose';
 
 const RepertorySymptomSchema = new Schema({
   name: { type: String }, // how to recognise symptom
+  parentName: { type: String },
   description: { type: String },
   descriptionAI: { type: String },
-  property: { type: Number },
+  property: { type: Number }, // umysl, zawroty glowy, oko, nos
   imagePath: { type: String },
   destroyed: { type: Boolean },
 }, {

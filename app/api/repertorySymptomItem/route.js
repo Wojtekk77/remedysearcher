@@ -3,20 +3,25 @@ import { connectToDB } from "@utils/database";
 import Statistics from '@models/statistics';
 import mongoose from 'mongoose';
 import Illness from '@models/illness';
+import RepertorySymptomItem from '@models/repertorySymptomItem';
+import Remedy from '@models/remedy';
 
 export const POST = async (request) => {
-    const jsonRequest = await request.json();
-    const { mind, general, specyfic, positiveModalities, negativeModalities, userId } = jsonRequest;
-    const startTime = new Date(); 
+    const { values } = await request.json();
 
 try {
     await connectToDB();
 
-   const endTime = new Date(); 
+    const shortName = values.shortName?.toLowerCase();
 
-    return new Response(JSON.stringify({
-        ilnesses: ilnesses || [],
-    }), { status: 200 })
+    let remedy;
+    if (shortName) {
+        remedy = await Remedy.find({ $or: [{ shortName }, { otherNames: shortName }] })
+    }
+
+    await RepertorySymptomItem.create({ ...values, shortName: remedy?.shortName || shortName || 'Name', remedy: remedy?._id });
+
+    return new Response(JSON.stringify({}), { status: 200 })
     } catch (error) {
         return new Response("Failed to get ilnesses", { status: 500 });
     }

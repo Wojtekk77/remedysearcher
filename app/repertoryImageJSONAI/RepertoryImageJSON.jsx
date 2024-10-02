@@ -1,47 +1,50 @@
 import * as React from 'react';
 import { useState, useCallback } from "react";
 import { REMEDY_PROPERTY_NAME } from '@common/constants';
-import RepertorySymptomItem from './RepertorySymptomItem';
-import FormDialog from '@components/Dialogs/FormDialog';
-
-const RepertorySymptom = ({ repertorySymptom }) => {
+import RepertoryImageJSONObj from './RepertoryImageJSONObj';
 
 
+const RepertoryImageJSON = ({ repertoryImageJSON }) => {
+
+
+  console.log(repertoryImageJSON, 'repertoryImageJSON');
   const [dialogData, setDialogData] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [imageArrOfObj, setImageArrOfObj] = useState(repertoryImageJSON.arrOfObjs); 
 
 
   const handleUpdateRepSymptomItem = useCallback(async ({ _id, values }) => {
 
       try {
         let response = await fetch(`/api/generalUpdate`, {
-        // let response = await fetch(`/api/repertorySymptomItem/${_id}`, {
+        // let response = await fetch(`/api/repertoryImageJSON/${_id}`, {
           method: "PATCH",
-          body: JSON.stringify({ _id, modelName: 'repertorySymptomItem', values }),
+          body: JSON.stringify({ _id, modelName: 'repertoryImageJSON', values }),
         });
         const data = await response.json();
-        return data?.repertorySymptomItem;
+        return data?.repertoryImageJSON;
 
       } catch (error) {
         console.log(error);
       }
   }, []);
 
-  const updateRepertorySymptomItem = useCallback(async ({ _id, values }) => {
+  const updateRepertoryImageJSON = useCallback(async ({ _id, values }) => {
     return handleUpdateRepSymptomItem({ _id, values });
   }, [])
 
-  const repertorySymptomItems = repertorySymptom?.repertorySymptomItems?.map(repertorySymptomItem => {
+  const RepertoryImageJSONObjs = imageArrOfObj.map(obj => {
     return (
-      <RepertorySymptomItem
-        key={repertorySymptomItem._id}
-        repertorySymptomItem={repertorySymptomItem}
-        updateRepertorySymptomItem={updateRepertorySymptomItem}
+      <RepertoryImageJSONObj
+        id={obj.name}
+        remedies={obj.remedies}
+        name={obj.name}
         setDialogData={setDialogData}
         setDialogOpen={setDialogOpen}
       />
     );
   });
+
 
   return (
     <div style={{ marginBottom: 50 }}>
@@ -50,21 +53,21 @@ const RepertorySymptom = ({ repertorySymptom }) => {
       <div style={{ display: 'flex' }}>
         <div>
           <div style={{ width: 500 }}>
-            <img src={repertorySymptom.imagePath} />
+            <img src={repertoryImageJSON.imagePath} />
           </div>
         </div>
         <div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <p>{repertorySymptom.name} {REMEDY_PROPERTY_NAME[repertorySymptom.property]}</p>
+            <p>{REMEDY_PROPERTY_NAME[repertoryImageJSON.property]}</p>
           </div>
-          <p style={{ display: 'flex', maxWidth: 500, flexWrap: 'wrap', marginTop: 15 }}>
-            {repertorySymptomItems}
+          <p style={{ maxWidth: 500, flexWrap: 'wrap', marginTop: 15 }}>
+            {RepertoryImageJSONObjs}
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 5 }}>
             <button
               type='button'
               onClick={() => {
-                setDialogData(repertorySymptom)
+                setDialogData(repertoryImageJSON)
                 setDialogOpen(true)
               }}
               className='outline_btn'>Edytuj</button>
@@ -72,12 +75,12 @@ const RepertorySymptom = ({ repertorySymptom }) => {
           
         </div>
       </div>
-      { dialogOpen && (
-          <FormDialog open={dialogOpen} setOpen={setDialogOpen} data={dialogData} modelName='repertorySymptomItem' />
+      {/* { dialogOpen && (
+          <FormDialog open={dialogOpen} setOpen={setDialogOpen} data={dialogData} modelName='repertoryImageJSONItem' />
         ) 
-      }
+      } */}
     </div>
   )
 };
 
-export default RepertorySymptom;
+export default RepertoryImageJSON;

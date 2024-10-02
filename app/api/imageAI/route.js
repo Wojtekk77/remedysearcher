@@ -1,8 +1,6 @@
-import Comment from "@models/comment";
+
 import Statistics from '@models/statistics';
 import { connectToDB } from "@utils/database";
-import { getFilesFromCatalog } from '../scripts/helpers';
-import { jsonLeftRight } from '../scripts/AICreated/jsonLeftRight';
 import RepertorySymptom from '@models/repertorySymptom';
 
 export const GET = async (request, { params }) => {
@@ -25,7 +23,6 @@ export const GET = async (request, { params }) => {
             // }
         ]);
 
-        // return new Response(JSON.stringify({ imagesWithJSON: [{img1: '11 1'}, { img2: '2 12'}] }), { status: 200 })
         return new Response(JSON.stringify({ repertorySymptoms }), { status: 200 })
 
     } catch (error) {
@@ -35,7 +32,8 @@ export const GET = async (request, { params }) => {
 
 export const POST = async (request) => {
 
-    const { comment, tag } = await request.json();
+    // mainPart: (umysl, zawrotyGlowy, glowa, oko, wzrok, ucho, sluch... s.9 repertorium)
+    const { mainPart } = await request.json();
 
     try {
         await connectToDB()

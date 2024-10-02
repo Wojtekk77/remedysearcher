@@ -6,6 +6,12 @@
 .pnp.js
 .env
 
+/app/api/scripts/AIWaited
+
+/app/api/scripts/AIImagesToConvert
+/app/api/scripts/AIUsedRepertoryPhoto
+
+
 # testing
 /coverage
 

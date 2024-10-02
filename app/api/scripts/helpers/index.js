@@ -37,7 +37,7 @@ export async function getFilesFromCatalog(catalogPath) {
 // function to encode file data to base64 encoded string
 export function base64_encode(fileDirectory) {
     const normalizedPath = path.normalize(`${__dirname}/../../../../../${fileDirectory}`)
-    console.log(normalizedPath, 'normalizedPath')
+    // console.log(normalizedPath, 'normalizedPath')
     return fs.readFileSync(normalizedPath, 'base64');
 }
 

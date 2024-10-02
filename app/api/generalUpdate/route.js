@@ -26,7 +26,6 @@ export const getModel = (modelName) => {
 export const PATCH = async (request) => {
 
     const data = await request.json();
-    console.log(data, 'data')
 
     const { modelName, _id, values } = data;
 
@@ -48,10 +47,45 @@ export const PATCH = async (request) => {
         }
 
         const updatedObj = await model.findById(_id);
-        return new Response(JSON.stringify({ repertorySymptomItem: updatedObj }), { status: 200 });
+
+        return new Response(JSON.stringify({ [modelName]: updatedObj }), { status: 200 });
 
     } catch (error) {
         return new Response(`Error Updating ${modelName}`, { status: 500 });
     }
+};
 
+export const POST = async (request) => {
+
+    const data = await request.json();
+    const { modelName, _id, match, lookup } = data;
+
+    try {
+        await connectToDB();
+
+        if (!modelName) {
+            return new Response("Not find modelName", { status: 500 })
+        }
+
+        const model = getModel(modelName);
+
+        let modelObj = {};
+        if (lookup?.$lookup?.from) {
+
+            const pipeline = [
+                _id ? { $match: { _id: new mongoose.Types.ObjectId(_id) } } : match,
+                lookup,
+            ];
+
+            modelObj = await model.aggregate(pipeline)
+        }
+        else {
+            modelObj = await model.findById(_id);
+        }
+
+        return new Response(JSON.stringify({ [modelName]: modelObj }), { status: 200 });
+
+    } catch (error) {
+        return new Response(`Error Getting ${modelName}`, { status: 500 });
+    }
 };

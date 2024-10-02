@@ -101,30 +101,30 @@ try {
         //         as: 'descCommonWords',
         //     },
         // },
-        {
-            $lookup:
-               {
-                 from: "descriptioncommonwords",
-                 let: { descId: "$_id" },
-                 pipeline: [
-                    { $match:
-                       { $expr:
-                          { $and:
-                             [
-                               { $eq: [ "$description", "$$descId" ] },
-                               { $ne: [ "$useful", false ] },
-                            //    { $gte: [ "$instock", "$$order_qty" ] }
-                             ]
-                          }
-                       }
-                    },
-                    { $sort: { points: -1 } },
-                    { $limit: 20 }
-                    // { $project: { stock_item: 0, _id: 0 } }
-                 ],
-                 as: "descCommonWords"
-               }
-        },
+        // {
+        //     $lookup:
+        //        {
+        //          from: "descriptioncommonwords",
+        //          let: { descId: "$_id" },
+        //          pipeline: [
+        //             { $match:
+        //                { $expr:
+        //                   { $and:
+        //                      [
+        //                        { $eq: [ "$description", "$$descId" ] },
+        //                        { $ne: [ "$useful", false ] },
+        //                     //    { $gte: [ "$instock", "$$order_qty" ] }
+        //                      ]
+        //                   }
+        //                }
+        //             },
+        //             { $sort: { points: -1 } },
+        //             { $limit: 20 }
+        //             // { $project: { stock_item: 0, _id: 0 } }
+        //          ],
+        //          as: "descCommonWords"
+        //        }
+        // },
         // ponizszy match eleiminuje cały lek! - dobre do testowania
         // {
         //     $match: {
@@ -138,7 +138,7 @@ try {
                 remedyName: 1,
                 remedy: 1,
                 wordSentencesAsText: 1,
-                descCommonWords: 1,
+                // descCommonWords: 1,
             }
         },
     ])
@@ -191,8 +191,7 @@ try {
 
             result[remedyName][positiveModalities.word] = positiveModalities;
             result[remedyName][negativeModalities.word] = negativeModalities;
-            // console.log(desc.descCommonWords);
-            result[remedyName]['Objawy kluczowe'] = { descId: desc._id, descCommonWords: desc.descCommonWords, totalPoints: 1 };
+            // result[remedyName]['Objawy kluczowe'] = { descId: desc._id, descCommonWords: desc.descCommonWords, totalPoints: 1 };
             
         }
     })

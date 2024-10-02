@@ -110,33 +110,33 @@ export const createColumns = (remedy, markDescCommWord, user) => {
             },
 		})
 	});
-	columns.push({
-        key: 'commDescWord',
-        id: 'commDescWordId',
-        field: 'commDescWord',
-        headerName: 'Objawy kluczowe',
-        width: 300, 
-        renderCell: ({ row }) => {
-            const keySyndroms = row['Objawy kluczowe'];
-            const firstThreeWords = getFirstsWordsFromDescCommWords(keySyndroms?.descCommonWords, 4)
-            const reactElement = getDescCommWordsDialogBody({ descCommonWords: keySyndroms?.descCommonWords, user })
-            return (
-                <div className='flex flex-row cursor-pointer'>
-                    <div className='flex flex-row cursor-pointer'>
-                        <CustomizedDialogs
-                            icon={<FaExternalLinkAlt className='mt-0.5 ml-2' />}
-                            value={firstThreeWords} // w przyszlosci moze kilka pierwszych slow kluczowych?
-                            // dangerouslySetText={DOMPurify.sanitize(reactElement)}
-                            dialogBody={<div>{reactElement}</div>}
+	// columns.push({
+    //     key: 'commDescWord',
+    //     id: 'commDescWordId',
+    //     field: 'commDescWord',
+    //     headerName: 'Objawy kluczowe',
+    //     width: 300, 
+    //     renderCell: ({ row }) => {
+    //         const keySyndroms = row['Objawy kluczowe'];
+    //         const firstThreeWords = getFirstsWordsFromDescCommWords(keySyndroms?.descCommonWords, 4)
+    //         const reactElement = getDescCommWordsDialogBody({ descCommonWords: keySyndroms?.descCommonWords, user })
+    //         return (
+    //             <div className='flex flex-row cursor-pointer'>
+    //                 <div className='flex flex-row cursor-pointer'>
+    //                     <CustomizedDialogs
+    //                         icon={<FaExternalLinkAlt className='mt-0.5 ml-2' />}
+    //                         value={firstThreeWords} // w przyszlosci moze kilka pierwszych slow kluczowych?
+    //                         // dangerouslySetText={DOMPurify.sanitize(reactElement)}
+    //                         dialogBody={<div>{reactElement}</div>}
 
-                            dialogHeader={`Objawy kluczowe: ${row.remedyName}`}
-                        />
-                    </div>
-                </div>
+    //                         dialogHeader={`Objawy kluczowe: ${row.remedyName}`}
+    //                     />
+    //                 </div>
+    //             </div>
 
-            )
-        },
-	});
+    //         )
+    //     },
+	// });
 	columns.push({
         key: 'totalPoints',
         id: 'totalPoints',

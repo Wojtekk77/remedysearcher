@@ -5,9 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { DataGrid } from '@mui/x-data-grid';
 import { CustomToolbar } from '../page';
 import { capitalizeFirstLetter } from '@utils';
-import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import { Checkbox, FormControlLabel } from '@mui/material';
 import { useSession } from 'next-auth/react';
-import FormDialog from '@components/Dialogs/FromDialog';
+import FormDialog from '@components/Dialogs/FormDialog';
 
 export const descriptionCell = ({ value, field, AIGeneratedText, customProps }) => {
   const desc = <div className="mb-2 mt-2">{value.map(ms => {

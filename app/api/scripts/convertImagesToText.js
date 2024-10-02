@@ -4,15 +4,27 @@ import { connectToDB } from "@utils/database";
 import OpenAI from "openai";
 import { appendTextToFile, base64_encode, getFilesFromCatalog } from './helpers';
 import { arrayOfRemedyNamesAndShortNames } from './kent/shortname-fullname';
+import RepertoryImageJSON from '@models/repertoryImageJSON';
+import { REMEDY_PROPERTY } from '../../../common/constants.js'
+import { isJsonString } from '@utils';
 
 // it will automatically save in scripts
-export const convertImagesToText = async (text = `The photo shows sorted alphabetically words. List them in javascript array.`, saveFileName = 'newFile.js', catalogPath = 'app/api/scripts/AIImageToConvert', savePath = 'app/api/scripts/AICreated' ) => {
+export const convertImagesToText = async ({ 
+    text = `The photo shows sorted alphabetically words. List them in javascript array.`,
+    saveFileName = 'newFile.js',
+    catalogPath = 'app/api/scripts/AIImagesToConvert',
+    savePath = 'app/api/scripts/AICreated',
+    imgServerPath = 'https://srv44093.seohost.com.pl/zdjecia/',
+    saveToFile,
+    saveToDB,
+    property = REMEDY_PROPERTY.UMYSL,
+    updateExistingFiles = false,
+}) => {
     const openai = new OpenAI();
     console.log('CONVERT IMAGE TO TEXT')
 
     try {
         
-        console.log('in try')
         const arrOfFiles = await getFilesFromCatalog(catalogPath);
 
         for (const file of arrOfFiles) {
@@ -40,12 +52,46 @@ export const convertImagesToText = async (text = `The photo shows sorted alphabe
                     ],
                     },
                 ],
-    
+                
             });
 
-            // console.log(response.choices[0], 'response.choices[0]');
             const sideName = file.name.replaceAll('.jpg', '');
-            appendTextToFile(savePath, saveFileName, `${response.choices[0].message.content.replaceAll('words', sideName)} \n \n`)
+            const adjustedReponse = response.choices[0].message.content.replaceAll('json', '').replaceAll(`\``, '');
+            let jsonIsValid = true;
+
+
+            if (!isJsonString(adjustedReponse)) {
+                appendTextToFile(savePath, 'notValidJson.txt', `${file.name} \n\n`);
+                jsonIsValid = false;
+            }
+
+            // console.log(response.choices[0], 'response.choices[0]');
+            if (saveToFile) {
+                appendTextToFile(savePath, saveFileName, `${response.choices[0].message.content.replaceAll('words', sideName)} \n \n`)
+                console.log('text saved in file: ', saveFileName);
+            }
+
+            if (saveToDB) {
+                const repImgExists = await RepertoryImageJSON.findOne({ imagePath: `${imgServerPath}${file.name}` })
+                
+                const createObj = { imagePath: `${imgServerPath}${file.name}`, property, imageAlreadyConverted: false };
+                if (jsonIsValid) {
+                    createObj.json = adjustedReponse;
+                }
+
+                if (!repImgExists) {
+                    await RepertoryImageJSON.create(createObj);
+                    console.log(file.name, 'text saved in DB')
+                }
+                else {
+                    console.log('Already exists in DB:', file.name, imgServerPath)
+                    if (updateExistingFiles && jsonIsValid) {
+                        await RepertoryImageJSON.updateOne({ imagePath: `${imgServerPath}${file.name}` }, { $set: { json: adjustedReponse }})
+                        console.log('Update already existsting in DB:', file.name, imgServerPath)
+                    }
+
+                }
+            }
 
         }
 

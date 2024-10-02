@@ -102,7 +102,11 @@
 }
 
 .outline_btn {
-  @apply rounded-full border border-black bg-transparent py-1.5 px-5 text-black transition-all hover:bg-black hover:text-white text-center text-sm font-inter flex items-center justify-center;
+  @apply rounded-full border border-black bg-transparent py-1 px-3 text-black transition-all hover:bg-black hover:text-white text-center text-sm font-inter flex items-center justify-center;
+}
+
+.small_btn {
+  @apply border border-black;
 }
 
 .head_text {
@@ -313,6 +317,57 @@
   position: relative;
   /* height: 80px;
   margin-top: -80px; */
+}
+
+/* CSS */
+.addButton {
+  background-color: rgb(0, 107, 183);
+  border: 1px solid transparent;
+  border-radius: 3px;
+  box-shadow: rgba(255, 255, 255, .4) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.15385;
+  margin: 0;
+  outline: none;
+  padding: 1px 1px 1px 1px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+
+
+.addButton:hover,
+.addButton:focus {
+  background-color: #2587dc;
+}
+
+.addButton:focus {
+  box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+}
+
+.addButton:active {
+  background-color: #3ca4ff;
+  box-shadow: none;
+}
+
+.editButton {
+  background-color: #287b2b;
+}
+
+.editButton:hover,
+.editButton:focus {
+  background-color: rgb(34, 184, 56);
 }
 
 .editSmallBtn {

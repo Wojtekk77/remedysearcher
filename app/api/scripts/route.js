@@ -18,6 +18,8 @@ import { createAISymptoms } from './createAISymptoms';
 import { convertImagesToText } from './convertImagesToText';  
 import { createRepertorySymptoms } from './createRepertorySymptoms';
 import { jsonLeftRight } from './AICreated/jsonLeftRight';
+import { REMEDY_PROPERTY } from '@common/constants';
+import { saveImageJSONsAsRepertorySymptom } from './saveImageJSONsAsRepertorySymptom';
 
 // get the most common word variations from description
 export const POST = async (request) => {
@@ -31,6 +33,7 @@ try {
     // await createNewRemedies();
     // await createClinicalSyndroms();
     // await convertTextByOpenAI();
+    // START JAK SIE OKAŻE, ŻE PONIŻSZE TRZEBA PUŚCIĆ NA LIVE TO ZMIEŃ ARGUMENTY NA OBIEKT
     // await convertImagesToText(undefined, 'coldWarmRemedies.js');
     // await convertImagesToText(`
     //     Dostaniesz zdjęcie z posegregowanymi wyrazami. Zapisz je w formacie JSON.
@@ -41,6 +44,7 @@ try {
     //     'jsonLeftRighSides.js',
     //     // 'app/api/scripts/leftRightSide',
     // );
+    // STOP
 
     // await gpt4oVectorSearch();
     // await saveRemedyShortNamesToDB();
@@ -53,13 +57,38 @@ try {
     // 2. Create AI generated symptoms that will be visible only for admins (Gaba could update texts)
     // await createAISymptoms()
     // FINISHED 2024.07.12
-    console.log('1')
-    await createRepertorySymptoms(jsonLeftRight, 'https://srv44093.seohost.com.pl/zdjecia/');
-    console.log('end')
+    // console.log('1')
+    // await createRepertorySymptoms(jsonLeftRight, 'https://srv44093.seohost.com.pl/zdjecia/');
+    // console.log('end')
     // START 
     // scripts to run on remote DB:
     // await createRepertorySymptoms(jsonLeftRight);
-    // FINISHED ????
+    // FINISHED 2024.07.31
+
+    // TO DO START
+    await convertImagesToText({
+
+        text: `
+            Zapisz tekst w formacie JSON.
+            Nie pomiń żadnego znaku!
+
+            Kluczami są pełne wyrażenia. 
+            Wartościami są tablice ze skrótami nazw leków homeopatycznych.
+            
+        `,
+        saveFileName: 'repertorySymptomsBrain7.js',
+        imgServerPath: 'https://srv44093.seohost.com.pl/zdjecia/umysl/',
+        saveToFile: false,
+        saveToDB: true,
+        property: REMEDY_PROPERTY.UMYSL,
+        updateExistingFiles: true,
+        // 'app/api/scripts/leftRightSide',
+    });
+
+
+    await saveImageJSONsAsRepertorySymptom({ property: REMEDY_PROPERTY.UMYSL })
+
+    // FINISHED
 
 
     let endTime = new Date(); 
