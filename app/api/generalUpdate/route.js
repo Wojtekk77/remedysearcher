@@ -1,6 +1,4 @@
-import Description from '@models/description';
 import { connectToDB } from "@utils/database";
-import Statistics from '@models/statistics';
 import mongoose from 'mongoose';
 import Illness from '@models/illness';
 import Symptom from '@models/symptom';
@@ -51,7 +49,7 @@ export const PATCH = async (request) => {
         return new Response(JSON.stringify({ [modelName]: updatedObj }), { status: 200 });
 
     } catch (error) {
-        return new Response(`Error Updating ${modelName}`, { status: 500 });
+        return new Response(`Error Updating ${modelName}, erro: ${error}`, { status: 500 });
     }
 };
 

@@ -11,7 +11,7 @@ export const GET = async (request, { params }) => {
         return new Response(JSON.stringify(comment), { status: 200 })
 
     } catch (error) {
-        return new Response("Internal Server Error", { status: 500 });
+        return new Response(`Internal Server Error ${error}`, { status: 500 });
     }
 }
 
@@ -36,7 +36,7 @@ export const PATCH = async (request, { params }) => {
 
         return new Response("Successfully updated the Comments", { status: 200 });
     } catch (error) {
-        return new Response("Error Updating Comment", { status: 500 });
+        return new Response(`Internal Server Error ${error}`, { status: 500 });
     }
 };
 
@@ -49,6 +49,6 @@ export const DELETE = async (request, { params }) => {
 
         return new Response("Comment deleted successfully", { status: 200 });
     } catch (error) {
-        return new Response("Error deleting comment", { status: 500 });
+        return new Response(`Internal Server Error ${error}`, { status: 500 });
     }
 };

@@ -1,6 +1,4 @@
 import { connectToDB } from "@utils/database";
-import { getFilesFromCatalog } from '../scripts/helpers';
-import { jsonLeftRight } from '../scripts/AICreated/jsonLeftRight';
 import RepertorySymptom from '@models/repertorySymptom';
 import RepertoryImageJSON from '@models/repertoryImageJSON';
 
@@ -9,7 +7,7 @@ export const GET = async (request, { params }) => {
     try {
         await connectToDB()
         // const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true }).limit(3)
-        const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: false }) // .limit(1)
+        const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: false }) //.limit(1)
         
         const repImagesPaths = repImages.map(ri => ri.imagePath) 
         
@@ -49,21 +47,6 @@ export const GET = async (request, { params }) => {
         return new Response(JSON.stringify({ repertorySymptoms }), { status: 200 })
 
     } catch (error) {
-        return new Response("Internal Server Error", { status: 500 });
+        return new Response(`Internal Server Error: ${error}`, { status: 500 });
     }
 }
-
-export const POST = async (request) => {
-
-    const { mainPart } = await request.json();
-
-    try {
-        await connectToDB()
-
-        return new Response(JSON.stringify({ statistics }), { status: 200 })
-
-    } catch (error) {
-        return new Response("Internal Server Error", { status: 500 });
-    }
-}
-
