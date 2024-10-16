@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState }  from 'react';
 import { capitalizeFirstLetter } from '@utils';
 import RepertoryImageJSONRemedyItem from './RepertoryImageJSONRemedyItem';
 
@@ -21,6 +21,7 @@ const RepertoryImageJSONObj = ({
   const repertoryImageJSONRemedyItems = repSymptomObj.value?.map(shortName => {
     return (
       <RepertoryImageJSONRemedyItem
+        key={shortName}
         id={shortName}
         name={shortName}
         setDialogData={setDialogData}

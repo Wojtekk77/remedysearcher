@@ -28,7 +28,8 @@ const RepertorySymptomAI = ({
         },
       }
     });
-    setRepertorySymptom(repSymptom[0])
+    const sorted = repSymptom[0].repertorySymptomItems.sort((a, b) => a.shortName.localeCompare(b.shortName));
+    setRepertorySymptom({ ...repSymptom[0], repertorySymptomItems: sorted })
   }, [])
 
   const updateRepSymptomItem = useCallback(async ({ _id, values }) => {
@@ -56,7 +57,7 @@ const RepertorySymptomAI = ({
     
       <div style={{ border: 'groove' }}>
         <div>
-          <div style={{ display: 'flex', minWidth: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', minWidth: '100%', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#16d0e8' }}>
             <p style={{ fontWeight: 'bold', fontSize: 15, minWidth: '50%' }}>{repertorySymptom?.name}</p>
             <p style={{ color: '#339' , marginLeft: 10, fontWeight: 'bold', fontStyle: 'italic', fontSize: 13}}>{repertorySymptom?.parentName || ''}</p>
             <button

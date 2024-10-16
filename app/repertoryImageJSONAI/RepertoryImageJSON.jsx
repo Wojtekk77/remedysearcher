@@ -36,6 +36,7 @@ const RepertoryImageJSON = ({ repertoryImageJSON }) => {
   const RepertoryImageJSONObjs = imageArrOfObj.map(obj => {
     return (
       <RepertoryImageJSONObj
+        key={obj.name}
         id={obj.name}
         remedies={obj.remedies}
         name={obj.name}

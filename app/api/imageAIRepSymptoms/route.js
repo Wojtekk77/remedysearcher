@@ -9,7 +9,7 @@ export const GET = async (request, { params }) => {
     try {
         await connectToDB()
         // const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true }).limit(3)
-        const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: false }) // .limit(3)
+        const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: false }) // .limit(1)
         
         const repImagesPaths = repImages.map(ri => ri.imagePath) 
         
@@ -40,7 +40,8 @@ export const GET = async (request, { params }) => {
             if (!acc[item.imagePath]) {
                 acc[item.imagePath] = [];
             }
-            acc[item.imagePath].push(item)
+            const sorted = item.repertorySymptomItems.sort((a, b) => a.shortName.localeCompare(b.shortName));
+            acc[item.imagePath].push({ ...item, repertorySymptomItems: sorted })
             return acc;
         }, {})
 
