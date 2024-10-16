@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import FormDialog from '@components/Dialogs/FormDialog';
 import RepertorySymptomAI from './RepertorySymptomAI';
-import { generalCreateModel, generalUpdateModel } from '@utils';
+import { generalCreateModel } from '@utils';
 
 
 const RepertorySymptomsAI = ({ repertorySymptoms }) => {
@@ -11,9 +11,6 @@ const RepertorySymptomsAI = ({ repertorySymptoms }) => {
   const [dialogData, setDialogData] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const updateRepSymptom = useCallback(async ({ _id, values }) => {
-    return generalUpdateModel({ _id, values, modelName: 'repertorySymptom' });
-}, []);
 
   const createRepertorySymptomItem = useCallback(async({ values }) => {
     await generalCreateModel({ values, modelName: 'repertorySymptomItem' });
@@ -28,7 +25,6 @@ const RepertorySymptomsAI = ({ repertorySymptoms }) => {
       setDialogModelProperties={setDialogModelProperties}
       setDialogConfirmationAction={setDialogConfirmationAction}
       createRepertorySymptomItem={createRepertorySymptomItem}
-      updateRepSymptom={updateRepSymptom}
     />
   });
 

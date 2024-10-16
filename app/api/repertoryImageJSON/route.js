@@ -1,5 +1,11 @@
+import Comment from "@models/comment";
+import Statistics from '@models/statistics';
 import { connectToDB } from "@utils/database";
+import { getFilesFromCatalog } from '../scripts/helpers';
+import { jsonLeftRight } from '../scripts/AICreated/jsonLeftRight';
+import RepertorySymptom from '@models/repertorySymptom';
 import RepertoryImageJSON from '@models/repertoryImageJSON';
+import { isJSDocReadonlyTag } from 'typescript';
 import { atLeastXCapitalizedInARow, isJsonString } from '@utils';
 import { REMEDY_PROPERTY } from '@common/constants';
 
@@ -22,6 +28,7 @@ export const GET = async (request, { params }) => {
 export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, skipUsed = true) => {
 
     const repertoryImageJSONsRaw = await RepertoryImageJSON.find({ property, imageAlreadyConverted: { $ne: skipUsed } }).sort({ imagePath: 1 });
+    let nameChierarchy = [];
     let repertoryImageJSONs = [];
     let parentName = '';
     let arrOfObjs = [];

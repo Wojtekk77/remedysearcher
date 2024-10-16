@@ -1,3 +1,4 @@
+import { connectToDB } from "@utils/database";
 import Remedy from '@models/remedy';
 import RepertorySymptom from '@models/repertorySymptom';
 import RepertorySymptomItem from '@models/repertorySymptomItem';
