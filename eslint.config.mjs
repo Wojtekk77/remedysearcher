@@ -8,12 +8,4 @@ export default [
   {languageOptions: { globals: globals.browser }},
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
-  {
-    "plugins": [
-      "react"
-   ],
-   "rules": {
-     "react/prop-types": 0
-   }
-  }
 ];
