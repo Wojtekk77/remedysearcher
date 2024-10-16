@@ -1,9 +1,9 @@
-import { connectToDB } from "@utils/database";
+
 import Remedy from '@models/remedy';
 import RepertorySymptom from '@models/repertorySymptom';
 import RepertorySymptomItem from '@models/repertorySymptomItem';
 import { REMEDY_PROPERTY } from '@common/constants';
-import { getArrayOfRemedySympt } from '../repertoryImageJSON/route';
+import { getArrayOfRemedySympt } from '../repertoryImageJSON/getArrayOfRemedySymptom';
 
 const getRemedyProperty = (rawProperty) => {
     switch(rawProperty)  {
