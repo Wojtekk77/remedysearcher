@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import RepertorySymptomItemAI from './RepertorySymptomItemAI';
 import { generalGetModel, generalUpdateModel } from '@utils';
+import EditableText from '@components/Form/EditableText';
 
 
 const RepertorySymptomAI = ({
@@ -10,6 +11,7 @@ const RepertorySymptomAI = ({
   setDialogModelProperties,
   setDialogConfirmationAction,
   createRepertorySymptomItem,
+  updateRepSymptom,
 }) => {
 
 
@@ -58,8 +60,10 @@ const RepertorySymptomAI = ({
       <div style={{ border: 'groove' }}>
         <div>
           <div style={{ display: 'flex', minWidth: '100%', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#16d0e8' }}>
-            <p style={{ fontWeight: 'bold', fontSize: 15, minWidth: '50%' }}>{repertorySymptom?.name}</p>
-            <p style={{ color: '#339' , marginLeft: 10, fontWeight: 'bold', fontStyle: 'italic', fontSize: 13}}>{repertorySymptom?.parentName || ''}</p>
+            <EditableText style={{ fontWeight: 'bold', fontSize: 15, minWidth: '50%' }} initialText={repertorySymptom?.name} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="name" />
+            {/* <p style={{ color: '#339' , marginLeft: 10, fontWeight: 'bold', fontStyle: 'italic', fontSize: 13}}>{repertorySymptom?.parentName || ''}</p> */}
+            <EditableText style={{ color: '#339' , marginLeft: 10, fontWeight: 'bold', fontStyle: 'italic', fontSize: 13}} initialText={repertorySymptom?.parentName || ''} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="parentName" />
+
             <button
               type='button'
               onClick={() => {
