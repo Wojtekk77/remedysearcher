@@ -4,7 +4,7 @@ import RepertorySymptomAI from './RepertorySymptomAI';
 import { generalCreateModel, generalUpdateModel } from '@utils';
 
 
-const RepertorySymptomsAI = ({ repertorySymptoms }) => {
+const RepertorySymptomsAI = ({ repertorySymptoms, refetchImage }) => {
 
   const [dialogModelProperties, setDialogModelProperties] = useState();
   const [dialogConfirmationAction, setDialogConfirmationAction] = useState();
@@ -30,6 +30,7 @@ const RepertorySymptomsAI = ({ repertorySymptoms }) => {
       setDialogConfirmationAction={setDialogConfirmationAction}
       createRepertorySymptomItem={createRepertorySymptomItem}
       updateRepSymptom={updateRepSymptom}
+      refetchImage={refetchImage}
     />
   });
 

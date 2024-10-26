@@ -1,9 +1,19 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import RepertorySymptomItemAI from './RepertorySymptomItemAI';
 import { generalGetModel, generalUpdateModel } from '@utils';
 import EditableText from '@components/Form/EditableText';
 import { ParentChildrenContext } from './page';
 
+
+const repSymptomField = ['name', 'parent', 'isParent'];
+const nothingChange = (a, b, fields = repSymptomField) => {
+  for (const field of fields) {
+    if (typeof a[field] !== typeof b[field] || a[field]?.toString() !== b[field]?.toString()) {
+      return false
+    }
+  }
+  return true;
+}
 
 const RepertorySymptomAI = ({
   repertorySymptom: repertorySymptomRaw,
@@ -13,10 +23,13 @@ const RepertorySymptomAI = ({
   setDialogConfirmationAction,
   createRepertorySymptomItem,
   updateRepSymptom,
+  refetchImage,
 }) => {
+
 
   const { children, parent, handleSetParent, handleSetChildren, handleSaveParency } = useContext(ParentChildrenContext);
   const [repertorySymptom, setRepertorySymptom] = useState(repertorySymptomRaw);
+  const [loading, setLoading] = useState(false);
   
   const handleRefetch = useCallback(async ({ _id }) => {
     const repSymptom = await generalGetModel({
@@ -38,6 +51,13 @@ const RepertorySymptomAI = ({
   const updateRepSymptomItem = useCallback(async ({ _id, values }) => {
       return generalUpdateModel({ _id, values, modelName: 'repertorySymptomItem' });
   }, []);
+
+  useEffect(() => {
+    if (repertorySymptomRaw && repertorySymptom && !nothingChange(repertorySymptomRaw, repertorySymptom)) {
+      setRepertorySymptom(repertorySymptomRaw)
+    }
+    
+  }, [repertorySymptomRaw])
 
   const repertorySymptomItems = repertorySymptom?.repertorySymptomItems?.sort((a, b) => a.shortName.localeCompare(b.shortName))?.map(repertorySymptomItem => {
     return (
@@ -87,11 +107,14 @@ const RepertorySymptomAI = ({
                             className='addButton editButton'
                             style={{ color: '#333', backgroundColor: '#d1ec20', marginRight: 5 }}
                             onClick={async () => {
+                              setLoading(true)
                               await handleSaveParency({ parent, children })
-                              await handleRefetch({ _id: repertorySymptom._id })
+                              await refetchImage();
+                              setLoading(false)
+                              // await handleRefetch({ _id: repertorySymptom._id })
                             }}
                           >
-                            Zapisz
+                            { loading ? 'Zapisywanie...' : 'Zapisz' }
                           </button>
                         )}
                       </>

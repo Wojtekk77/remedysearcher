@@ -54,11 +54,20 @@ const RepertoySymptomImage = ({ imagePath, repertorySymptoms: repertorySymptomsR
             >
               + Dodaj symptom
             </button>
+            <button
+              className="addButton editButton"
+              style={{ marginLeft: 15 }}
+              onClick={async () => {
+                await handleRefetch();
+              }}
+            >
+              Odśwież
+            </button>
           </div>
         </div>
         <div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <RepertorySymptomsAI repertorySymptoms={repertorySymptoms} />
+            <RepertorySymptomsAI repertorySymptoms={repertorySymptoms} refetchImage={handleRefetch}/>
           </div>
         </div>
       </div>
