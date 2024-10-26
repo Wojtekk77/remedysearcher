@@ -4,12 +4,22 @@ import { jsonLeftRight } from '../scripts/AICreated/jsonLeftRight';
 import RepertorySymptom from '@models/repertorySymptom';
 import RepertoryImageJSON from '@models/repertoryImageJSON';
 
-export const GET = async (request, { params }) => {
+export const GET = async (request) => {
+
+    const { searchParams } = new URL(request.url); // Extract query parameters
+    const _limit = parseInt(searchParams.get('_limit')) || 5; // Default limit to 5
+    const _page = parseInt(searchParams.get('_page')) || 1; // Default page to 1
+    console.log(_limit, _page)
+    const startTimewordsFamilies = new Date(); 
 
     try {
         await connectToDB()
         // const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true }).limit(3)
-        const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: false }) // .limit(1)
+        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: false })
+        const imagesTotal = repImages.length;
+        console.log(imagesTotal, '<-imagesTotal');
+        // console.log((_page - 1) * _limit, _limit * _page, '<-(_limit - 1) * _page, _limit * _page')
+        repImages = repImages.slice((_page - 1) * _limit, _limit * _page)
         
         const repImagesPaths = repImages.map(ri => ri.imagePath) 
         
@@ -46,7 +56,14 @@ export const GET = async (request, { params }) => {
         }, {})
 
         const repertorySymptoms = Object.entries(repertorySymptomsRaw2).map(([imagePath, array]) => ({ imagePath, repertorySymptoms: array, property: array[0]?.property }))
-        return new Response(JSON.stringify({ repertorySymptoms }), { status: 200 })
+    
+        const endTimeWordsFamilies = new Date();     
+        console.log(`${endTimeWordsFamilies.getTime() - startTimewordsFamilies.getTime()}ms Description.aggregate`);
+
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        headers.append("imagesTotal", imagesTotal);
+        return new Response(JSON.stringify({ repertorySymptoms }), { status: 200, headers })
 
     } catch (error) {
         return new Response("Internal Server Error", { status: 500 });

@@ -1,5 +1,6 @@
 import { connectToDB } from "@utils/database";
 import RepertorySymptom from '@models/repertorySymptom';
+import { updateParency } from './updateParency';
 
 // export const GET = async (request, { params }) => {
 
@@ -67,3 +68,21 @@ export const POST = async (request) => {
     }
 }
 
+
+// TO UPDATE EXISTING INSTANCE
+export const PATCH = async (request) => {
+
+    const { values } = await request.json();
+    const { parent, children } = values;
+    try {
+
+        if (parent && children?.length) {
+            await updateParency({ ...values })
+        }
+
+        return new Response(JSON.stringify({}), { status: 200 })
+
+    } catch (error) {
+        return new Response("Internal Server Error", { status: 500 });
+    }
+}
