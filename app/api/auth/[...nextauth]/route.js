@@ -19,6 +19,7 @@ const handler = NextAuth({
     async session({ session }) {
       // store the user id from MongoDB to session
       if (session.user) {
+        await connectToDB();
         const sessionUser = await User.findOne({ email: session.user.email });
         session.user.id = sessionUser._id.toString();
         session.user.isAdmin = Boolean(sessionUser.isAdmin);
