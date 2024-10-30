@@ -43,9 +43,10 @@ export const PATCH = async (request) => {
         if (shortName) {
             remedy = await Remedy.findOne({ $or: [{ shortName }, { otherNames: shortName }] })
             shortName = remedy?.shortName ? remedy?.shortName : shortName;
+            values.shortName = shortName;
         }
         
-        await RepertorySymptomItem.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, { $set: { ...values, shortName: shortName || 'Name', remedy: remedy?._id } });
+        await RepertorySymptomItem.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, { $set: { ...values, remedy: remedy?._id } });
         const repertorySymptomItem = await RepertorySymptomItem.findById({ _id: new mongoose.Types.ObjectId(_id) });
         return new Response(JSON.stringify({ repertorySymptomItem }), { status: 200 })
 

@@ -19,6 +19,10 @@ export default function FormDialog({ open, setOpen, data: dataRaw, modelProperti
 
     e.preventDefault();
 
+    if (Object.keys(data.values || {}).length === 0) {
+      return;
+    }
+
     try {
       const response = await fetch(`/api/${data.modelProperties?.apiPath}`, {
         method: "PATCH",
@@ -61,7 +65,7 @@ export default function FormDialog({ open, setOpen, data: dataRaw, modelProperti
       disabled=true
     }
 
-    return <DialogField key={key} label={key} value={value} setData={handleSetData} disabled={disabled}/>
+    return <DialogField key={key} autoFocus={(key === 'shortName')} label={key} value={value} setData={handleSetData} disabled={disabled}/>
   });
 
   return (
@@ -76,6 +80,7 @@ export default function FormDialog({ open, setOpen, data: dataRaw, modelProperti
           }
         }}
         fullWidth={true}
+        disableRestoreFocus
       >
         <DialogTitle>Edytuj</DialogTitle>
         <DialogContent>
@@ -106,7 +111,7 @@ const DialogField = ({ label, value, setData, disabled }) => {
       </DialogContentText>
     
       <TextField
-        autoFocus={true}
+        autoFocus={label === 'shortName'}
         margin="dense"
         id={label}
         label={`${label?.includes('AI') ? 'Tekst wygenerowany przez AI' : label }`}

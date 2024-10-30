@@ -1,6 +1,7 @@
 import { connectToDB } from "@utils/database";
 import RepertorySymptom from '@models/repertorySymptom';
 import { updateParency } from './updateParency';
+import { cobineRepSymotoms } from './cobineRepSymotoms';
 
 // export const GET = async (request, { params }) => {
 
@@ -73,10 +74,13 @@ export const POST = async (request) => {
 export const PATCH = async (request) => {
 
     const { values } = await request.json();
-    const { parent, children } = values;
+    const { parent, children, cobineSymptoms } = values;
     try {
 
-        if (parent && children?.length) {
+        if (parent && children?.length && cobineSymptoms) {
+            await cobineRepSymotoms({ ...values })
+        }
+        else if (parent && children?.length) {
             await updateParency({ ...values })
         }
 

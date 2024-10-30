@@ -27,7 +27,7 @@ const RepertorySymptomAI = ({
 }) => {
 
 
-  const { children, parent, handleSetParent, handleSetChildren, handleSaveParency } = useContext(ParentChildrenContext);
+  const { children, parent, handleSetParent, handleSetChildren, handleSaveParency, handleCombineRepSymptoms } = useContext(ParentChildrenContext);
   const [repertorySymptom, setRepertorySymptom] = useState(repertorySymptomRaw);
   const [loading, setLoading] = useState(false);
   
@@ -117,6 +117,9 @@ const RepertorySymptomAI = ({
                             { loading ? 'Zapisywanie...' : 'Zapisz' }
                           </button>
                         )}
+                        {
+                          repertorySymptom.parent && <p className='addButton editButton' style={{ backgroundColor: repertorySymptom.parent && '#c06dfc', marginRight: 5 }}>Dz</p>
+                        }
                       </>
               }
               <EditableText key={repertorySymptom?.name} style={{ fontWeight: 'bold', fontSize: 15, minWidth: '50%' }} initialText={repertorySymptom?.name} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="name" />
@@ -127,7 +130,22 @@ const RepertorySymptomAI = ({
             
             <div>
 
-            
+              { (parent === repertorySymptom._id.toString() && children?.length) && (
+
+                <button
+                  type='button'
+                  onClick={async () => {
+                    setLoading(true)
+                    await handleCombineRepSymptoms({ parent, children })
+                    await refetchImage();
+                    setLoading(false)
+                  }}
+                  style={{ marginLeft: 15}}
+                  className='addButton editButton'
+                >
+                  Połącz
+                </button>
+              )}
               <button
                 type='button'
                 onClick={() => {
@@ -161,9 +179,9 @@ const RepertorySymptomAI = ({
                   {repertorySymptomItems}
                   <button
                     style={{ marginLeft: 5 }}
-                    onClick={() => { 
-                        createRepertorySymptomItem({ values: { repertorySymptom: repertorySymptom?._id, strength: 1 }})
-                        handleRefetch({ _id: repertorySymptom?._id })
+                    onClick={async () => { 
+                        await createRepertorySymptomItem({ values: { repertorySymptom: repertorySymptom?._id, strength: 1 }})
+                        await handleRefetch({ _id: repertorySymptom?._id })
                       }
                     }
                     className='addButton'

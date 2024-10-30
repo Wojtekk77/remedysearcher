@@ -19,7 +19,7 @@ try {
         remedy = await Remedy.find({ $or: [{ shortName }, { otherNames: shortName }] })
     }
 
-    await RepertorySymptomItem.create({ ...values, shortName: remedy?.shortName || shortName || 'Name', remedy: remedy?._id });
+    await RepertorySymptomItem.create({ ...values, shortName: remedy?.shortName || shortName || '', remedy: remedy?._id });
 
     return new Response(JSON.stringify({}), { status: 200 })
     } catch (error) {

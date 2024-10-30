@@ -99,3 +99,7 @@ export const isJsonString = (str) => {
     }
     return true;
 }
+
+export const valueExists = (v) => {
+    return (v !== null && v !== undefined);
+}

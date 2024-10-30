@@ -22,7 +22,7 @@ const EditableText = ({ initialText, onUpdate, _id, fieldName, style }) => {
           onBlur={handleBlur}
           className="search_input peer"
           autoFocus={true}
-          style={{ minWidth: '50%' }}
+          style={{ minWidth: '100%' }}
         />
       ) : (
         <p

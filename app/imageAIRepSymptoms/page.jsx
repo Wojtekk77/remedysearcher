@@ -91,6 +91,25 @@ const ImageAI = () => {
     }
   },[parent, children]);
 
+
+  const handleCombineRepSymptoms = useCallback(async ({ parent, children }) => {
+    try {
+      const response = await fetch(`/api/repertorySymptom`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          values: {
+            parent,
+            children,
+            cobineSymptoms: true,
+          }
+        }),
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+  },[parent, children]);
+
   // Handle page click
   const handlePageClick = (data) => {
     console.log(data, 'data on page change')
@@ -134,7 +153,7 @@ const ImageAI = () => {
 
     
   return (
-    <ParentChildrenContext.Provider value={{ parent, handleSetParent, children, handleSetChildren, handleSaveParency }}>
+    <ParentChildrenContext.Provider value={{ parent, handleSetParent, children, handleSetChildren, handleSaveParency, handleCombineRepSymptoms }}>
       
       <RepertorySymptomsImages items={data?.repertorySymptoms} />
       <ReactPaginate
