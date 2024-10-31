@@ -1,7 +1,7 @@
 import { connectToDB } from "@utils/database";
 import RepertorySymptom from '@models/repertorySymptom';
 import { updateParency } from './updateParency';
-import { cobineRepSymotoms } from './cobineRepSymotoms';
+import { combineRepSymotoms } from './combineRepSymotoms';
 
 // export const GET = async (request, { params }) => {
 
@@ -78,7 +78,7 @@ export const PATCH = async (request) => {
     try {
 
         if (parent && children?.length && cobineSymptoms) {
-            await cobineRepSymotoms({ ...values })
+            await combineRepSymotoms({ ...values })
         }
         else if (parent && children?.length) {
             await updateParency({ ...values })
