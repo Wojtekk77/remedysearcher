@@ -10,6 +10,6 @@ export const combineRepSymotoms = async ({ parent, children }) => {
     
     const repertorySymptomItemsToMove = await RepertorySymptomItem.updateMany({ repertorySymptom: { $in: childrenIds } }, { $set: { repertorySymptom: parentId } });
     
-    await RepertorySymptom.deleteOne({ _id: { $in: childrenIds } });
+    await RepertorySymptom.deleteMany({ _id: { $in: childrenIds } });
 };
 

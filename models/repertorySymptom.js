@@ -9,6 +9,7 @@ const RepertorySymptomSchema = new Schema({
   descriptionAI: { type: String },
   property: { type: Number }, // umysl, zawroty glowy, oko, nos
   imagePath: { type: String },
+  orderNumber: { type: Number },
   toFix: { type: Boolean },
   destroyed: { type: Boolean },
 }, {

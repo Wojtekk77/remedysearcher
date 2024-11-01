@@ -33,11 +33,12 @@ export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, sk
     let parentName = '';
     let arrOfObjs = [];
 
-    repertoryImageJSONsRaw.forEach(obj => {
+    repertoryImageJSONsRaw.forEach(async obj => {
 
         console.log(obj.imagePath)
         if (!isJsonString(obj.json)) {
             console.log('not valid - skip')
+            await RepertoryImageJSON.updateOne({ _id: obj._id }, { $set: { imageAlreadyConverted: false } })
             return;
         }
         arrOfObjs = [];
@@ -67,6 +68,8 @@ export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, sk
             property: REMEDY_PROPERTY.UMYSL,
             arrOfObjs,
         })
+        await RepertoryImageJSON.updateOne({ _id: obj._id }, { $set: { imageAlreadyConverted: true } })
+
     })
     return repertoryImageJSONs;
 }

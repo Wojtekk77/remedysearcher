@@ -55,12 +55,17 @@ import { combineRepSymotoms } from './combineRepSymotoms';
 export const POST = async (request) => {
 
     const { values, modelName } = await request.json();
-    const { imagePath } = values;
+    let { imagePath, orderNumber, ...otherValues } = values;
 
     try {
         await connectToDB()
 
-        await RepertorySymptom.create({ ...values, imagePath });
+        let lastImageRepSymptomOrderNumber; 
+        if (!orderNumber) {
+            lastImageRepSymptomOrderNumber = await RepertorySymptom.find({ imagePath }).sort({ orderNumber: -1 }).limit(1);
+            orderNumber = lastImageRepSymptomOrderNumber[0].orderNumber + 1
+        }
+        await RepertorySymptom.create({ ...otherValues, imagePath, orderNumber });
 
         return new Response(JSON.stringify({}), { status: 200 })
 

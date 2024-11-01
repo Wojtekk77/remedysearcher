@@ -16,9 +16,6 @@ const RepertorySymptomsImages = ({ items }) => {
     return null;
   }
 
-  const addRepertorySymptom = useCallback(async({ values }) => {
-      await generalCreateModel({ values, modelName: 'repertorySymptom' });
-  }, []);
 
   return(
     items?.map(item => {
@@ -28,7 +25,6 @@ const RepertorySymptomsImages = ({ items }) => {
           repertorySymptoms={item.repertorySymptoms}
           imagePath={item.imagePath}
           property={item.property}
-          addRepertorySymptom={addRepertorySymptom}
         />
       );
     })
@@ -50,6 +46,10 @@ const ImageAI = () => {
 
   const isAdmin = session?.user?.isAdmin;
   const [data, setData] = useState();
+
+  const addRepertorySymptom = useCallback(async({ values }) => {
+    await generalCreateModel({ values, modelName: 'repertorySymptom' });
+  }, []);
 
   const handleSetParent = useCallback(({ _id }) => {
     setParent(parent?.toString() === _id.toString() ? null : _id.toString())
@@ -153,7 +153,7 @@ const ImageAI = () => {
 
     
   return (
-    <ParentChildrenContext.Provider value={{ parent, handleSetParent, children, handleSetChildren, handleSaveParency, handleCombineRepSymptoms }}>
+    <ParentChildrenContext.Provider value={{ parent, handleSetParent, children, handleSetChildren, handleSaveParency, handleCombineRepSymptoms, addRepertorySymptom }}>
       
       <RepertorySymptomsImages items={data?.repertorySymptoms} />
       <ReactPaginate

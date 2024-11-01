@@ -15,7 +15,7 @@ export const GET = async (request) => {
     try {
         await connectToDB()
         // const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true }).limit(3)
-        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: false })
+        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true })
         const imagesTotal = repImages.length;
         console.log(imagesTotal, '<-imagesTotal');
         // console.log((_page - 1) * _limit, _limit * _page, '<-(_limit - 1) * _page, _limit * _page')
@@ -39,7 +39,7 @@ export const GET = async (request) => {
             },
             {
                 $sort: {
-                    imagePath: 1,
+                    imagePath: 1, orderNumber: 1,
                 },
             },
 

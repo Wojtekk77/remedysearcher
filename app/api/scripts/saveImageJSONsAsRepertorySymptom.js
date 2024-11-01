@@ -1,4 +1,3 @@
-import { connectToDB } from "@utils/database";
 import Remedy from '@models/remedy';
 import RepertorySymptom from '@models/repertorySymptom';
 import RepertorySymptomItem from '@models/repertorySymptomItem';
@@ -48,6 +47,7 @@ export const saveImageJSONsAsRepertorySymptom = async ({ property }) => {
         for await (const imageJSON of imageJSONs) {
             const { imagePath, property, arrOfObjs } = imageJSON;
 
+            let orderNumber = 1;
             for await (const obj of arrOfObjs) {
 
                 const { name, remedies: arrOfRemedyShortNames, parentName } = obj;
@@ -57,7 +57,8 @@ export const saveImageJSONsAsRepertorySymptom = async ({ property }) => {
                 let repSymptom = await RepertorySymptom.findOne({ name, property, parentName, description: name.toLowerCase() });
 
                 if (!repSymptom?._id) {
-                    repSymptom = await RepertorySymptom.create({ name, description: name.toLowerCase(), property, imagePath, parentName });
+                    repSymptom = await RepertorySymptom.create({ name, description: name.toLowerCase(), property, imagePath, parentName, orderNumber });
+                    orderNumber += 1;
                 }
                 else {
                     console.log('RepertodySymptom exists: ', repSymptom?.name, repSymptom?._id)
@@ -74,7 +75,7 @@ export const saveImageJSONsAsRepertorySymptom = async ({ property }) => {
         }
         
         let endTime = new Date(); 
-        console.log(`END Total Time ${endTime.getTime() - startTime.getTime()}ms !`);
+        console.log(`END Total Time ${endTime.getTime()}`);
         // res.json({ remedies: result });
         return new Response(JSON.stringify({}), { status: 200 })
     } catch (error) {

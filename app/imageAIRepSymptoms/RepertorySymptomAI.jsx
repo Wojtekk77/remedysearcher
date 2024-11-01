@@ -5,7 +5,7 @@ import EditableText from '@components/Form/EditableText';
 import { ParentChildrenContext } from './page';
 
 
-const repSymptomField = ['name', 'parent', 'isParent'];
+const repSymptomField = ['name', 'parent', 'isParent', 'orderNumber'];
 const nothingChange = (a, b, fields = repSymptomField) => {
   for (const field of fields) {
     if (typeof a[field] !== typeof b[field] || a[field]?.toString() !== b[field]?.toString()) {
@@ -27,7 +27,7 @@ const RepertorySymptomAI = ({
 }) => {
 
 
-  const { children, parent, handleSetParent, handleSetChildren, handleSaveParency, handleCombineRepSymptoms } = useContext(ParentChildrenContext);
+  const { children, parent, handleSetParent, handleSetChildren, handleSaveParency, handleCombineRepSymptoms, addRepertorySymptom } = useContext(ParentChildrenContext);
   const [repertorySymptom, setRepertorySymptom] = useState(repertorySymptomRaw);
   const [loading, setLoading] = useState(false);
   
@@ -110,6 +110,7 @@ const RepertorySymptomAI = ({
                               setLoading(true)
                               await handleSaveParency({ parent, children })
                               await refetchImage();
+                              handleSetParent({ _id: repertorySymptom._id })
                               setLoading(false)
                               // await handleRefetch({ _id: repertorySymptom._id })
                             }}
@@ -117,10 +118,11 @@ const RepertorySymptomAI = ({
                             { loading ? 'Zapisywanie...' : 'Zapisz' }
                           </button>
                         )}
-                        {
-                          repertorySymptom.parent && <p className='addButton editButton' style={{ backgroundColor: repertorySymptom.parent && '#c06dfc', marginRight: 5 }}>Dz</p>
-                        }
+
                       </>
+              }
+              {
+                repertorySymptom.parent && <p className='addButton editButton' style={{ backgroundColor: repertorySymptom.parent && '#c06dfc', marginRight: 5 }}>Dz</p>
               }
               <EditableText key={repertorySymptom?.name} style={{ fontWeight: 'bold', fontSize: 15, minWidth: '50%' }} initialText={repertorySymptom?.name} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="name" />
             </div>
@@ -128,7 +130,7 @@ const RepertorySymptomAI = ({
             {/* <EditableText key={repertorySymptom?.parentName} style={{ color: '#339' , marginLeft: 10, fontWeight: 'bold', fontStyle: 'italic', fontSize: 13}} initialText={repertorySymptom?.parentName || ''} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="parentName" /> */}
 
             
-            <div>
+            <div style={{ display: 'flex' }}>
 
               { (parent === repertorySymptom._id.toString() && children?.length) && (
 
@@ -169,6 +171,19 @@ const RepertorySymptomAI = ({
               >
                 XXX
               </button>
+              <button
+                onClick={async () => {
+                  await addRepertorySymptom({ values: { imagePath: repertorySymptom.imagePath, property: repertorySymptom.property, name: 'NAZWA', parentName: '', orderNumber: repertorySymptom.orderNumber + 0.1 } });
+                  await refetchImage();
+                }}
+                className="addButton"
+                style={{ marginLeft:5, marginRight: 5 }}
+              >
+                +
+              </button>
+              {/* <button style={{ marginLeft: 3 }}>{repertorySymptom?.orderNumber}</button> */}
+              <EditableText key={repertorySymptom?.orderNumber} initialText={repertorySymptom?.orderNumber} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="orderNumber" />
+
             </div>
             
           </div>

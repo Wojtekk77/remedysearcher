@@ -7,13 +7,13 @@ import { generalGetModel } from '@utils';
 import RepertorySymptomsAI from './RepertorySymptomsAI';
 
 
-const RepertoySymptomImage = ({ imagePath, repertorySymptoms: repertorySymptomsRaw, property, addRepertorySymptom }) => {
+const RepertoySymptomImage = ({ imagePath, repertorySymptoms: repertorySymptomsRaw, property }) => {
 
   const [repertorySymptoms, setReprtorySymptoms] = useState(repertorySymptomsRaw)
 
   const handleRefetch = useCallback(async () => {
 
-    const repSymptoms = await generalGetModel({
+    let repSymptoms = await generalGetModel({
       modelName: 'repertorySymptom',
       match: { $match: { imagePath }},
       lookup: { 
@@ -25,6 +25,8 @@ const RepertoySymptomImage = ({ imagePath, repertorySymptoms: repertorySymptomsR
         },
       }
     });
+
+    repSymptoms = repSymptoms.sort((a,b) => a.orderNumber - b.orderNumber)
 
     setReprtorySymptoms(repSymptoms)
   }, [])
@@ -44,16 +46,8 @@ const RepertoySymptomImage = ({ imagePath, repertorySymptoms: repertorySymptomsR
 
         <div>
           <div style={{ width: 500 }}>
+            {imagePath}
             <img src={imagePath} />
-            <button
-              onClick={async () => {
-                await addRepertorySymptom({ values: { imagePath, property: repertorySymptoms[0].property, name: 'NAZWA - NOWO STWORZONY', parentName: 'PARENT NAME NOWO STWORZONY' } });
-                await handleRefetch();
-              }}
-              className="addButton"
-            >
-              + Dodaj symptom
-            </button>
             <button
               className="addButton editButton"
               style={{ marginLeft: 15 }}
