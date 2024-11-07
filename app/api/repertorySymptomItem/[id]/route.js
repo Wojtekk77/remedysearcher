@@ -51,6 +51,21 @@ export const PATCH = async (request) => {
     }
 }
 
+export const DELETE = async (request) => {
+    const { values } = await request.json();
+
+try {
+    await connectToDB();
+
+    console.log(values, 'values')
+    const x = await RepertorySymptomItem.deleteOne({ _id: new mongoose.Types.ObjectId(values._id) });
+    console.log(x);
+    return new Response(JSON.stringify({}), { status: 200 })
+    } catch (error) {
+        return new Response("Failed to get ilnesses", { status: 500 });
+    }
+}
+
 const addNewRepSymptomItems = async (repSymptomItemsAsStr, _id) => {
 
     const arrOfRepSymptItems = repSymptomItemsAsStr.split(',');

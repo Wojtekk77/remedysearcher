@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
 import RepertorySymptomItemAI from './RepertorySymptomItemAI';
-import { generalGetModel, generalUpdateModel } from '@utils';
+import { generalDeleteModel, generalGetModel, generalUpdateModel } from '@utils';
 import EditableText from '@components/Form/EditableText';
 import { ParentChildrenContext } from './page';
 
@@ -30,6 +30,7 @@ const RepertorySymptomAI = ({
   const { children, parent, handleSetParent, handleSetChildren, handleSaveParency, handleCombineRepSymptoms, addRepertorySymptom } = useContext(ParentChildrenContext);
   const [repertorySymptom, setRepertorySymptom] = useState(repertorySymptomRaw);
   const [loading, setLoading] = useState(false);
+  const [showRemoveButton, setShowRemoveButton] = useState(false);
   
   const handleRefetch = useCallback(async ({ _id }) => {
     const repSymptom = await generalGetModel({
@@ -52,6 +53,12 @@ const RepertorySymptomAI = ({
       return generalUpdateModel({ _id, values, modelName: 'repertorySymptomItem' });
   }, []);
 
+
+  const deleteRepSymptomItem = useCallback(async ({ apiPath, values }) => {
+    return generalDeleteModel({ values, apiPath });
+}, []);
+    
+
   useEffect(() => {
     if (repertorySymptomRaw && repertorySymptom && !nothingChange(repertorySymptomRaw, repertorySymptom)) {
       setRepertorySymptom(repertorySymptomRaw)
@@ -70,6 +77,8 @@ const RepertorySymptomAI = ({
         setDialogModelProperties={setDialogModelProperties}
         handleRefetchParent={handleRefetch}
         setDialogConfirmationAction={setDialogConfirmationAction}
+        deleteRepSymptomItem={deleteRepSymptomItem}
+        showRemoveButton={showRemoveButton}
       />
     );
   });
@@ -180,6 +189,16 @@ const RepertorySymptomAI = ({
                 style={{ marginLeft:5, marginRight: 5 }}
               >
                 +
+              </button>
+              <button
+                onClick={async () => {
+                  setShowRemoveButton(!showRemoveButton)
+                  // await handleRefetch({ _id: repertorySymptom._id })
+                }}
+                className="addButton removeButton"
+                style={{ marginLeft: 1, marginRight: 3 }}
+              >
+                - i
               </button>
               {/* <button style={{ marginLeft: 3 }}>{repertorySymptom?.orderNumber}</button> */}
               <EditableText key={repertorySymptom?.orderNumber} initialText={repertorySymptom?.orderNumber} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="orderNumber" />

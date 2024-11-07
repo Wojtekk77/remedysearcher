@@ -12,6 +12,8 @@ const RepertorySymptomItemAI = ({
   setDialogModelProperties,
   setDialogConfirmationAction,
   handleRefetchParent,
+  showRemoveButton,
+  deleteRepSymptomItem,
 }) => {
   
   const [repSymptomItem, setRepSymptomItem] = useState(repertorySymptomItem);
@@ -22,7 +24,7 @@ const RepertorySymptomItemAI = ({
     setRepSymptomItem(updatedRepSymptpomItem)
   }, [])
 
-  const handleRefetchItem = useCallback(async () => {
+  const handleRefetchParentAndItem = useCallback(async () => {
     const repertorySymptomItem = await generalGetModel({ _id: repSymptomItem._id, modelName: 'repertorySymptomItem' });
     await handleRefetchParent({ _id: repertorySymptomItem?.repertorySymptom });
     setRepSymptomItem(repertorySymptomItem);
@@ -49,18 +51,33 @@ const RepertorySymptomItemAI = ({
         >
             {`${repSymptomItem.strength === 4 && '*' || ''}${capitalizeFirstLetter(repSymptomItem.shortName)}.,`}
         </button>
-        <button
-          style={{ width: 12 }}
-          className='addButton editButton'
-          onClick={() => {
-            setDialogModelProperties({ apiPath: `repertorySymptomItem/${repSymptomItem._id}`, modelName: 'repertorySymptomItem', id: repSymptomItem._id })
-            setDialogData(repSymptomItem)
-            setDialogConfirmationAction(() => handleRefetchItem)
-            setDialogOpen(true) 
-          }}
-        >
-          #
-        </button>
+        {
+          showRemoveButton ?
+          <button
+            style={{ width: 12 }}
+            className='addButton removeButton'
+            onClick={async () => {
+              await deleteRepSymptomItem({ apiPath: `repertorySymptomItem/${repSymptomItem._id}`, values: { _id: repSymptomItem._id } })
+              await handleRefetchParent({ _id: repertorySymptomItem?.repertorySymptom });
+            }}
+          >
+          -
+          </button> :
+          <button
+            style={{ width: 12 }}
+            className='addButton editButton'
+            onClick={() => {
+              setDialogModelProperties({ apiPath: `repertorySymptomItem/${repSymptomItem._id}`, modelName: 'repertorySymptomItem', id: repSymptomItem._id })
+              setDialogData(repSymptomItem)
+              setDialogConfirmationAction(() => handleRefetchParentAndItem)
+              setDialogOpen(true) 
+            }}
+          >
+            #
+          </button>
+        }
+
+        
       </span>
   )
 };

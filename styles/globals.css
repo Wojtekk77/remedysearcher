@@ -370,6 +370,15 @@
   background-color: rgb(34, 184, 56);
 }
 
+.removeButton {
+  background-color: #d51b1b;
+}
+
+.removeButton:hover,
+.removeButton:focus {
+  background-color: rgb(139, 1, 1);
+}
+
 .editSmallBtn {
   background-color:rgba(120, 120, 120, 0.4);
   transition: 0.4s ease-in-out;

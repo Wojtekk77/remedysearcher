@@ -87,6 +87,24 @@ export const generalCreateModel = async ({ modelName, values }) => {
     } catch (error) {
         console.log('General POST Error:', error);
     }
+};
+
+export const generalDeleteModel = async ({ apiPath, values }) => {
+
+    try {
+        let response = await fetch(`/api/${apiPath}`, {
+            method: "DELETE",
+            // modelName: 'repertprSymptom'
+            body: JSON.stringify({ values }),
+        });
+        
+        const data = await response.json();
+
+        return data;
+
+    } catch (error) {
+        console.log('General POST Error:', error);
+    }
 
 };
 

@@ -27,18 +27,18 @@ try {
     }
 }
 
-export const GET = async (request) => {
-    const startTime = new Date(); 
+// export const GET = async (request) => {
+//     const startTime = new Date(); 
     
-    try {
-        await connectToDB()
+//     try {
+//         await connectToDB()
 
-        const ilnesses = await Illness.find({}).sort({ name: 1 });
-        const endTime = new Date(); 
-        console.log(`${endTime.getTime() - startTime.getTime()}ms: Total Time`);
+//         const ilnesses = await Illness.find({}).sort({ name: 1 });
+//         const endTime = new Date(); 
+//         console.log(`${endTime.getTime() - startTime.getTime()}ms: Total Time`);
 
-        return new Response(JSON.stringify(ilnesses), { status: 200 })
-    } catch (error) {
-        return new Response("Failed to fetch ilnesses", { status: 500 })
-    }
-} 
+//         return new Response(JSON.stringify(ilnesses), { status: 200 })
+//     } catch (error) {
+//         return new Response("Failed to fetch ilnesses", { status: 500 })
+//     }
+// } 
