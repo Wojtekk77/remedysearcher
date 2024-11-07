@@ -11,6 +11,7 @@ const RepertorySymptomItemAI = ({
   setDialogOpen,
   setDialogModelProperties,
   setDialogConfirmationAction,
+  handleRefetchParent,
 }) => {
   
   const [repSymptomItem, setRepSymptomItem] = useState(repertorySymptomItem);
@@ -23,6 +24,7 @@ const RepertorySymptomItemAI = ({
 
   const handleRefetchItem = useCallback(async () => {
     const repertorySymptomItem = await generalGetModel({ _id: repSymptomItem._id, modelName: 'repertorySymptomItem' });
+    await handleRefetchParent({ _id: repertorySymptomItem?.repertorySymptom });
     setRepSymptomItem(repertorySymptomItem);
   }, [])
 

@@ -36,21 +36,51 @@ export const PATCH = async (request) => {
 
     try {
         await connectToDB()
-
-        let shortName = values.shortName?.toLowerCase();
-
-        let remedy;
-        if (shortName) {
-            remedy = await Remedy.findOne({ $or: [{ shortName }, { otherNames: shortName }] })
-            shortName = remedy?.shortName ? remedy?.shortName : shortName;
-            values.shortName = shortName;
+        let repertorySymptomItem = {};
+        if (values.shortName?.includes(',')) {
+            repertorySymptomItem = await addNewRepSymptomItems(values.shortName, _id);
         }
-        
-        await RepertorySymptomItem.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, { $set: { ...values, remedy: remedy?._id } });
-        const repertorySymptomItem = await RepertorySymptomItem.findById({ _id: new mongoose.Types.ObjectId(_id) });
+        else {
+            repertorySymptomItem = await updateOneSymptom(_id, values);
+        }
+
         return new Response(JSON.stringify({ repertorySymptomItem }), { status: 200 })
 
     } catch (error) {
         return new Response(`Internal Server Error: ${error}`, { status: 500 });
     }
 }
+
+const addNewRepSymptomItems = async (repSymptomItemsAsStr, _id) => {
+
+    const arrOfRepSymptItems = repSymptomItemsAsStr.split(',');
+    const firstShortName = arrOfRepSymptItems.shift();
+    const repertorySymptomItem = await updateOneSymptom(_id, { shortName: firstShortName })
+
+    console.log(arrOfRepSymptItems, 'arrOfRepSymptItems')
+    for (const shortNameRaw of arrOfRepSymptItems) {
+
+        let shortName = shortNameRaw.trim().toLowerCase();
+        const remedy = await Remedy.findOne({ $or: [{ shortName }, { otherNames: shortName }] })
+        shortName = remedy?.shortName ? remedy?.shortName : shortName;
+
+        await RepertorySymptomItem.create({ repertorySymptom: repertorySymptomItem.repertorySymptom, shortName, remedy: remedy?._id, strength: 1 } );
+    } 
+
+    return repertorySymptomItem;
+}
+
+const updateOneSymptom = async (_id, values) => {
+
+    let shortName = values.shortName?.toLowerCase();
+
+    let remedy;
+    if (shortName) {
+        remedy = await Remedy.findOne({ $or: [{ shortName }, { otherNames: shortName }] })
+        shortName = remedy?.shortName ? remedy?.shortName : shortName;
+        values.shortName = shortName;
+    }
+    
+    await RepertorySymptomItem.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, { $set: { ...values, remedy: remedy?._id } });
+    return RepertorySymptomItem.findById({ _id: new mongoose.Types.ObjectId(_id) });
+};

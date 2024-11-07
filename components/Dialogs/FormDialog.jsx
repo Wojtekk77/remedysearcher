@@ -61,7 +61,7 @@ export default function FormDialog({ open, setOpen, data: dataRaw, modelProperti
       return <div key={key} ></div>
     }
 
-    if (typeof value === 'boolean' || disabledFields.includes(key)) {
+    if ((key !== 'isParent' && typeof value === 'boolean') || disabledFields.includes(key)) {
       disabled=true
     }
 
@@ -124,7 +124,7 @@ const DialogField = ({ label, value, setData, disabled }) => {
           setData({ [label]: e.target.value });
         }}
         fullWidth={useFullWidth}
-        disabled={disabled || label === 'description' || typeof value === 'boolean'}
+        disabled={disabled || label === 'description'}
       />
     </div>
   )

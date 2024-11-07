@@ -54,7 +54,7 @@ export const saveImageJSONsAsRepertorySymptom = async ({ property }) => {
 
                 console.log(name, ':', 'remedies count:', arrOfRemedyShortNames?.length)
 
-                let repSymptom = await RepertorySymptom.findOne({ name, property, parentName, description: name.toLowerCase() });
+                let repSymptom = await RepertorySymptom.findOne({ imagePath, name, property, parentName, description: name.toLowerCase() });
 
                 if (!repSymptom?._id) {
                     repSymptom = await RepertorySymptom.create({ name, description: name.toLowerCase(), property, imagePath, parentName, orderNumber });
@@ -66,7 +66,6 @@ export const saveImageJSONsAsRepertorySymptom = async ({ property }) => {
 
                 if (repSymptom?._id) {
                     await saveRepSymptomItemToDB({ arrOfRemedyShortNames, remedyObjShortNames, repSymptom });
-
                 }
 
             }

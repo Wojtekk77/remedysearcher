@@ -4,7 +4,6 @@ import React, { createContext, useCallback } from 'react';
 import { useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
 import RepertoySymptomImage from './RepertoySymptomImage';
-import { PaginatedItems } from '@components/Paginate';
 import { generalCreateModel } from '@utils';
 import ReactPaginate from 'react-paginate';
 
@@ -42,7 +41,7 @@ const ImageAI = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const [pageCount, setPageCount] = useState(0); // Total number of pages
   const [currentPage, setCurrentPage] = useState(0); // Current page (0-indexed)
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const isAdmin = session?.user?.isAdmin;
   const [data, setData] = useState();
@@ -160,7 +159,7 @@ const ImageAI = () => {
           breakLabel="..."
           nextLabel="->"
           onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={15}
           pageCount={pageCount}
           previousLabel="<-"
           renderOnZeroPageCount={null}
