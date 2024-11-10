@@ -135,7 +135,7 @@ const RepertorySymptomAI = ({
               }
               <EditableText key={repertorySymptom?.name} style={{ fontWeight: 'bold', fontSize: 15, minWidth: '50%' }} initialText={repertorySymptom?.name} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="name" />
             </div>
-            {/* <p style={{ color: '#339' , marginLeft: 10, fontWeight: 'bold', fontStyle: 'italic', fontSize: 13}}>{repertorySymptom?.parentName || ''}</p> */}
+            <p style={{ color: '#339' , marginLeft: 10, fontWeight: 'bold', fontStyle: 'italic', fontSize: 10}}>{repertorySymptom?.parentObj?.name || ''}</p>
             {/* <EditableText key={repertorySymptom?.parentName} style={{ color: '#339' , marginLeft: 10, fontWeight: 'bold', fontStyle: 'italic', fontSize: 13}} initialText={repertorySymptom?.parentName || ''} onUpdate={updateRepSymptom} _id={repertorySymptom._id} fieldName="parentName" /> */}
 
             

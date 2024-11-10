@@ -65,7 +65,7 @@ export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, sk
         repertoryImageJSONs.push({
             _id: obj._id,
             imagePath: obj.imagePath,
-            property: REMEDY_PROPERTY.UMYSL,
+            property,
             arrOfObjs,
         })
         await RepertoryImageJSON.updateOne({ _id: obj._id }, { $set: { imageAlreadyConverted: true } })

@@ -38,6 +38,19 @@ export const GET = async (request) => {
                 }
             },
             {
+                $lookup: {
+                    from: 'repertorysymptoms',
+                    let: { parentId: { $toObjectId: '$parent' } },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ['$_id', '$$parentId'] } } }
+                    ],
+                    as: 'parentObj'
+                }
+            },
+            {
+                $unwind: { path: '$parentObj', preserveNullAndEmptyArrays: true },
+            },
+            {
                 $sort: {
                     imagePath: 1, orderNumber: 1,
                 },
@@ -50,6 +63,7 @@ export const GET = async (request) => {
             if (!acc[item.imagePath]) {
                 acc[item.imagePath] = [];
             }
+            console.log(item?.name, item?.parentObj, 'item');
             const sorted = item.repertorySymptomItems.sort((a, b) => a.shortName.localeCompare(b.shortName));
             acc[item.imagePath].push({ ...item, repertorySymptomItems: sorted })
             return acc;
