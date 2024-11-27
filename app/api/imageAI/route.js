@@ -2,6 +2,7 @@
 import Statistics from '@models/statistics';
 import { connectToDB } from "@utils/database";
 import RepertorySymptom from '@models/repertorySymptom';
+import { REMEDY_PROPERTY } from '@common/constants';
 
 export const GET = async (request, { params }) => {
 
@@ -10,6 +11,12 @@ export const GET = async (request, { params }) => {
 
 
         const repertorySymptoms = await RepertorySymptom.aggregate([
+            {
+                $match: {
+                    // show left, right, diagonally, cold, warm
+                    property: { $lte: REMEDY_PROPERTY.LEFT_DOWN_RIGHT_UP },
+                },
+            },
             {
                 $lookup: {
                     from: 'repertorysymptomitems',

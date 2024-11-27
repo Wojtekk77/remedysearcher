@@ -130,21 +130,14 @@ const SidebarNav = ({}) => {
               <li className={currentPath == '/imageAI' ? 'active' : ''}>
                 <Link href='/imageAI' className='sidebar_button' >
                   <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
-                  <div className="grow">Images AI</div>
+                  <div className="grow">Lewa Prawa Strona</div>
                   <div><FaAngleRight className='text-lg font-light' /></div>
                 </Link>
               </li>
               <li className={currentPath == '/imageAIRepSymptoms' ? 'active' : ''}>
                 <Link href='/imageAIRepSymptoms' className='sidebar_button' >
                   <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
-                  <div className="grow">Image AI Rep Symptoms</div>
-                  <div><FaAngleRight className='text-lg font-light' /></div>
-                </Link>
-              </li>
-              <li className={currentPath == '/repertoryImageJSONAI' ? 'active' : ''}>
-                <Link href='/repertoryImageJSONAI' className='sidebar_button' >
-                  <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
-                  <div className="grow">Repertory Image JSON AI</div>
+                  <div className="grow">Zdjęcia repertorium</div>
                   <div><FaAngleRight className='text-lg font-light' /></div>
                 </Link>
               </li>

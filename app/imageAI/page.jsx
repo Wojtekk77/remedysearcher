@@ -1,11 +1,8 @@
 "use client";
 
-import ReactPaginate from 'react-paginate';
-import { useRouter, useSearchParams } from "next/navigation";
+import React from 'react';
 import { useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
-import * as React from 'react';
-import { REMEDY_PROPERTY_NAME } from '@common/constants';
 import RepertorySymptom from './RepertorySymptom';
 import { PaginatedItems } from '@components/Paginate';
 
