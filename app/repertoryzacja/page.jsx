@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
+import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter  } from '@mui/x-data-grid';
 import Link from 'next/link';
 import { FaAngleRight } from 'react-icons/fa';
@@ -36,10 +37,18 @@ export const CustomToolbar = () => {
   );
 }
 
-const ClinicSearcher = () => {
+const Repertory = () => {
   const { data: session } = useSession();
 
   const [ilnesses, setIlnesses] = useState([]);
+
+  const { data, loading } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 500,
+    maxColumns: 6,
+  });
+
+  console.log(data ,'data')
 
   const getIlnesses = async () => {
     try {
@@ -59,12 +68,16 @@ const ClinicSearcher = () => {
 
   return (
     <div style={{ minHeight: '73vh' }}>
-      <div className="header">
+      <div style={{ height: '75vh' }}>
+        <DataGrid
+          {...data}
+          loading={loading}
+        />
+      </div>
+       {/* <div className="header">
         <h1 className='head_text'>
           <span className='blue_gradient'>Wyszukiwarka kliniczna</span>
         </h1>
-        {/* <div>{illness.dosage}</div>
-        <div>{illness.description}</div> */}
       </div>
       <DataGrid
         getRowId={(row) => row._id}
@@ -85,10 +98,10 @@ const ClinicSearcher = () => {
           },
         }}
         slots={{ toolbar: CustomToolbar }}
-      />
+      /> */}
 
     </div>
   );
 };
 
-export default ClinicSearcher;
+export default Repertory;
