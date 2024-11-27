@@ -1,12 +1,7 @@
-import Description from '@models/description';
-import Remedy from '@models/remedy';
-import { connectToDB } from "@utils/database";
 import OpenAI from "openai";
 import { appendTextToFile, base64_encode, getFilesFromCatalog } from './helpers';
-import { arrayOfRemedyNamesAndShortNames } from './kent/shortname-fullname';
 import RepertoryImageJSON from '@models/repertoryImageJSON';
-import { REMEDY_PROPERTY } from '../../../common/constants.js'
-import { isJsonString } from '@utils';
+import { isJsonString, valueExists } from '@utils';
 
 // it will automatically save in scripts
 export const convertImagesToText = async ({ 
@@ -14,13 +9,14 @@ export const convertImagesToText = async ({
     saveFileName = 'newFile.js',
     catalogPath = 'app/api/scripts/AIImagesToConvert',
     savePath = 'app/api/scripts/AICreated',
-    imgServerPath = 'https://srv44093.seohost.com.pl/zdjecia/',
+    imgServerPath = 'https://srv44093.seohost.com.pl/zdjecia/', // true path should be passed in parent
     saveToFile,
     saveToDB,
-    property = REMEDY_PROPERTY.UMYSL,
+    property,
     updateExistingFiles = false,
 }) => {
     const openai = new OpenAI();
+    let startTime = new Date(); 
     console.log('CONVERT IMAGE TO TEXT')
 
     try {
@@ -76,7 +72,7 @@ export const convertImagesToText = async ({
                 
                 const createObj = { imagePath: `${imgServerPath}${file.name}`, property, imageAlreadyConverted: false };
                 if (jsonIsValid) {
-                    createObj.json = adjustedReponse;
+                    createObj.json = parseWithUniqueKeys(adjustedReponse);
                 }
 
                 if (!repImgExists) {
@@ -103,3 +99,23 @@ export const convertImagesToText = async ({
         return new Response("Failed to create a new comment", { status: 500 });
     }
 }
+
+// Funkcja do przetworzenia JSON z duplikowanymi kluczami
+function parseWithUniqueKeys(jsonString) {
+    const regex = /"([^"]+)":\s*(\[[^\]]*\])/g; // Wzorzec do dopasowania klucza-wartości
+    const result = {};
+    let match;
+
+    while ((match = regex.exec(jsonString)) !== null) {
+        let [_, key, value] = match;
+        
+        // Modyfikacja klucza jeśli jest duplikatem
+        while (valueExists(result[key])) {
+            key += ":"; // Dodaj dwukropek do końca klucza
+        }
+
+        result[key] = JSON.parse(value); // Dodanie wartości do unikalnego klucza
+    }
+
+    return JSON.stringify(result, null, 4); // Sformatowany wynik jako JSON
+};

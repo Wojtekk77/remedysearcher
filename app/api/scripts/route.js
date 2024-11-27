@@ -18,7 +18,7 @@ import { createAISymptoms } from './createAISymptoms';
 import { convertImagesToText } from './convertImagesToText';  
 import { createRepertorySymptoms } from './createRepertorySymptoms';
 import { jsonLeftRight } from './AICreated/jsonLeftRight';
-import { REMEDY_PROPERTY } from '@common/constants';
+import { REMEDY_PROPERTY, REMEDY_PROPERTY_NAME } from '@common/constants';
 import { saveImageJSONsAsRepertorySymptom } from './saveImageJSONsAsRepertorySymptom';
 
 // get the most common word variations from description
@@ -66,27 +66,29 @@ try {
     // FINISHED 2024.07.31
 
     // TO DO START
+    const property = REMEDY_PROPERTY.ZAWROTY_GLOWY;
     await convertImagesToText({
 
         text: `
             Zapisz tekst w formacie JSON.
             Nie pomiń żadnego znaku!
 
-            Kluczami są pełne wyrażenia. 
+            Kluczami są pełne wyrażenia.
+            Jeżeli klucz się powtórzy to stwórz nowy klucz dodając znak ":" na końcu klucza.
+
             Wartościami są tablice ze skrótami nazw leków homeopatycznych.
-            
         `,
         saveFileName: 'repertorySymptomsBrain7.js',
-        imgServerPath: 'https://srv44093.seohost.com.pl/zdjecia/umysl/',
+        imgServerPath: `https://srv44093.seohost.com.pl/zdjecia/zawroty_glowy/`,
         saveToFile: false,
         saveToDB: true,
-        property: REMEDY_PROPERTY.UMYSL,
+        property,
         updateExistingFiles: true,
         // 'app/api/scripts/leftRightSide',
     });
 
 
-    await saveImageJSONsAsRepertorySymptom({ property: REMEDY_PROPERTY.UMYSL })
+    await saveImageJSONsAsRepertorySymptom({ property })
 
     // FINISHED
 

@@ -28,9 +28,7 @@ export const GET = async (request, { params }) => {
 export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, skipUsed = true) => {
 
     const repertoryImageJSONsRaw = await RepertoryImageJSON.find({ property, imageAlreadyConverted: { $ne: skipUsed } }).sort({ imagePath: 1 });
-    let nameChierarchy = [];
     let repertoryImageJSONs = [];
-    let parentName = '';
     let arrOfObjs = [];
 
     repertoryImageJSONsRaw.forEach(async obj => {
@@ -44,20 +42,17 @@ export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, sk
         arrOfObjs = [];
         Object.entries(JSON.parse(obj.json)).forEach(([key, value]) => {
             
-                if (atLeastXCapitalizedInARow(key.substring(0, 6), 3)) {
-                    parentName = key;
-                }
-                
+               
                 
                 if (Array.isArray(value)) {
 
                     if (value?.length === 0 || typeof value[0] === 'string') {
-                        arrOfObjs.push({ name: key, remedies: value, parentName })
+                        arrOfObjs.push({ name: key, remedies: value })
                     }
 
                 }
                 else if (typeof value === 'object') {
-                    const arrayOfKeyValue = getKeyValueFromObj({ parentName: key, obj: value })
+                    const arrayOfKeyValue = getKeyValueFromObj({ obj: value })
                     arrOfObjs.push(...arrayOfKeyValue)
                 }
 
@@ -74,7 +69,7 @@ export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, sk
     return repertoryImageJSONs;
 }
 
-const getKeyValueFromObj = ({ parentName, obj }) => {
+const getKeyValueFromObj = ({ obj }) => {
     const arrayOfKeyValue = [];
     Object.entries(obj).forEach(([key, value]) => {
 
@@ -83,13 +78,12 @@ const getKeyValueFromObj = ({ parentName, obj }) => {
             if (value?.length === 0 || typeof value[0] === 'string') {
                 arrayOfKeyValue.push({
                     name: key,
-                    parentName,
                     remedies: value,
                 })
             }
         }
         else {
-            const arr = getKeyValueFromObj({ parentName: `${parentName}, ${key}`, obj: value })
+            const arr = getKeyValueFromObj({ obj: value })
             arrayOfKeyValue.push(...arr);
         }
         

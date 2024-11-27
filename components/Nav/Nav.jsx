@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getProviders } from "next-auth/react";
 import MobileNav from './MobileNav';
 // import DesktopNav from './DesktopNav';

@@ -1,8 +1,7 @@
 import { connectToDB } from "@utils/database";
-import { getFilesFromCatalog } from '../scripts/helpers';
-import { jsonLeftRight } from '../scripts/AICreated/jsonLeftRight';
 import RepertorySymptom from '@models/repertorySymptom';
 import RepertoryImageJSON from '@models/repertoryImageJSON';
+import { REMEDY_PROPERTY } from '@common/constants';
 
 export const GET = async (request) => {
 
@@ -15,7 +14,7 @@ export const GET = async (request) => {
     try {
         await connectToDB()
         // const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true }).limit(3)
-        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true })
+        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true, property: REMEDY_PROPERTY.ZAWROTY_GLOWY })
         const imagesTotal = repImages.length;
         console.log(imagesTotal, '<-imagesTotal');
         // console.log((_page - 1) * _limit, _limit * _page, '<-(_limit - 1) * _page, _limit * _page')

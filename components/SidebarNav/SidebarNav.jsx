@@ -104,15 +104,22 @@ const SidebarNav = ({}) => {
               <div><FaAngleRight className='text-lg font-light' /></div>
             </Link>
           </li>
-          <li className={currentPath == '/create-comment' ? 'active' : ''}>
+          {/* <li className={currentPath == '/create-comment' ? 'active' : ''}>
             <Link href='/create-comment' className='sidebar_button' >
               <div className='pr-3'><FaRegComments className='text-md font-light' /></div>
               <div className="grow">Komentarz</div>
               <div><FaAngleRight className='text-lg font-light' /></div>
             </Link>
-          </li>
+          </li> */}
           { session?.user?.isAdmin && (
             <>
+              <li className={currentPath == '/repertoryzacja' ? 'active' : ''}>
+                <Link href='/repertoryzacja' className='sidebar_button' >
+                  <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
+                  <div className="grow">Repertoryzacja</div>
+                  <div><FaAngleRight className='text-lg font-light' /></div>
+                </Link>
+              </li>
               <li className={currentPath == '/stats' ? 'active' : ''}>
                 <Link href='/stats' className='sidebar_button' >
                   <div className='pr-3'><FaChartBar className='text-md font-light' /></div>
