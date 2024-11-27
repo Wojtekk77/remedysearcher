@@ -8,13 +8,14 @@ export const GET = async (request) => {
     const { searchParams } = new URL(request.url); // Extract query parameters
     const _limit = parseInt(searchParams.get('_limit')) || 5; // Default limit to 5
     const _page = parseInt(searchParams.get('_page')) || 1; // Default page to 1
+    const _property = parseInt(searchParams.get('_property')) || REMEDY_PROPERTY.UMYSL; // DEFAULT PROP UMSYL
     console.log(_limit, _page)
     const startTimewordsFamilies = new Date(); 
 
     try {
         await connectToDB()
         // const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true }).limit(3)
-        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true, property: REMEDY_PROPERTY.UMYSL })
+        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true, property: _property })
         const imagesTotal = repImages.length;
         console.log(imagesTotal, '<-imagesTotal');
         // console.log((_page - 1) * _limit, _limit * _page, '<-(_limit - 1) * _page, _limit * _page')
@@ -62,7 +63,7 @@ export const GET = async (request) => {
             if (!acc[item.imagePath]) {
                 acc[item.imagePath] = [];
             }
-            console.log(item?.name, item?.parentObj, 'item');
+
             const sorted = item.repertorySymptomItems.sort((a, b) => a.shortName.localeCompare(b.shortName));
             acc[item.imagePath].push({ ...item, repertorySymptomItems: sorted })
             return acc;

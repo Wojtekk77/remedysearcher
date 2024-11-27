@@ -1,11 +1,13 @@
 "use client";
 
-import React, { createContext, useCallback } from 'react';
-import { useState, useEffect } from "react";
+import React, { createContext, useCallback, useState, useEffect, useMemo } from "react";
 import { useSession } from 'next-auth/react';
 import RepertoySymptomImage from './RepertoySymptomImage';
 import { generalCreateModel } from '@utils';
 import ReactPaginate from 'react-paginate';
+import { REMEDY_PROPERTY, REMEDY_PROPERTY_NAME } from '@common/constants';
+import FormSelect from '@components/Form/FormSelect';
+import FormAutocomplete from '@components/Form/FormAutocomplete';
 
 
 const RepertorySymptomsImages = ({ items }) => {
@@ -42,6 +44,12 @@ const ImageAI = () => {
   const [pageCount, setPageCount] = useState(0); // Total number of pages
   const [currentPage, setCurrentPage] = useState(0); // Current page (0-indexed)
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [reperotrySymptomProperty, setRepertorySymptomProperty] = useState(REMEDY_PROPERTY.UMYSL);
+
+  const selectedValues = useMemo(() => {
+    return Object.values(REMEDY_PROPERTY).map((value) => ({ label: REMEDY_PROPERTY_NAME[value], value }) ).filter(item => item.value > REMEDY_PROPERTY.LEFT_DOWN_RIGHT_UP);
+  }, []);
+    
 
   const isAdmin = session?.user?.isAdmin;
   const [data, setData] = useState();
@@ -121,7 +129,7 @@ const ImageAI = () => {
 
       try {
         // Fetch posts for the current page from the API using _page and _limit
-        const response = await fetch(`/api/imageAIRepSymptoms?_page=${currentPage + 1}&_limit=${itemsPerPage}`);
+        const response = await fetch(`/api/imageAIRepSymptoms?_page=${currentPage + 1}&_limit=${itemsPerPage}&_property=${reperotrySymptomProperty}`);
         const data = await response.json();
         setData(data);
         // Get total number of posts from the "totalImages" header
@@ -136,7 +144,7 @@ const ImageAI = () => {
     };
 
     if (session?.user?.isAdmin) fetchImages();
-  }, [session?.user?.isAdmin, currentPage, itemsPerPage])
+  }, [session?.user?.isAdmin, currentPage, itemsPerPage, reperotrySymptomProperty])
 
   if (!isAdmin) {
     return <>ADMIN! Musisz być zalogowany jako ADMIN aby zobaczyć tę stronę.</>
@@ -150,10 +158,32 @@ const ImageAI = () => {
     return <>No repertory symptoms</>
   }
 
-    
+
   return (
     <ParentChildrenContext.Provider value={{ parent, handleSetParent, children, handleSetChildren, handleSaveParency, handleCombineRepSymptoms, addRepertorySymptom }}>
-      
+      {REMEDY_PROPERTY_NAME[reperotrySymptomProperty]}
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="->"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={15}
+        pageCount={pageCount}
+        previousLabel="<-"
+        renderOnZeroPageCount={null}
+        className="pagination"
+        activeClassName="activePage"
+        pageClassName="page"
+        forcePage={currentPage}
+      />
+      <FormAutocomplete 
+        options={selectedValues}
+        onChange={setRepertorySymptomProperty}
+        defaultOption={{ label: REMEDY_PROPERTY_NAME[REMEDY_PROPERTY.UMYSL], value: REMEDY_PROPERTY.UMYSL }}
+      />
+      {/* <FormSelect 
+        options={Object.values(REMEDY_PROPERTY).map((value) => ({ label: REMEDY_PROPERTY_NAME[value], value }) ).filter(item => item.value > REMEDY_PROPERTY.LEFT_DOWN_RIGHT_UP)}
+        defaultLabel="Umysł"
+      /> */}
       <RepertorySymptomsImages items={data?.repertorySymptoms} />
       <ReactPaginate
           breakLabel="..."
@@ -170,7 +200,7 @@ const ImageAI = () => {
       />
       <button className="addButton" onClick={() => setItemsPerPage(itemsPerPage + 1)}>
         +1 zdjęcie
-      </button>
+      </button> 
     </ParentChildrenContext.Provider>
   );
   
