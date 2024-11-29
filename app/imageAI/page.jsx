@@ -9,8 +9,6 @@ import { PaginatedItems } from '@components/Paginate';
 
 const RepertorySymptoms = ({ items }) => {
 
-  console.log(items, 'items');
-
   if (!items) {
     return null;
   }
@@ -47,24 +45,14 @@ const ImageAI = () => {
     return <>ADMIN! Musisz być zalogowany jako ADMIN aby zobaczyć tę stronę.</>
   }
 
-  // const RepertorySymptoms = data?.repertorySymptoms?.map(repertorySymptom => {
-  //   return (
-  //     <RepertorySymptom
-  //       key={repertorySymptom._id}
-  //       repertorySymptom={repertorySymptom}
-  //     />
-  //   );
-  // });
-
   if (!data?.repertorySymptoms) {
     return <>No repertory symptoms</>
   }
     
   return (
-    <>
-      {/* {RepertorySymptoms} */}
-      <PaginatedItems items={data?.repertorySymptoms} itemsPerPage={5} ModelItem={RepertorySymptoms} />
-    </>
+    
+    <PaginatedItems items={data?.repertorySymptoms} itemsPerPage={5} ModelItem={RepertorySymptoms} />
+
   );
   
 };

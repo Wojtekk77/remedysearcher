@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import { GoogleLoginButton } from 'react-social-login-buttons';
-import { FaAngleRight, FaChartBar, FaExternalLinkAlt, FaPersonBooth, FaRegComments, FaSearch, FaSignOutAlt } from 'react-icons/fa';
+import { FaAngleRight, FaChartBar, FaSearch, FaSignOutAlt } from 'react-icons/fa';
 
 
 const SidebarNav = ({}) => {

@@ -52,7 +52,7 @@ const Repertory = () => {
 
   const getIlnesses = async () => {
     try {
-      let response = await fetch("/api/illness", {
+      let response = await fetch("/api/repertorySymptom", {
         method: "GET",
       });
       response = await response.json();
@@ -67,7 +67,7 @@ const Repertory = () => {
   }, [])
 
   return (
-    <div style={{ minHeight: '73vh' }}>
+    <div style={{ height: '73vh' }}>
       <div style={{ height: '75vh' }}>
         <DataGrid
           {...data}

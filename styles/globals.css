@@ -110,7 +110,7 @@
 }
 
 .head_text {
-  @apply mb-4 text-4xl font-extrabold leading-[1.15] text-black sm:text-4xl;
+  @apply mb-4 text-4xl font-bold leading-[1.15] text-black sm:text-4xl;
 }
 
 .head_text_sidebar {

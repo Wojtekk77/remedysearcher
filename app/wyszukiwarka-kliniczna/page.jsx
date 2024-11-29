@@ -60,9 +60,9 @@ const ClinicSearcher = () => {
   return (
     <div style={{ minHeight: '73vh' }}>
       <div className="header">
-        <h1 className='head_text'>
+        <h2 className='head_text'>
           <span className='blue_gradient'>Wyszukiwarka kliniczna</span>
-        </h1>
+        </h2>
         {/* <div>{illness.dosage}</div>
         <div>{illness.description}</div> */}
       </div>
@@ -75,7 +75,7 @@ const ClinicSearcher = () => {
         disableColumnSelector
         disableDensitySelector
         disableExportIcon
-        style={{ width: 1200, maxHeight: '75vh' }}
+        style={{ maxHeight: '70vh', minHeight: '70vh' }}
         disableToolbarButton={true}
         hideFooter={true}
         slotProps={{
