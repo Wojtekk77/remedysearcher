@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import RemedySearchResultCardList from "./RemedySearchResultCardList";
 import { DataGrid } from '@mui/x-data-grid';
 import { createColumns } from './helpers';

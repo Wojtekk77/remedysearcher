@@ -2,54 +2,60 @@ import { connectToDB } from "@utils/database";
 import RepertorySymptom from '@models/repertorySymptom';
 import { updateParency } from './updateParency';
 import { combineRepSymotoms } from './combineRepSymotoms';
+import { getSearchProps } from "../remedies/helpers";
 
-// export const GET = async (request, { params }) => {
+export const GET = async (request) => {
 
-//     try {
-//         await connectToDB()
-//         // ęę TUTAJ TRZEBA WYCIĄGNĄĆ PO IMAGEJSON -> A POTEM REP SYMPTOM ITD
-//         const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true }).limit(3)
-//         const repImagesPaths = repImages.map(ri => ri.imagePath) 
-//         // console.log(repImagesPaths, 'repImagesPaths');
-//         const repertorySymptomsRaw = await RepertorySymptom.aggregate([
-//             {
-//                 $match: {
-//                     imagePath: { $in: repImagesPaths }
-//                 },
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'repertorysymptomitems',
-//                     localField: '_id',
-//                     foreignField: 'repertorySymptom',
-//                     as: 'repertorySymptomItems'
-//                 }
-//             },
-//             {
-//                 $sort: {
-//                     imagePath: 1,
-//                 },
-//             },
+    try {
 
-//         ]);
-//         const repertorySymptomsRaw2 = repertorySymptomsRaw.reduce((acc, item) => {
-//             if (!acc[item.imagePath]) {
-//                 acc[item.imagePath] = [];
-//             }
-//             acc[item.imagePath].push(item)
-//             return acc;
-//         }, {})
+        await connectToDB()
+        const { searchParams } = new URL(request.url); // Extract query parameters
+        const _property = parseInt(searchParams.get('_property')) || { $gte: 1 }; // Default page to 1
+        const _text = parseInt(searchParams.get('_property')) || { $gte: 1 };
 
-//         const repertorySymptoms = Object.entries(repertorySymptomsRaw2).map(([imagePath, array]) => ({ imagePath, repertorySymptoms: array, property: array[0]?.property }))
-//         // console.log(repertorySymptoms[0])
-//         // console.log(repertorySymptoms[1])
-//         // return new Response(JSON.stringify({ imagesWithJSON: [{img1: '11 1'}, { img2: '2 12'}] }), { status: 200 })
-//         return new Response(JSON.stringify({ repertorySymptoms }), { status: 200 })
+        // const [searchWordsArray] = getSearchProps({ mind: _text });
 
-//     } catch (error) {
-//         return new Response("Internal Server Error", { status: 500 });
-//     }
-// }
+
+        const repertorySymptomsRaw = await RepertorySymptom.aggregate([
+            {
+                $match: {
+                    property: _property,
+                    name: {}
+                },
+            },
+            {
+                $lookup: {
+                    from: 'repertorysymptomitems',
+                    localField: '_id',
+                    foreignField: 'repertorySymptom',
+                    as: 'repertorySymptomItems'
+                }
+            },
+            {
+                $sort: {
+                    imagePath: 1,
+                },
+            },
+
+        ]);
+        const repertorySymptomsRaw2 = repertorySymptomsRaw.reduce((acc, item) => {
+            if (!acc[item.imagePath]) {
+                acc[item.imagePath] = [];
+            }
+            acc[item.imagePath].push(item)
+            return acc;
+        }, {})
+
+        const repertorySymptoms = Object.entries(repertorySymptomsRaw2).map(([imagePath, array]) => ({ imagePath, repertorySymptoms: array, property: array[0]?.property }))
+        // console.log(repertorySymptoms[0])
+        // console.log(repertorySymptoms[1])
+        // return new Response(JSON.stringify({ imagesWithJSON: [{img1: '11 1'}, { img2: '2 12'}] }), { status: 200 })
+        return new Response(JSON.stringify({ repertorySymptoms }), { status: 200 })
+
+    } catch (error) {
+        return new Response("Internal Server Error", { status: 500 });
+    }
+}
 
 // TO CREATE NEW INSTANCE
 export const POST = async (request) => {

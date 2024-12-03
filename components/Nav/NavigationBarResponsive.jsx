@@ -23,14 +23,13 @@ import { usePathname } from 'next/navigation';
 const settings = [{ label: 'Profil', link: '/profile' }];
 const userPages = [{ label: 'Wyszukiwarka', link: '/' }, { label: 'Wyszukiwarka kliniczna', link: 'wyszukiwarka-kliniczna' }];
 const adminPages = [{ label: 'Repertoryzacja', link: 'repertoryzacja' }, { label: 'Statystyki', link: 'stats' }, { label: 'Lewa prawa', link: 'imageAI' }, { label: 'Zdjęcia repertorium', link: 'imageAIRepSymptoms' }];
+// { label: 'Wyszukiwarka BETA', link: 'wyszukiwarka' }
 
 function NavigationBarResponsive() {
   
-  
   const { data: session } = useSession();
   const [providers, setProviders] = useState(null);
-
-  const pages = session?.user?.isAdmin ? [...userPages, ...adminPages] : userPages;
+  const [pages, setPages] = useState(userPages)
   const currentPath = usePathname();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -49,13 +48,17 @@ function NavigationBarResponsive() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  console.log(currentPath, 'currentPath')
+
   useEffect(() => {
     (async () => {
       const res = await getProviders();
       setProviders(res);
     })();
-  }, []);
+    console.log('use effect', session?.user)
+    if (session?.user?.isAdmin) {
+      setPages([...userPages, ...adminPages])
+    }
+  }, [session?.user]);
 
   return (
     <AppBar position="static">
