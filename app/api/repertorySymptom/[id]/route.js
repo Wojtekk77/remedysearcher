@@ -1,5 +1,10 @@
-import Comment from "@models/comment";
+import mongoose from 'mongoose';
 import { connectToDB } from "@utils/database";
+import { updateParency } from '../updateParency';
+import { repertorySymptomNameUpdate } from '../helpers';
+import { combineRepSymotoms } from '../combineRepSymotoms';
+import RepertorySymptom from '@models/repertorySymptom';
+import { valueExists } from '@utils';
 
 export const GET = async (request, { params }) => {
     try {
@@ -15,30 +20,38 @@ export const GET = async (request, { params }) => {
     }
 }
 
-export const PATCH = async (request, { params }) => {
-    const { comment, tag } = await request.json();
 
-    try {
-        await connectToDB();
+export const repertorySymptomUpdate = async ({ values, _id }) => {
+    const { name, ...otherValues } = values;
+    if (_id) {
 
-        // Find the existing comment by ID
-        const existingComment = await Comment.findById(params.id);
-
-        if (!existingComment) {
-            return new Response("Comment not found", { status: 404 });
+        if (valueExists(name)) {
+            await repertorySymptomNameUpdate({ ...values, _id });
         }
-
-        // Update the comment with new data
-        existingComment.comment = comment;
-        existingComment.tag = tag;
-
-        await existingComment.save();
-
-        return new Response("Successfully updated the Comments", { status: 200 });
-    } catch (error) {
-        return new Response("Error Updating Comment", { status: 500 });
+        
+        if ( Object.keys(otherValues).length) {
+            await RepertorySymptom.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, { $set: { ...otherValues } });
+        }
     }
+
+    return RepertorySymptom.findById(new mongoose.Types.ObjectId(_id));
+
 };
+
+// TO UPDATE EXISTING INSTANCE
+export const PATCH = async (request) => {
+
+    const { values, _id } = await request.json();
+    try {
+
+        const updatedRepertorySymptom = await repertorySymptomUpdate({ values, _id })
+
+        return new Response(JSON.stringify({ repertorySymptom: updatedRepertorySymptom }), { status: 200 })
+
+    } catch (error) {
+        return new Response("Internal Server Error", { status: 500 });
+    }
+}
 
 export const DELETE = async (request, { params }) => {
     try {

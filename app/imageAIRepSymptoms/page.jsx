@@ -163,6 +163,7 @@ const ImageAI = () => {
     <ParentChildrenContext.Provider value={{ parent, handleSetParent, children, handleSetChildren, handleSaveParency, handleCombineRepSymptoms, addRepertorySymptom }}>
       {REMEDY_PROPERTY_NAME[reperotrySymptomProperty]}
       <ReactPaginate
+        key={1}
         breakLabel="..."
         nextLabel="->"
         onPageChange={handlePageClick}
@@ -185,22 +186,25 @@ const ImageAI = () => {
         defaultLabel="Umysł"
       /> */}
       <RepertorySymptomsImages items={data?.repertorySymptoms} />
-      <ReactPaginate
-          breakLabel="..."
-          nextLabel="->"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={15}
-          pageCount={pageCount}
-          previousLabel="<-"
-          renderOnZeroPageCount={null}
-          className="pagination"
-          activeClassName="activePage"
-          pageClassName="page"
-          forcePage={currentPage}
-      />
-      <button className="addButton" onClick={() => setItemsPerPage(itemsPerPage + 1)}>
-        +1 zdjęcie
-      </button> 
+      <div style={{ height: 120 }}>
+        <ReactPaginate
+            key={2}
+            breakLabel="..."
+            nextLabel="->"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={15}
+            pageCount={pageCount}
+            previousLabel="<-"
+            renderOnZeroPageCount={null}
+            className="pagination"
+            activeClassName="activePage"
+            pageClassName="page"
+            forcePage={currentPage}
+        />
+        <button className="addButton" onClick={() => setItemsPerPage(itemsPerPage + 1)}>
+          +1 zdjęcie
+        </button> 
+      </div>
     </ParentChildrenContext.Provider>
   );
   

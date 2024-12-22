@@ -8,6 +8,7 @@ import RepertoryImageJSON from '@models/repertoryImageJSON';
 import { isJSDocReadonlyTag } from 'typescript';
 import { atLeastXCapitalizedInARow, isJsonString } from '@utils';
 import { REMEDY_PROPERTY } from '@common/constants';
+import { checkIfTextContainsRemedies, getRepSynNameAndRemediesSNFromText } from '../helpers';
 
 export const GET = async (request, { params }) => {
 
@@ -25,7 +26,7 @@ export const GET = async (request, { params }) => {
     }
 }
 
-export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, skipUsed = true) => {
+export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, skipUsed = true, remedyObjShortNames) => {
 
     const repertoryImageJSONsRaw = await RepertoryImageJSON.find({ property, imageAlreadyConverted: { $ne: skipUsed } }).sort({ imagePath: 1 });
     let repertoryImageJSONs = [];
@@ -47,12 +48,23 @@ export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, sk
                 if (Array.isArray(value)) {
 
                     if (value?.length === 0 || typeof value[0] === 'string') {
+
+                        if (value.includes(',')) {
+                            value = value.split(',');
+                        }
+
+                        if (checkIfTextContainsRemedies(key, remedyObjShortNames)) {
+                            const { name, shortNames } = getRepSynNameAndRemediesSNFromText(key, remedyObjShortNames);
+                            key = name, 
+                            value = [...new Set([...shortNames, ...value])].sort((a, b) => a.localeCompare(b));
+                        }
+
                         arrOfObjs.push({ name: key, remedies: value })
                     }
 
                 }
                 else if (typeof value === 'object') {
-                    const arrayOfKeyValue = getKeyValueFromObj({ obj: value })
+                    const arrayOfKeyValue = getKeyValueFromObj({ obj: value, remedyObjShortNames })
                     arrOfObjs.push(...arrayOfKeyValue)
                 }
 
@@ -69,13 +81,28 @@ export const getArrayOfRemedySympt = async (property = REMEDY_PROPERTY.UMYSL, sk
     return repertoryImageJSONs;
 }
 
-const getKeyValueFromObj = ({ obj }) => {
+const getKeyValueFromObj = ({ obj, remedyObjShortNames }) => {
     const arrayOfKeyValue = [];
     Object.entries(obj).forEach(([key, value]) => {
 
         if (Array.isArray(value)) {
+
+
+            
             
             if (value?.length === 0 || typeof value[0] === 'string') {
+
+
+                if (value.includes(',')) {
+                    value = value.split(',');
+                }
+
+                if (checkIfTextContainsRemedies(key, remedyObjShortNames)) {
+                    const { name, shortNames } = getRepSynNameAndRemediesSNFromText(key, remedyObjShortNames);
+                    key = name, 
+                    value = [...new Set([...shortNames, ...value])].sort((a, b) => a.localeCompare(b));
+                }
+
                 arrayOfKeyValue.push({
                     name: key,
                     remedies: value,
@@ -83,7 +110,7 @@ const getKeyValueFromObj = ({ obj }) => {
             }
         }
         else {
-            const arr = getKeyValueFromObj({ obj: value })
+            const arr = getKeyValueFromObj({ obj: value, remedyObjShortNames })
             arrayOfKeyValue.push(...arr);
         }
         

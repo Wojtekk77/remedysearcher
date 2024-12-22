@@ -9,7 +9,7 @@ import RepertorySymptomsAI from './RepertorySymptomsAI';
 
 const RepertoySymptomImage = ({ imagePath, repertorySymptoms: repertorySymptomsRaw, property }) => {
 
-  const [repertorySymptoms, setReprtorySymptoms] = useState(repertorySymptomsRaw)
+  const [repertorySymptoms, setRepertorySymptoms] = useState(repertorySymptomsRaw)
 
   const handleRefetch = useCallback(async () => {
 
@@ -28,7 +28,7 @@ const RepertoySymptomImage = ({ imagePath, repertorySymptoms: repertorySymptomsR
 
     repSymptoms = repSymptoms.sort((a,b) => a.orderNumber - b.orderNumber)
 
-    setReprtorySymptoms(repSymptoms)
+    setRepertorySymptoms(repSymptoms)
   }, [])
 
 

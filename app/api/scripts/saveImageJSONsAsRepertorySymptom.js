@@ -32,8 +32,6 @@ export const saveImageJSONsAsRepertorySymptom = async ({ property }) => {
         //      property: REMEDY_PROPERTY.UMYSL,
         //      arrOfObjs: [{ name: key, remedies: value, parentName }, {}, ...],
         // }
-        const imageJSONs = await getArrayOfRemedySympt(property);
-
         const arrOfRemedyObjShortNames = await Remedy.find({ destroyed: { $ne: true } });
         const remedyObjShortNames = arrOfRemedyObjShortNames.reduce((acc, remedy) => {
             if (!acc[remedy.shortName]) {
@@ -42,6 +40,9 @@ export const saveImageJSONsAsRepertorySymptom = async ({ property }) => {
 
             return acc;
         }, {});
+
+        const imageJSONs = await getArrayOfRemedySympt(property, true, remedyObjShortNames);
+
 
         // const arrOfIllnesToProcess = arrOfIllness;
         for await (const imageJSON of imageJSONs) {
@@ -94,7 +95,11 @@ export const saveRepSymptomItemToDB = async ({ arrOfRemedyShortNames = [], useSt
         let remedyId = remedyObjShortNames[adjustedShortName];
 
         if (!remedyId) {
-            const remedy = await Remedy.findOne({ shortName: adjustedShortName });
+            let remedy = await Remedy.findOne({ shortName: adjustedShortName });
+            
+            if (!remedy?._id) {
+                remedy = await Remedy.findOne({ otherNames: adjustedShortName });
+            }
             
             if (remedy?._id) {
                 remedyObjShortNames[adjustedShortName] = remedy._id;
@@ -102,18 +107,18 @@ export const saveRepSymptomItemToDB = async ({ arrOfRemedyShortNames = [], useSt
         }
 
         const repertorySymptomItem = await RepertorySymptomItem.findOne({
+            repertorySymptom: repSymptom?._id,
             shortName: adjustedShortName,
             remedy: remedyId,
-            repertorySymptom: repSymptom?._id,
             strength,
         });
 
         if (repertorySymptomItem?._id) {
-            console.log('rep sympt item find', repertorySymptomItem?.shortName, repertorySymptomItem?.remedy)
+            // console.log('rep sympt item find', repertorySymptomItem?.shortName, repertorySymptomItem?.remedy)
         }
 
         if (!repertorySymptomItem?._id) {
-            console.log('Add new item to array:', adjustedShortName, remedyId, repSymptom.name, strength);
+            // console.log('Add new item to array:', adjustedShortName, remedyId, repSymptom.name, strength);
             // await RepertorySymptomItem.create({
             //     shortName: adjustedShortName,
             //     remedy: remedyId,

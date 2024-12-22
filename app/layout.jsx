@@ -1,11 +1,7 @@
 import React from 'react';
-
 import "@styles/globals.css";
-
-import Nav from "@components/Nav/Nav";
 import Provider from "@components/Provider";
 import Footer from '@components/Footer';
-import SidebarNav from '@components/SidebarNav/SidebarNav';
 import NavigationBarResponsive from '@components/Nav/NavigationBarResponsive';
 
 export const metadata = {

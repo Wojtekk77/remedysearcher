@@ -1,3 +1,5 @@
+
+
 export const REMEDY_PROPERTY = {
     LEFT: 1,
     RIGHT: 2,
@@ -90,6 +92,4 @@ export const REMEDY_PROPERTY_NAME = {
     42: 'Poty',
     43: 'Skóra',
     44: 'Objawy ogólne',
-
-}
-
+};

@@ -54,7 +54,7 @@ function NavigationBarResponsive() {
       const res = await getProviders();
       setProviders(res);
     })();
-    console.log('use effect', session?.user)
+
     if (session?.user?.isAdmin) {
       setPages([...userPages, ...adminPages])
     }

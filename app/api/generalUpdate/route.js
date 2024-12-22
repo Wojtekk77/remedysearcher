@@ -6,6 +6,8 @@ import Illness from '@models/illness';
 import Symptom from '@models/symptom';
 import RepertorySymptom from '@models/repertorySymptom';
 import RepertorySymptomItem from '@models/repertorySymptomItem';
+import { repertorySymptomNameUpdate } from '../repertorySymptom/helpers';
+import { repertorySymptomUpdate } from '../repertorySymptom/[id]/route';
 
 
 export const getModel = (modelName) => {
@@ -38,15 +40,24 @@ export const PATCH = async (request) => {
         }
 
         const model = getModel(modelName);
+        
+        let existingObj;
+        let updatedObj;
+        if (modelName === 'repertorySymptom') {
+            existingObj = await repertorySymptomUpdate({ values, _id})
+            updatedObj = existingObj;
+        }
+        else {
+            // // Find the existing by ID
+            existingObj = await model.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, { $set: { ...values } });
+        }
 
-        // // Find the existing comment by ID
-        let existingObj = await model.updateOne({ _id: new mongoose.Types.ObjectId(_id) }, { $set: { ...values } });
 
         if (!existingObj) {
             return new Response(`${modelName} not found`, { status: 404 });
         }
 
-        const updatedObj = await model.findById(_id);
+        updatedObj = updatedObj || await model.findById(_id);
 
         return new Response(JSON.stringify({ [modelName]: updatedObj }), { status: 200 });
 

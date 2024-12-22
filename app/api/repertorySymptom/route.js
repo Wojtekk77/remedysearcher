@@ -2,7 +2,8 @@ import { connectToDB } from "@utils/database";
 import RepertorySymptom from '@models/repertorySymptom';
 import { updateParency } from './updateParency';
 import { combineRepSymotoms } from './combineRepSymotoms';
-import { getSearchProps } from "../remedies/helpers";
+import { REMEDY_PROPERTY } from '@common/constants';
+import { repertorySymptomCreate, repertorySymptomNameUpdate } from './helpers';
 
 export const GET = async (request) => {
 
@@ -10,43 +11,28 @@ export const GET = async (request) => {
 
         await connectToDB()
         const { searchParams } = new URL(request.url); // Extract query parameters
-        const _property = parseInt(searchParams.get('_property')) || { $gte: 1 }; // Default page to 1
-        const _text = parseInt(searchParams.get('_property')) || { $gte: 1 };
+        const _property = parseInt(searchParams.get('_property')) || { $gte: REMEDY_PROPERTY.UMYSL }; // all, without sides (left - right etc.)
 
-        // const [searchWordsArray] = getSearchProps({ mind: _text });
-
-
-        const repertorySymptomsRaw = await RepertorySymptom.aggregate([
+        let repertorySymptoms = await RepertorySymptom.aggregate([
             {
                 $match: {
                     property: _property,
-                    name: {}
+                    parent: null,
+                    // name: {  }
                 },
-            },
-            {
-                $lookup: {
-                    from: 'repertorysymptomitems',
-                    localField: '_id',
-                    foreignField: 'repertorySymptom',
-                    as: 'repertorySymptomItems'
-                }
             },
             {
                 $sort: {
-                    imagePath: 1,
+                    property: 1,
+                    name: 1,
                 },
             },
-
+            {
+                $limit: 200
+            },
         ]);
-        const repertorySymptomsRaw2 = repertorySymptomsRaw.reduce((acc, item) => {
-            if (!acc[item.imagePath]) {
-                acc[item.imagePath] = [];
-            }
-            acc[item.imagePath].push(item)
-            return acc;
-        }, {})
-
-        const repertorySymptoms = Object.entries(repertorySymptomsRaw2).map(([imagePath, array]) => ({ imagePath, repertorySymptoms: array, property: array[0]?.property }))
+        console.log(repertorySymptoms)
+        repertorySymptoms = repertorySymptoms.filter(item => item.name.length > 1)
         // console.log(repertorySymptoms[0])
         // console.log(repertorySymptoms[1])
         // return new Response(JSON.stringify({ imagesWithJSON: [{img1: '11 1'}, { img2: '2 12'}] }), { status: 200 })
@@ -60,19 +46,14 @@ export const GET = async (request) => {
 // TO CREATE NEW INSTANCE
 export const POST = async (request) => {
 
-    const { values, modelName } = await request.json();
-    let { imagePath, orderNumber, ...otherValues } = values;
+    const { values } = await request.json();
+    // let { imagePath, orderNumber, ...otherValues } = values;
 
     try {
         await connectToDB()
 
-        let lastImageRepSymptomOrderNumber; 
-        if (!orderNumber) {
-            lastImageRepSymptomOrderNumber = await RepertorySymptom.find({ imagePath }).sort({ orderNumber: -1 }).limit(1);
-            orderNumber = lastImageRepSymptomOrderNumber[0].orderNumber + 1
-        }
-        await RepertorySymptom.create({ ...otherValues, imagePath, orderNumber });
-
+        await repertorySymptomCreate({ values })
+        
         return new Response(JSON.stringify({}), { status: 200 })
 
     } catch (error) {
@@ -85,7 +66,7 @@ export const POST = async (request) => {
 export const PATCH = async (request) => {
 
     const { values } = await request.json();
-    const { parent, children, cobineSymptoms } = values;
+    const { parent, children, cobineSymptoms, name, _id } = values;
     try {
 
         if (parent && children?.length && cobineSymptoms) {
@@ -93,6 +74,9 @@ export const PATCH = async (request) => {
         }
         else if (parent && children?.length) {
             await updateParency({ ...values })
+        }
+        else if (_id && name) {
+            await repertorySymptomNameUpdate({ ...values })
         }
 
         return new Response(JSON.stringify({}), { status: 200 })

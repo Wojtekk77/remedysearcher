@@ -17,6 +17,23 @@ const RepertorySymptomsAI = ({ repertorySymptoms, refetchImage }) => {
   }, []);
 
   const updateRepSymptom = useCallback(async ({ _id, values }) => {
+
+    console.log(`PATCH: /api/repertorySymptom/${_id}`)
+    try {
+      let response = await fetch(`/api/repertorySymptom/${_id}`, {
+          method: "PATCH",
+          // modelName: 'repertprSymptom'
+          body: JSON.stringify({ _id, values }),
+      });
+      
+      const data = await response.json();
+
+      return data.repertorySymptom;
+
+  } catch (error) {
+      console.log('PATCH REPERTORY SYMPTOM:', error);
+  }
+
     return generalUpdateModel({ _id, values, modelName: 'repertorySymptom' });
   }, []);
 

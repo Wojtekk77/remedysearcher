@@ -20,6 +20,10 @@ import { createRepertorySymptoms } from './createRepertorySymptoms';
 import { jsonLeftRight } from './AICreated/jsonLeftRight';
 import { REMEDY_PROPERTY, REMEDY_PROPERTY_NAME } from '@common/constants';
 import { saveImageJSONsAsRepertorySymptom } from './saveImageJSONsAsRepertorySymptom';
+import { createDisplayNameForRepSymptom } from './createDisplayNameForRepSymptom';
+import { takeRemediesShortnamesFromNameToRSItem } from './takeRemediesShortnamesFromNameToRSItem';
+import { removePolishChars } from '../helpers';
+import { splitRepertorySymptomsName } from './splitRepertorySymptomsName';
 
 // get the most common word variations from description
 export const POST = async (request) => {
@@ -65,33 +69,40 @@ try {
     // await createRepertorySymptoms(jsonLeftRight);
     // FINISHED 2024.07.31
 
-    // TO DO START
-    const property = REMEDY_PROPERTY.ZAWROTY_GLOWY;
-    await convertImagesToText({
+    // // TO DO START
+    // // Odpalić gdy wrzucone zostaną nowe zdjęcia! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! 
+    // const property = REMEDY_PROPERTY.OKO; // zmien tez imgServerPath
+    // const adjustedPropertyName = removePolishChars(REMEDY_PROPERTY_NAME[property].toLowerCase()).split(' ').join('_');
 
-        text: `
-            Zapisz tekst w formacie JSON.
-            Nie pomiń żadnego znaku!
+    // await convertImagesToText({
 
-            Kluczami są pełne wyrażenia.
-            Jeżeli klucz się powtórzy to stwórz nowy klucz dodając znak ":" na końcu klucza.
+    //     text: `
+    //         Zapisz tekst w formacie JSON.
+    //         Nie pomiń żadnego znaku!
 
-            Wartościami są tablice ze skrótami nazw leków homeopatycznych.
-        `,
-        saveFileName: 'repertorySymptomsBrain7.js',
-        imgServerPath: `https://srv44093.seohost.com.pl/zdjecia/zawroty_glowy/`,
-        saveToFile: false,
-        saveToDB: true,
-        property,
-        updateExistingFiles: true,
-        // 'app/api/scripts/leftRightSide',
-    });
+    //         Kluczami są pełne wyrażenia.
+    //         Jeżeli klucz się powtórzy to stwórz nowy klucz dodając znak ":" na końcu klucza.
+
+    //         Wartościami są tablice ze skrótami nazw leków homeopatycznych.
+    //     `,
+    //     saveFileName: 'repertorySymptomsBrain8.js',
+    //     imgServerPath: `https://srv44093.seohost.com.pl/zdjecia/${adjustedPropertyName}/`, // !!! tutaj też podmien
+    //     saveToFile: false,
+    //     saveToDB: true,
+    //     property,
+    //     updateExistingFiles: true,
+    //     // 'app/api/scripts/leftRightSide',
+    // });
 
 
-    await saveImageJSONsAsRepertorySymptom({ property })
+    // await saveImageJSONsAsRepertorySymptom({ property })
+
+    await splitRepertorySymptomsName({ property: 8 })
 
     // FINISHED
 
+
+    // await createDisplayNameForRepSymptom();
 
     let endTime = new Date(); 
 	

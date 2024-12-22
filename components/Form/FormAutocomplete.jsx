@@ -13,7 +13,7 @@ export default function FormAutocomplete({ options, onChange, defaultOption }) {
         <Autocomplete
             disablePortal
             options={options}
-            sx={{ width: 300 }}
+            // sx={{ width: 300 }}
             onChange={handleOnChange}
             renderInput={(params) => <TextField {...params} label="Właściwość" />}
         />
