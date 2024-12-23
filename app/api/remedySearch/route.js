@@ -6,7 +6,7 @@ export const POST = async (request) => {
 
     const { values } = await request.json();
     let { text, property, ids } = values;
-    console.log(text, property, '<-text, propertry')
+
     try {
 
         await connectToDB()
@@ -30,12 +30,40 @@ export const POST = async (request) => {
             $unwind: { path: "$repertorySymptomItem", preserveNullAndEmptyArrays: true }
           },
           {
-            $group: {
-              _id: '$repertorySymptomItem'
+            $match: {
+              'repertorySymptomItem.remedy': { $ne: null },
             },
           },
+          {
+            $group: {
+              _id: '$repertorySymptomItem.remedy',
+              repertorySymptoms: { $push: { name: '$name', strength: '$repertorySymptomItem.strength' } }, 
+              count: { $sum: 1 },
+              powerCount: { $sum: '$repertorySymptomItem.strength' }
+            },
+          },
+          {
+            $addFields: {
+              countPowerProduct: { $pow: ['$count', '$powerCount'] }
+            }
+          },
+          { 
+            $lookup: {
+              from: 'remedies',
+              localField: '_id',
+              foreignField: '_id',
+              as: 'remedy',
+            },
+          },
+          {
+            $unwind: { path: "$remedy", preserveNullAndEmptyArrays: true }
+          },
+          {
+            $sort: { countPowerProduct : -1, powerCount: -1 }
+          },
         ]);
-        console.log(repertorySymptoms, 'repertorySymptoms');
+
+        // console.log(repertorySymptoms, 'repertorySymptoms');
 
         // return new Response(JSON.stringify({ imagesWithJSON: [{img1: '11 1'}, { img2: '2 12'}] }), { status: 200 })
         return new Response(JSON.stringify({ sugestedRemedies: repertorySymptoms }), { status: 200 })
@@ -71,7 +99,17 @@ export const POST = async (request) => {
 
 // 5-TE najmniej ważne (OBJAWY SZCZEGÓLNE) - prawdopodobnie z ich powodu klient do Ciebie przyjdzie
 // Wysłuchasz jego historii starając się przerywać jak najrzadziej lecz będziesz analizował objawy szczegółowe jako ostatnie
-// Ponieważ objawy te są szczególne jedynie dla jakiejś częsci klienta, a nie jego całości 
+// Ponieważ objawy te są szczególne jedynie dla jakiejś częsci klienta, a nie jego całości istoty (z naszego punktu widzenia mjąmają najmniejsze znaczenie (BEZWZGLĘDNIE W PRZYPADKACH PRZEWLEKŁYCH))
+// Przykład: Dla przedsiębiorstwa kolejowego - strajk, lub wypadek czy chwilowo niedziałjące linie są mniej ważne niż inteligencja i sprawność działania zarządu - to one powodują, ze kolej działa bez zarzutu.
+// w podobny sposób potraktuj klienta (jako całość), a on sam naprawi zaburzenia obejmujące części jego ciała. Musisz go zrozumieć, możesz to tylko zrobić poprzez objawy ogólne i psychiczne.
+// naprawiając ład "na obwodzie" - wkrótce załamie sięnowy element systemu. Idź do zarządu, przedstaw sytuacje i pozwól działać.
+
+
+// Przestroga: Gdybyś chiał samodzielnie wykonać prace - mógłbyś doprowadzić do sytuacji,  której po wyleczeniu np. wyprysku, staniesz nieoczekiwania w obliczu, powiedzmy astmy. Gdy przepiszesz
+// na nią lek, nieszczęsny pacjent powróci do ciebie z nową chorobą - reumatyzmem. Spartacztsz sprawę, a jego serce się wstrzyma.
+// Zwróć się zatem do organu wykonawczego - do pacjenta, który już od początku miał skłonność do wyprysku, astmy, reumatyzmu; zwróć się do pacjenta jako żywej istoty, która wyraża się przede wszystkim przez swoje objawy ogólne i psychiczne;
+// postępuj z nim zgodznie z zasadąprawdopodobieństwa, a on zrobi resztę.
+//
 
 
 const calculateRemedyPoints = () => {

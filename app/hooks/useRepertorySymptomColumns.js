@@ -44,10 +44,10 @@ export const highlightText = ({ filterModel, value, row, expandRepertorySymptom 
   return <span>{segments}</span>;
 };
 
-const useRepertorySymptomColumns = ({ session, filterModel, checkbox = false, handleDeleteClick }) => {
+const useRepertorySymptomColumns = ({ session, filterModel, checkbox = false, handleDeleteClick, expandRepertorySymptom }) => {
   // Create a custom cell renderer for highlighting text
   const renderCell = useCallback((params) => {
-      return highlightText({ value: params.formattedValue, row: params.row });
+      return highlightText({ value: params.formattedValue, row: params.row, expandRepertorySymptom });
     },
     [filterModel?.quickFilterValues] // Assuming `filterModel.quickFilterValues` is relevant
   );

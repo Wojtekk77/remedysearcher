@@ -4,26 +4,25 @@ import React, { useCallback, useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
 
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import useRepertorySymptomColumns from '@app/hooks/useRepertorySymptomColumns';
+import useReperytoryRemedyColumns from '@app/hooks/useReperytoryRemedyColumns';
 
-const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySymptoms, setSelectedReprtorySymptomIds }) => {
+const RepertoryRemediesDataGrid = ({ repertorySugestedRemedies, setRepertorySugestedRemedies }) => {
   
   const { data: session } = useSession();
-  const [removeId, setRemoveId] = useState();
+  // const [removeId, setRemoveId] = useState();
   
-  const handleDeleteClick = useCallback((id) => () => {
-    setRemoveId(id)
-  }, []);
+  // const handleDeleteClick = useCallback((id) => () => {
+  //   setRemoveId(id)
+  // }, []);
 
-  const { columns } = useRepertorySymptomColumns({ session, handleDeleteClick });
+  const { columns } = useReperytoryRemedyColumns({ session });
 
-  useEffect(() => {
-    if (removeId) {
-      setRepertorySymptoms(repertorySymptoms.filter((row) => row._id !== removeId))
-      setSelectedReprtorySymptomIds([removeId], true)
-      setRemoveId(null)
-    }
-  }, [removeId])
+  // useEffect(() => {
+  //   if (removeId) {
+  //     setRepertorySelectedRemedies(repertorySelectedRemedies.filter((row) => row._id !== removeId))
+  //     setRemoveId(null)
+  //   }
+  // }, [removeId])
 
   console.log('Search selected IDS reload!')
   return (
@@ -37,7 +36,7 @@ const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySympt
           },
         }}
         getRowId={(row) => row._id}
-        rows={repertorySymptoms}
+        rows={repertorySugestedRemedies || []}
         columns={columns}
         disableColumnMenu={true}
         disableColumnFilter
@@ -59,4 +58,4 @@ const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySympt
   );
 };
 
-export default React.memo(RepertorySymptomSelectedDataGrid);
+export default React.memo(RepertoryRemediesDataGrid);

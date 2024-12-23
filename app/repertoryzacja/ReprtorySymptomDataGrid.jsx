@@ -3,31 +3,16 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useSession } from 'next-auth/react';
 
-import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 import useRepertorySymptomColumns from '@app/hooks/useRepertorySymptomColumns';
 
-export const CustomToolbar = () => {
-  return (
-    <GridToolbarContainer>
-      {/* <GridToolbarExport /> */}
-      <GridToolbarQuickFilter
-        // variant="filled"
-        InputProps={{
-          disableUnderline: true
-        }}
-        // {...props.quickFilterProps}
-      />
-    </GridToolbarContainer>
-  );
-}
-
-const ReprtorySymptomDataGrid = ({ repertorySymptoms, setSelectedReprtorySymptomIds }) => {
+const ReprtorySymptomDataGrid = ({ repertorySymptoms, setSelectedReprtorySymptomIds, expandRepertorySymptom }) => {
   
   const { data: session } = useSession();
   const [filterModel, setFilterModel] = useState({ items: [] });
 
-  const { columns } = useRepertorySymptomColumns({ session, filterModel });
+  const { columns } = useRepertorySymptomColumns({ session, filterModel, expandRepertorySymptom });
   console.log('Search reload!')
   return (
     <div style={{ height: '73vh' }}>
@@ -54,7 +39,6 @@ const ReprtorySymptomDataGrid = ({ repertorySymptoms, setSelectedReprtorySymptom
         checkboxSelection
         disableRowSelectionOnClick
         onRowSelectionModelChange={(ids) => {
-          console.log(ids)
           setSelectedReprtorySymptomIds(ids);
         }}
         filterModel={filterModel}

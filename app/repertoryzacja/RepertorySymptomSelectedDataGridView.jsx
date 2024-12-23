@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useEffect } from 'react';
 import RepertorySymptomSelectedDataGrid from './RepertorySymptomSelectedDataGrid';
 
-const RepertorySymptomSelectedDataGridView = ({ repertorySymptomIds }) => {
+const RepertorySymptomSelectedDataGridView = ({ repertorySymptomIds, setSelectedReprtorySymptomIds }) => {
 
   const [repertorySymptoms, setRepertorySymptoms] = useState([]);
   
@@ -42,7 +42,7 @@ const RepertorySymptomSelectedDataGridView = ({ repertorySymptomIds }) => {
 
   console.log('Seleted Search reload VIEW!')
 
-  return <RepertorySymptomSelectedDataGrid repertorySymptoms={repertorySymptoms} repertorySymptomIds={repertorySymptomIds} setRepertorySymptoms={setRepertorySymptoms} />;
+  return <RepertorySymptomSelectedDataGrid repertorySymptoms={repertorySymptoms} repertorySymptomIds={repertorySymptomIds} setRepertorySymptoms={setRepertorySymptoms} setSelectedReprtorySymptomIds={setSelectedReprtorySymptomIds} />;
 };
 
 export default React.memo(RepertorySymptomSelectedDataGridView);
