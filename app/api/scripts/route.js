@@ -71,33 +71,33 @@ try {
 
     // // TO DO START
     // // Odpalić gdy wrzucone zostaną nowe zdjęcia! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! 
-    // const property = REMEDY_PROPERTY.OKO; // zmien tez imgServerPath
-    // const adjustedPropertyName = removePolishChars(REMEDY_PROPERTY_NAME[property].toLowerCase()).split(' ').join('_');
+    const property = REMEDY_PROPERTY.OKO; // zmien tez imgServerPath
+    const adjustedPropertyName = removePolishChars(REMEDY_PROPERTY_NAME[property].toLowerCase()).split(' ').join('_');
 
-    // await convertImagesToText({
+    await convertImagesToText({
 
-    //     text: `
-    //         Zapisz tekst w formacie JSON.
-    //         Nie pomiń żadnego znaku!
+        text: `
+            Zapisz tekst w formacie JSON.
+            Nie pomiń żadnego znaku!
 
-    //         Kluczami są pełne wyrażenia.
-    //         Jeżeli klucz się powtórzy to stwórz nowy klucz dodając znak ":" na końcu klucza.
+            Kluczami są pełne wyrażenia.
+            Jeżeli klucz się powtórzy to stwórz nowy klucz dodając znak ":" na końcu klucza.
 
-    //         Wartościami są tablice ze skrótami nazw leków homeopatycznych.
-    //     `,
-    //     saveFileName: 'repertorySymptomsBrain8.js',
-    //     imgServerPath: `https://srv44093.seohost.com.pl/zdjecia/${adjustedPropertyName}/`, // !!! tutaj też podmien
-    //     saveToFile: false,
-    //     saveToDB: true,
-    //     property,
-    //     updateExistingFiles: true,
-    //     // 'app/api/scripts/leftRightSide',
-    // });
+            Wartościami są tablice ze skrótami nazw leków homeopatycznych.
+        `,
+        saveFileName: 'repertorySymptomsBrain8.js',
+        imgServerPath: `https://srv44093.seohost.com.pl/zdjecia/${adjustedPropertyName}/`, // !!! tutaj też podmien
+        saveToFile: false,
+        saveToDB: true,
+        property,
+        updateExistingFiles: true,
+        // 'app/api/scripts/leftRightSide',
+    });
 
 
-    // await saveImageJSONsAsRepertorySymptom({ property })
+    await saveImageJSONsAsRepertorySymptom({ property })
 
-    await splitRepertorySymptomsName({ property: 8 })
+    // await splitRepertorySymptomsName({ property: 8 })
 
     // FINISHED
 
