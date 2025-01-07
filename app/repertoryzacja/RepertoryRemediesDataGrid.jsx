@@ -26,7 +26,7 @@ const RepertoryRemediesDataGrid = ({ repertorySugestedRemedies, setRepertorySuge
 
   console.log('Search selected IDS reload!')
   return (
-    <div style={{ height: '73vh' }}>
+    <div style={{ height: '65vh', marginBottom: '8vh' }}>
       <DataGrid
         getRowHeight={() => 'auto'}
         // rowHeight={40}

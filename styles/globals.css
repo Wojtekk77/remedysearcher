@@ -46,7 +46,7 @@
 }
 
 .gradient {
-  height: fit-content;
+  /* height: fit-content;
   z-index: -1;
   width: 100%;
   max-width: 1200px;
@@ -67,7 +67,7 @@
   height: 70vh;
   filter: blur(100px) saturate(150%);
   top: 40px;
-  opacity: 0.25;
+  opacity: 0.25; */
 }
 
 @media screen and (max-width: 640px) {

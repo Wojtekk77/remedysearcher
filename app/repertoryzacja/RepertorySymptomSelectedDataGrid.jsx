@@ -27,7 +27,7 @@ const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySympt
 
   console.log('Search selected IDS reload!')
   return (
-    <div style={{ height: '73vh' }}>
+    <div style={{ height: '65vh' }}>
       <DataGrid
         getRowHeight={() => 'auto'}
         // rowHeight={40}

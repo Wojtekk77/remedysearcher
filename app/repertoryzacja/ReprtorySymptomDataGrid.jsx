@@ -15,7 +15,7 @@ const ReprtorySymptomDataGrid = ({ repertorySymptoms, setSelectedReprtorySymptom
   const { columns } = useRepertorySymptomColumns({ session, filterModel, expandRepertorySymptom });
   console.log('Search reload!')
   return (
-    <div style={{ height: '73vh' }}>
+    <div style={{ height: '65vh' }}>
       <DataGrid
         getRowHeight={() => 'auto'}
         // rowHeight={40}
