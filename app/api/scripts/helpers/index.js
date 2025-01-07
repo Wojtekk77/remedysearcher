@@ -118,7 +118,7 @@ export const processSingleLine = async (text, instructions, openai) => {
     return response.choices[0].message.content;
     
     } catch (error) {
-        console.error("Error processing line:", line, error);
+        console.error("Error processing line:", error);
     throw error;
     }
 };

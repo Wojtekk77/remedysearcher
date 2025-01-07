@@ -16,9 +16,13 @@ const FilterForm = ({ setRepertorySymptoms }) => {
   
 
   const selectedValues = useMemo(() => {
-    return Object.values(REMEDY_PROPERTY)
+    const selectedValuesArray = [{ label: 'Modalności, strony', value: { $lte: REMEDY_PROPERTY.LEFT_DOWN_RIGHT_UP } }]
+    selectedValuesArray.push(...Object.values(REMEDY_PROPERTY)
       .map((value) => ({ label: REMEDY_PROPERTY_NAME[value], value }))
-      .filter(item => item.value > REMEDY_PROPERTY.LEFT_DOWN_RIGHT_UP);
+      .filter(item => item.value > REMEDY_PROPERTY.LEFT_DOWN_RIGHT_UP));
+
+    return selectedValuesArray;
+
   }, [REMEDY_PROPERTY, REMEDY_PROPERTY_NAME]); // Ensure dependencies are correct
 
 
@@ -61,7 +65,6 @@ const FilterForm = ({ setRepertorySymptoms }) => {
     setError(false);
   }, []);
 
-  console.log('Filter form reload');
   return (
     <>
       <Box

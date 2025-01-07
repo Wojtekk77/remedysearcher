@@ -4,7 +4,7 @@ import React, { useCallback, useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
 
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import useRepertorySymptomColumns from '@app/hooks/useRepertorySymptomColumns';
+import useRepertorySelectedSymptomColumns from '@app/hooks/useRepertorySelectedSymptomColumns';
 
 const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySymptoms, setSelectedReprtorySymptomIds }) => {
   
@@ -15,7 +15,7 @@ const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySympt
     setRemoveId(id)
   }, []);
 
-  const { columns } = useRepertorySymptomColumns({ session, handleDeleteClick });
+  const { columns } = useRepertorySelectedSymptomColumns({ session, handleDeleteClick });
 
   useEffect(() => {
     if (removeId) {
@@ -25,7 +25,6 @@ const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySympt
     }
   }, [removeId])
 
-  console.log('Search selected IDS reload!')
   return (
     <div style={{ height: '65vh' }}>
       <DataGrid

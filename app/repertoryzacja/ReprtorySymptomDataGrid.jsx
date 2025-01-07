@@ -13,7 +13,7 @@ const ReprtorySymptomDataGrid = ({ repertorySymptoms, setSelectedReprtorySymptom
   const [filterModel, setFilterModel] = useState({ items: [] });
 
   const { columns } = useRepertorySymptomColumns({ session, filterModel, expandRepertorySymptom });
-  console.log('Search reload!')
+
   return (
     <div style={{ height: '65vh' }}>
       <DataGrid

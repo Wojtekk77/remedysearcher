@@ -24,7 +24,6 @@ const RepertoryRemediesDataGrid = ({ repertorySugestedRemedies, setRepertorySuge
   //   }
   // }, [removeId])
 
-  console.log('Search selected IDS reload!')
   return (
     <div style={{ height: '65vh', marginBottom: '8vh' }}>
       <DataGrid
