@@ -20,7 +20,6 @@ const Repertory = () => {
     }
   },[setSelectedReprtorySymptomIds])
 
-  console.log(selectedRepertorySymptomIds, 'selectedRepertorySymptomIds')
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
