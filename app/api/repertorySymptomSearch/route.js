@@ -6,8 +6,10 @@ import mongoose from 'mongoose';
 export const POST = async (request) => {
 
     const { values } = await request.json();
-    let { text, property, ids } = values;
-    console.log(text, property, '<-text, propertry')
+    let { text, property, repertorySymptoms } = values;
+
+    const ids = repertorySymptoms?.map(rs => rs.id);
+    
     try {
 
         await connectToDB()

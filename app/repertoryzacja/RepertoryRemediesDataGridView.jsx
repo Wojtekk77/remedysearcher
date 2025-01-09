@@ -16,14 +16,14 @@ const RepertoryRemediesDataGridView = ({ repertorySymptomIds }) => {
       return;
     }
 
-    const getRepertoryRemediesByIds = async (ids) => {
+    const getRepertoryRemediesByIds = async (repertorySymptoms) => {
 
       try {
         let response = await fetch(`/api/remedySearch`, {
           method: "POST",
           body: JSON.stringify({
             values: {
-              ids
+              repertorySymptoms
             }
           }),
         });

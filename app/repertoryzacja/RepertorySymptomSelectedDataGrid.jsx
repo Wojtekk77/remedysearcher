@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import useRepertorySelectedSymptomColumns from '@app/hooks/useRepertorySelectedSymptomColumns';
 
-const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySymptoms, setSelectedReprtorySymptomIds }) => {
+const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySymptoms, setSelectedReprtorySymptomIds, setStrengthToSelectedRepertorySymptomIds }) => {
   
   const { data: session } = useSession();
   const [removeId, setRemoveId] = useState();
@@ -15,7 +15,7 @@ const RepertorySymptomSelectedDataGrid = ({ repertorySymptoms, setRepertorySympt
     setRemoveId(id)
   }, []);
 
-  const { columns } = useRepertorySelectedSymptomColumns({ session, handleDeleteClick });
+  const { columns } = useRepertorySelectedSymptomColumns({ session, handleDeleteClick, setStrengthToSelectedRepertorySymptomIds });
 
   useEffect(() => {
     if (removeId) {

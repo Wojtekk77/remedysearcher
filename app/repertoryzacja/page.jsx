@@ -13,12 +13,25 @@ const Repertory = () => {
 
   const handleSetSelectedReprtorySymptomIds = useCallback((selectedSymptomIds, remove) => {
     if (remove) {
-      setSelectedReprtorySymptomIds(prevState => prevState.filter(item => selectedSymptomIds.every(selectedItem => selectedItem !== item)))
+      setSelectedReprtorySymptomIds(prevState => prevState.filter(item => selectedSymptomIds.every(selectedItem => selectedItem !== item.id)))
     }
     else {
-      setSelectedReprtorySymptomIds(prevState => [...prevState, ...selectedSymptomIds])
+      setSelectedReprtorySymptomIds(prevState => { 
+        const filteredSymptomIds = selectedSymptomIds.filter(id => !prevState.find(item => item.id === id))
+        return [...prevState, ...filteredSymptomIds.map(item => ({ id: item }))]
+      })
     }
   },[setSelectedReprtorySymptomIds])
+
+  const handleSetStrengthToSelectedRepertorySymptomIds = useCallback((selectedSymptomId, strength) => {
+    setSelectedReprtorySymptomIds(prevState =>
+        prevState.map(item =>
+            item.id === selectedSymptomId
+                ? { ...item, strength: item.strength === strength ? undefined : strength }
+                : { ...item }
+        )
+    );
+  }, [setSelectedReprtorySymptomIds]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -29,7 +42,7 @@ const Repertory = () => {
         <Grid size={6}>
           <Box>
             <div style={{ height: 70 }}></div>
-            <RepertorySymptomSelectedDataGridView repertorySymptomIds={selectedRepertorySymptomIds} setSelectedReprtorySymptomIds={handleSetSelectedReprtorySymptomIds} />
+            <RepertorySymptomSelectedDataGridView repertorySymptomIds={selectedRepertorySymptomIds} setSelectedReprtorySymptomIds={handleSetSelectedReprtorySymptomIds} setStrengthToSelectedRepertorySymptomIds={handleSetStrengthToSelectedRepertorySymptomIds}/>
           </Box>
           {/* <RepertorySymptomSearchView selectedRepertorySymptomIds={selectedRepertorySymptomIds} showFilter={false} /> */}
         </Grid>

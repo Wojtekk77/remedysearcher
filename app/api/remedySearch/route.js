@@ -1,17 +1,21 @@
 import { connectToDB } from "@utils/database";
 import RepertorySymptom from '@models/repertorySymptom';
 import mongoose from 'mongoose';
+import { isArraySubset } from '@common/helpers';
 
 export const POST = async (request) => {
 
     const { values } = await request.json();
-    let { text, property, ids } = values;
+    let { text, property, repertorySymptoms } = values;
+
+    const ids = repertorySymptoms.map(rs => new mongoose.Types.ObjectId(rs.id))
+    const mandatorySymptoms = repertorySymptoms.filter(rs => rs.strength)
 
     try {
 
         await connectToDB()
         let repertorySymptoms = await RepertorySymptom.aggregate([
-          { $match: { _id: { $in: ids.map(id => new mongoose.Types.ObjectId(id) )}} },
+          { $match: { _id: { $in: ids }} },
           {
               $sort: {
                   property: 1,
@@ -37,7 +41,7 @@ export const POST = async (request) => {
           {
             $group: {
               _id: '$repertorySymptomItem.remedy',
-              repertorySymptoms: { $push: { name: '$name', strength: '$repertorySymptomItem.strength' } }, 
+              repertorySymptoms: { $push: { name: '$name', strength: '$repertorySymptomItem.strength', repertorySymptomId: '$_id', repSymptomItemId: '$repertorySymptomItem._id' } },
               count: { $sum: 1 },
               powerCount: { $sum: '$repertorySymptomItem.strength' }
             },
@@ -63,16 +67,30 @@ export const POST = async (request) => {
           },
         ]);
 
+
+        const filteredRepertorySymptoms = repertorySymptoms.filter(rs => {
+          return checkRemedySymptoms(rs.repertorySymptoms, mandatorySymptoms)
+        })
         // console.log(repertorySymptoms, 'repertorySymptoms');
 
         // return new Response(JSON.stringify({ imagesWithJSON: [{img1: '11 1'}, { img2: '2 12'}] }), { status: 200 })
-        return new Response(JSON.stringify({ sugestedRemedies: repertorySymptoms }), { status: 200 })
+        return new Response(JSON.stringify({ sugestedRemedies: filteredRepertorySymptoms }), { status: 200 })
 
     } catch (error) {
         return new Response("Internal Server Error", { status: 500 });
     }
 };
 
+function checkRemedySymptoms(remedySymptoms, mandatorySymptoms) {
+  // Convert remedySymptoms to a map for quick lookup by id
+  const remedyMap = new Map(remedySymptoms.map(item => [item.repertorySymptomId.toString(), item.strength]));
+
+  // Check if all mandatorySymptoms are present with the required strength
+  return mandatorySymptoms.every(mandatory => {
+      const remedyStrength = remedyMap.get(mandatory.id);
+      return remedyStrength !== undefined && remedyStrength >= mandatory.strength;
+  });
+}
 // PAMIĘTAJ, ŻEBY ŁĄCZYĆ SYNONIMY -> NP. PRAGNIENIE OTWARTEGO POWIETRZA I POPRAWA POD WPŁYWEM POWIETRZA, 
 
 // 1-SZE POD WSZGLĘDEM WARTOŚCI (OBJAWY PSYCHICZNE / REAKCJE EMOCJONALNE)
@@ -105,13 +123,8 @@ export const POST = async (request) => {
 // naprawiając ład "na obwodzie" - wkrótce załamie sięnowy element systemu. Idź do zarządu, przedstaw sytuacje i pozwól działać.
 
 
-// Przestroga: Gdybyś chiał samodzielnie wykonać prace - mógłbyś doprowadzić do sytuacji,  której po wyleczeniu np. wyprysku, staniesz nieoczekiwania w obliczu, powiedzmy astmy. Gdy przepiszesz
+// Przestroga: Gdybyś chiał samodzielnie wykonać prace - mógłbyś doprowadzić do sytuacji, której po wyleczeniu np. wyprysku, staniesz nieoczekiwania w obliczu, powiedzmy astmy. Gdy przepiszesz
 // na nią lek, nieszczęsny pacjent powróci do ciebie z nową chorobą - reumatyzmem. Spartacztsz sprawę, a jego serce się wstrzyma.
 // Zwróć się zatem do organu wykonawczego - do pacjenta, który już od początku miał skłonność do wyprysku, astmy, reumatyzmu; zwróć się do pacjenta jako żywej istoty, która wyraża się przede wszystkim przez swoje objawy ogólne i psychiczne;
 // postępuj z nim zgodznie z zasadąprawdopodobieństwa, a on zrobi resztę.
 //
-
-
-const calculateRemedyPoints = () => {
-
-}

@@ -415,3 +415,45 @@
 .activePage {
   font-weight: bold;
 }
+
+.strength-bar {
+  display: flex;
+  width: 100px;
+  background-color: #fffbfb;
+  padding: 2px;
+  /* height: 15px; */
+  border-radius: 2px;
+  /* overflow: hidden; */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); */
+}
+
+.strength-bar__segment {
+  flex: 1;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  padding: 2px;
+  margin-right: 3px;
+}
+
+.strength-bar__segment--1 {
+  background-color: rgba(0, 255, 0, 0.2); /* Przytłumiona zieleń */
+}
+.strength-bar__segment--2 {
+  background-color: rgba(216, 216, 24, 0.63); /* Przytłumiona żółć */
+}
+.strength-bar__segment--3 {
+  background-color: rgba(255, 0, 0, 0.2); /* Przytłumiona czerwień */
+  margin-right: 0;
+}
+
+.strength-bar__segment.active.strength-bar__segment--1 {
+  background-color: rgba(0, 255, 0, 1); /* Wyraźna zieleń */
+}
+.strength-bar__segment.active.strength-bar__segment--2 {
+  background-color: rgb(255, 255, 0); /* Wyraźna żółć */
+}
+.strength-bar__segment.active.strength-bar__segment--3 {
+  background-color: rgba(255, 0, 0, 1); /* Wyraźna czerwień */
+}
