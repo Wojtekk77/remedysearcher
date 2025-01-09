@@ -1,5 +1,5 @@
 import RepertorySymptom from '@models/repertorySymptom';
-import { createLookupParentPipeline, joinParency } from '../helpers';
+import { createLookupParentPipeline } from '../helpers';
 import OpenAI from "openai";
 
 const correctJoinedParency = async (joinedParency, openai) => {
@@ -57,10 +57,10 @@ export const createDisplayNameForRepSymptom = async () => {
         },
         ...createLookupParentPipeline(),
     ]);
-    console.log('ęę 1')
+
     for (const repertorySymptom of repertorySymptoms) {
 
-        const joinedParency = joinParency(repertorySymptom, ',', true);
+        const joinedParency = ''; // joinParency(repertorySymptom, ',', true);
 
         try {
             const newJoinedParency = await correctJoinedParency(joinedParency, openai);

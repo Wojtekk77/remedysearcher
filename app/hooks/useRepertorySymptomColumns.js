@@ -1,10 +1,8 @@
 import React, { useCallback, useMemo } from "react";
-import { GRID_CHECKBOX_SELECTION_COL_DEF, GridActionsCellItem } from "@mui/x-data-grid";
-import { REMEDY_PROPERTY_NAME } from "@common/constants";
-import Icon from "@components/Icon";
+import { GRID_CHECKBOX_SELECTION_COL_DEF } from "@mui/x-data-grid";
 import RepertorySymptomNameCell from '@components/RepertorySymptomNameCell';
-import { repertorySymptomColumns } from '@app/repertoryzacja/helpers';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import { repertorySymptomName, repertorySymptomProperty } from '@app/repertoryzacja/repertoryColumns';
+
 export const highlightText = ({ filterModel, value, row, expandRepertorySymptom }) => {
   
   if (!filterModel?.quickFilterValues || filterModel?.quickFilterValues.length === 0) {
@@ -44,7 +42,7 @@ export const highlightText = ({ filterModel, value, row, expandRepertorySymptom 
   return <span>{segments}</span>;
 };
 
-const useRepertorySymptomColumns = ({ session, filterModel, checkbox = false, handleDeleteClick, expandRepertorySymptom }) => {
+const useRepertorySymptomColumns = ({ session, filterModel, expandRepertorySymptom }) => {
   // Create a custom cell renderer for highlighting text
   const renderCell = useCallback((params) => {
       return highlightText({ value: params.formattedValue, row: params.row, expandRepertorySymptom });
@@ -52,50 +50,15 @@ const useRepertorySymptomColumns = ({ session, filterModel, checkbox = false, ha
     [filterModel?.quickFilterValues] // Assuming `filterModel.quickFilterValues` is relevant
   );
 
-  // Create a custom icon renderer
-  const renderIcon = useCallback(({ value, row }) => {
-      return row.depth === 5 ? (
-        <>
-          <span style={{ marginRight: "0.4rem" }}>
-            {REMEDY_PROPERTY_NAME[value]}
-          </span>
-          <Icon property={value} />
-        </>
-      ) : null;
-    },
-    []
-  );
-
   // Memoize the column definitions
   const columns = useMemo(() => [
-      ...checkbox ? [{
+      {
         ...GRID_CHECKBOX_SELECTION_COL_DEF,
         width: 50,
-      }] : [],
-      ...repertorySymptomColumns(renderCell, renderIcon, session?.user),
-      ...handleDeleteClick ? [
-        {
-          field: 'actions',
-          type: 'actions',
-          headerName: '',
-          width: 50,
-          cellClassName: 'actions',
-          renderCell: ({ row }) => {
-
-            return (
-              <GridActionsCellItem
-                icon={<DeleteIcon />}
-                label="Delete"
-                onClick={handleDeleteClick(row._id)}
-                color="inherit"
-              />
-            )
-          }
-        }
-      ] : [],
-    ],
-    [renderCell, renderIcon, session?.user]
-  );
+      },
+      repertorySymptomName(renderCell, session?.user),
+      repertorySymptomProperty()
+    ],[renderCell, session?.user]);
 
   return { columns };
 };

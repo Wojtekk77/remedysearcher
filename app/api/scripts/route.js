@@ -24,6 +24,9 @@ import { createDisplayNameForRepSymptom } from './createDisplayNameForRepSymptom
 import { takeRemediesShortnamesFromNameToRSItem } from './takeRemediesShortnamesFromNameToRSItem';
 import { removePolishChars } from '../helpers';
 import { splitRepertorySymptomsName } from './splitRepertorySymptomsName';
+import RepertoryImageJSON from '@models/repertoryImageJSON';
+import RepertorySymptom from '@models/repertorySymptom';
+import { createHTMLFromDocAndConvertToJSON } from './createHTMLFromDocAndConvertToJSON';
 
 // get the most common word variations from description
 export const POST = async (request) => {
@@ -69,40 +72,40 @@ try {
     // await createRepertorySymptoms(jsonLeftRight);
     // FINISHED 2024.07.31
 
-    // // TO DO START
-    // // Odpalić gdy wrzucone zostaną nowe zdjęcia! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! 
-    const property = REMEDY_PROPERTY.OKO; // zmien tez imgServerPath
-    const adjustedPropertyName = removePolishChars(REMEDY_PROPERTY_NAME[property].toLowerCase()).split(' ').join('_');
+    // // // TO DO START
+    // // // Odpalić gdy wrzucone zostaną nowe zdjęcia! ! ! ! ! ! ! ! ! ! ! ! ! ! ! ! // PAMIĘTAJ O ZMIANIE PROPERTY @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ !!! <============================ zMIANA PROPERTY
+    // const property = REMEDY_PROPERTY.SLUCH; // zmien tez imgServerPath
+    // const adjustedPropertyName = removePolishChars(REMEDY_PROPERTY_NAME[property].toLowerCase()).split(' ').join('_');
 
-    await convertImagesToText({
+    // await convertImagesToText({
 
-        text: `
-            Zapisz tekst w formacie JSON.
-            Nie pomiń żadnego znaku!
+    //     text: `
+    //         Zapisz tekst w formacie JSON.
+    //         Nie pomiń żadnego znaku!
 
-            Kluczami są pełne wyrażenia.
-            Jeżeli klucz się powtórzy to stwórz nowy klucz dodając znak ":" na końcu klucza.
+    //         Kluczami są pełne wyrażenia.
+    //         Jeżeli klucz się powtórzy to stwórz nowy klucz dodając znak ":" na końcu klucza.
 
-            Wartościami są tablice ze skrótami nazw leków homeopatycznych.
-        `,
-        saveFileName: 'repertorySymptomsBrain8.js',
-        imgServerPath: `https://srv44093.seohost.com.pl/zdjecia/${adjustedPropertyName}/`, // !!! tutaj też podmien
-        saveToFile: false,
-        saveToDB: true,
-        property,
-        updateExistingFiles: true,
-        // 'app/api/scripts/leftRightSide',
-    });
+    //         Wartościami są tablice ze skrótami nazw leków homeopatycznych.
+    //     `,
+    //     saveFileName: 'repertorySymptomsBrain8.js',
+    //     imgServerPath: `https://srv44093.seohost.com.pl/zdjecia/${adjustedPropertyName}/`, // !!! tutaj też podmien
+    //     saveToFile: false,
+    //     saveToDB: true,
+    //     property,
+    //     updateExistingFiles: true,
+    //     // 'app/api/scripts/leftRightSide',
+    // });
 
+    // // PAMIĘTAJ O ZMIANIE PROPERTY @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ !!! <============================ zMIANA PROPERTY
+    // await saveImageJSONsAsRepertorySymptom({ property })
 
-    await saveImageJSONsAsRepertorySymptom({ property })
+    // // await splitRepertorySymptomsName({ property: 8 })
 
-    // await splitRepertorySymptomsName({ property: 8 })
+    // // FINISHED
 
-    // FINISHED
+    await createHTMLFromDocAndConvertToJSON('');
 
-
-    // await createDisplayNameForRepSymptom();
 
     let endTime = new Date(); 
 	

@@ -12,6 +12,7 @@ const RepertoryRemediesDataGridView = ({ repertorySymptomIds }) => {
   useEffect(() => {
 
     if (!repertorySymptomIds?.length) {
+      setRepertorySugestedRemedies([]);
       return;
     }
 
@@ -40,7 +41,6 @@ const RepertoryRemediesDataGridView = ({ repertorySymptomIds }) => {
 
   }, [repertorySymptomIds]);
 
-  console.log('SUGESTED Search reload VIEW!')
 
   return <RepertoryRemediesDataGrid repertorySugestedRemedies={repertorySugestedRemedies} repertorySymptomIds={repertorySymptomIds} setRepertorySugestedRemedies={setRepertorySugestedRemedies} />;
 };

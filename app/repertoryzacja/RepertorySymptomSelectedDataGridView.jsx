@@ -12,6 +12,7 @@ const RepertorySymptomSelectedDataGridView = ({ repertorySymptomIds, setSelected
   useEffect(() => {
 
     if (!repertorySymptomIds?.length) {
+      setRepertorySymptoms([]);
       return;
     }
 
@@ -39,8 +40,6 @@ const RepertorySymptomSelectedDataGridView = ({ repertorySymptomIds, setSelected
     getRepertorySymptomsByIds(repertorySymptomIds)
 
   }, [repertorySymptomIds]);
-
-  console.log('Seleted Search reload VIEW!')
 
   return <RepertorySymptomSelectedDataGrid repertorySymptoms={repertorySymptoms} repertorySymptomIds={repertorySymptomIds} setRepertorySymptoms={setRepertorySymptoms} setSelectedReprtorySymptomIds={setSelectedReprtorySymptomIds} />;
 };

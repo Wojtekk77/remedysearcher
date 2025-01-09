@@ -1,11 +1,6 @@
-import React, { useCallback, useMemo } from "react";
-import { GRID_CHECKBOX_SELECTION_COL_DEF, GridActionsCellItem } from "@mui/x-data-grid";
-import { REMEDY_PROPERTY_NAME } from "@common/constants";
-import Icon from "@components/Icon";
-import { repertorySymptomColumns } from '@app/repertoryzacja/helpers';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import React, { useMemo } from "react";
 
-const useReperytoryRemedyColumns = ({ session, filterModel, checkbox = false, handleDeleteClick }) => {
+const useReperytoryRemedyColumns = ({ session }) => {
 
 
   // Memoize the column definitions

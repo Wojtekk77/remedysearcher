@@ -182,9 +182,9 @@ function NavigationBarResponsive() {
             session?.user ? (
               <Box sx={{ flexGrow: 0 }}>
 
-                <Tooltip title="Open settings">
+                <Tooltip title="Ustawienia">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src={session?.user.image} />
+                    <Avatar alt={session?.user.email} src={session?.user.image} />
                   </IconButton>
                 </Tooltip>
                 <Menu
