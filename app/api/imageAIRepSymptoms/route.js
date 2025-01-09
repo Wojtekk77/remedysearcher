@@ -15,14 +15,14 @@ export const GET = async (request) => {
     try {
         await connectToDB()
         // const repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true }).limit(3)
-        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true, property: _property })
+        let repImages = await RepertoryImageJSON.find({ imageAlreadyConverted: true, property: _property }).sort({ imagePath: 1 })
         const imagesTotal = repImages.length;
         console.log(imagesTotal, '<-imagesTotal');
         // console.log((_page - 1) * _limit, _limit * _page, '<-(_limit - 1) * _page, _limit * _page')
         repImages = repImages.slice((_page - 1) * _limit, _limit * _page)
         
-        const repImagesPaths = repImages.map(ri => ri.imagePath) 
-        
+        const repImagesPaths = repImages.map(ri => ri.imagePath)
+
         const repertorySymptomsRaw = await RepertorySymptom.aggregate([
             {
                 $match: {
