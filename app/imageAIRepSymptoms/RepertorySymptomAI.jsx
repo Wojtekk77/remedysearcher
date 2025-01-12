@@ -172,13 +172,13 @@ const RepertorySymptomAI = ({
               </button>
               <button
                 className="addButton editButton"
-                style={{ marginLeft: 5, backgroundColor: repertorySymptom.toFix ? '#ee110d' : '#b97f29' }}
+                style={{ marginLeft: 5, backgroundColor: repertorySymptom.toFix ? '#ee110d' : '#39e622' }}
                 onClick={async () => {
                   await updateRepSymptom({ _id: repertorySymptom._id , values: { toFix: !repertorySymptom.toFix } });
                   await handleRefetch({ _id: repertorySymptom._id })
                 }}
               >
-                XXX
+                { repertorySymptom?.toFix ? 'FIX' : 'XXX' }
               </button>
               <button
                 onClick={async () => {

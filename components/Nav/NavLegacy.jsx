@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { getProviders } from "next-auth/react";
-import MobileNav from './MobileNav';
+import MobileNav from './MobileNavLegacy';
 // import DesktopNav from './DesktopNav';
 // import { ClientOnly } from '@components/ClientOnly';
 // import { isMobile } from 'react-device-detect';

@@ -1,65 +1,136 @@
-import { getFilesFromCatalog } from './helpers';
+import Remedy from '@models/remedy';
+import { appendTextToFile, getFilesFromCatalog } from './helpers';
+import DescriptionMamk from '@models/descriptionMamk';
 
 const fs = require('fs');
 const mammoth = require('mammoth');
 
-export const createHTMLFromDocAndConvertToJSON = async (catalogPath) => {
+export const createHTMLFromDocAndConvertToJSON = async (catalogPath = 'app/api/scripts/AIDocx') => {
 
 
-            // const arrOfFiles = await getFilesFromCatalog(catalogPath);
+            const arrOfFiles = await getFilesFromCatalog(catalogPath);
     
-            // for (const file of arrOfFiles) {
+            for (const file of arrOfFiles) {
 
-            //     // jesli danej nazwy nie ma w bazie to zapisz nowe remedium z tą właśnie nazwąi stworzonym JSONem 
+                // jesli danej nazwy nie ma w bazie to zapisz nowe remedium z tą właśnie nazwąi stworzonym JSONem 
+                let remedyName = file.name.toLowerCase().replace('.docx', '');
+                const mappedName = remediesNameList.find(item => item?.name === remedyName)
+                if (mappedName) {
+                    remedyName = mappedName?.dbName || mappedName?.name;
+                }
+                let remedy = await Remedy.findOne({ name: remedyName })
 
-            //     console.log(file.name)
+                if (!remedy?._id) {
+                    // Create new remedy as it's not been i repertory e.g.! ['adonis vernalis','carcinosinum','lycopodium','pertussinum']
+                    // USE mappedName.name
+                    console.log('NOT FOUND: ', remedyName, mappedName)
+                    await Remedy.create({ name: remedyName })
+                    remedy = await Remedy.findOne({ name: remedyName })
+                    // appendTextToFile('app/api/scripts/AIDocxTry', 'notInDbRemedies2', `${mappedName}: '', \n`)
+                }
 
-
-            //     try {
-            //         // Czytanie pliku DOCX
-            //         const buffer = fs.readFileSync(filePath);
+                try {
+                    // Czytanie pliku DOCX
+                    const buffer = fs.readFileSync(file.path);
              
-            //         // Konwersja do HTML
-            //         const result = await mammoth.convertToHtml({ buffer: buffer });
+                    // Konwersja do HTML
+                    const result = await mammoth.convertToHtml({ buffer: buffer });
              
-            //         // Wynikowy HTML
-            //         const html = result.value;
-             
-            //         // Zapisz HTML do pliku lub zrób z nim coś innego
-            //         fs.writeFileSync('output.html', html);
-            //         console.log("Konwersja zakończona sukcesem! Zapisano do output.html");
-             
-            //     } catch (error) {
-            //         console.error("Wystąpił błąd podczas konwersji: ", error);
-            //     }
-
-    
-            //     const response = await openai.chat.completions.create({
-            //         model: "gpt-4o",
-            //         messages: [
-            //             {
-            //             role: "user",
-            //             content: [
-            //                 { 
-            //                     type: "text",
-            //                     text,
-            //                 },
-            //                 {
-            //                 type: "image_url",
-            //                 image_url: {
-            //                     // "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
-            //                     url: `data:image/jpg;base64,${base64Image}`
-        
-            //                 },
-            //                 },
-            //             ],
-            //             },
-            //         ],
+                    // Wynikowy HTML
+                    const html = result.value;
+                    await DescriptionMamk.create({ descriptionHtml: html, remedy: remedy?._id, remedyName: remedy.name })
                     
-            //     });
-            // }
+                    // Zapisz HTML do pliku lub zrób z nim coś innego
+                    // appendTextToFile('app/api/scripts/AIDocxTry', remedyName, html)
+                    console.log("Konwersja zakończona sukcesem! Zapisano do output.html", remedyName);
+             
+                } catch (error) {
+                    console.error("Wystąpił błąd podczas konwersji: ", error);
+                }
+
+
+
+
+
+    
+                // const response = await openai.chat.completions.create({
+                //     model: "gpt-4o",
+                //     messages: [
+                //         {
+                //         role: "user",
+                //         content: [
+                //             { 
+                //                 type: "text",
+                //                 text,
+                //             },
+                //             {
+                //             type: "image_url",
+                //             image_url: {
+                //                 // "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                //                 url: `data:image/jpg;base64,${base64Image}`
+        
+                //             },
+                //             },
+                //         ],
+                //         },
+                //     ],
+                    
+                // });
+            }
 
 };
+
+export const remediesNameList = [
+    { name: 'acidum fluoricum', dbName: 'fluoricum acidum' }, 
+    { name: 'acidum nitricum', dbName: 'nitricum acidum' }, 
+    { name: 'acidum phosforicum', dbName: 'phosphoricum acidum' }, 
+    { name: 'acidum picricum', dbName: 'picricum acidum' }, 
+    { name: 'adonis vernalis', dbName: '' }, 
+    { name: 'agaricus', dbName: 'agaricus muscarius' }, 
+    { name: 'apis', dbName: 'apis mellifica' }, 
+    { name: 'arnika', dbName: 'arnica montana' }, 
+    { name: 'barium carbonicum', dbName: 'baryta carbonica' }, 
+    { name: 'barium iodatum', dbName: 'baryta iodata' }, 
+    { name: 'barium muriaticum', dbName: 'baryta muriatica' }, 
+    { name: 'barium sulfuricum', dbName: 'barium sulphuricum' }, 
+    { name: 'bismuthum', dbName: 'bismuthum oxidum' }, 
+    { name: 'borax veneta', dbName: 'borax' }, 
+    { name: 'bovista lycoperdon', dbName: 'bovista' }, 
+    { name: 'calcium carbonicum', dbName: 'calcarea carbonica' }, 
+    { name: 'calcium fluoricum', dbName: 'calcarea fluorata' }, 
+    { name: 'calcium fosforicum', dbName: 'calcarea phosphorica' }, 
+    { name: 'calcium silicatum', dbName: 'calcarea silicata' }, 
+    { name: 'calcium sulfuricum', dbName: 'calcarea sulphurica' }, 
+    { name: 'camphora', dbName: 'camphora officinarum' }, 
+    { name: 'cantharis vesicatoria', dbName: 'cantharis' }, 
+    { name: 'capsicum annuum', dbName: 'capsicum' }, 
+    { name: 'carcinosinum', dbName: '' }, 
+    { name: 'chelidonium  majus', dbName: 'chelidonium majus' }, 
+    { name: 'china', dbName: 'china officinalis' }, 
+    { name: 'cimicifuga', dbName: 'cimicifuga racemosa' }, 
+    { name: 'lachesis muta', dbName: 'lachesis' }, 
+    { name: 'lycopodium clamatum', dbName: 'lycopodium clavatum' }, 
+    { name: 'lycopodium', dbName: '' }, 
+    { name: 'lyssinum', dbName: 'lyssin (hydrophobinum)' }, 
+    { name: 'magnesium sulfuricum', dbName: 'magnesium sulphuricum' }, 
+    { name: 'mercurius solubilis', dbName: 'mercurius vivus' }, 
+    { name: 'mezerum', dbName: 'mezereum' }, 
+    { name: 'naja', dbName: 'naja tripudia' }, 
+    { name: 'passiflora incarnata', dbName: 'passiflora' }, 
+    { name: 'pertussinum', dbName: '' }, 
+    { name: 'platina', dbName: 'platinum metallicum' }, 
+    { name: 'plumbum metalicum', dbName: 'plumbum metallicum' }, 
+    { name: 'pulsatilla pratensis', dbName: 'pulsatilla nigricans', otherName: 'pulsatilla pratensis' }, 
+    { name: 'radium bromatum', dbName: 'radium', otherName: 'radium bromatum' }, 
+    { name: 'raphanus sativus', dbName: 'raphanus', otherName: 'raphanus sativus' }, 
+    { name: 'sabadilla officinalis', dbName: 'sabadilla', otherName: 'sabadilla officinalis' }, 
+    { name: 'sanicula', dbName: 'sanicula aqua' }, 
+    { name: 'sarsaparilla officinalis', dbName: 'sarsaparilla', otherName: 'sarsaparilla officinalis' }, 
+    { name: 'scutellaria laterifolia', dbName: 'scutellaria lateriflora' }, 
+    { name: 'sulfur', dbName: 'sulphur' }, 
+    { name: 'tuberkulina', dbName: 'tuberculinum' },
+];
+
 
 const names = [
 "abies canadensis",

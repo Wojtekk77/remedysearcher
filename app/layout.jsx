@@ -15,11 +15,7 @@ const RootLayout = ({ children }) => (
     <div className='gradient' />
       <Provider>
         <NavigationBarResponsive />
-        {/* <aside className='aside'>
-          <SidebarNav />
-        </aside> */}
         <main className='app' >
-          {/* <Nav /> */}
           <div className='box'>
             {children}
           </div>

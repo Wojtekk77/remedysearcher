@@ -10,10 +10,10 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+// import AdbIcon from '@mui/icons-material/Adb';
 import { getProviders, signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { GoogleLoginButton } from 'react-social-login-buttons';
@@ -21,8 +21,8 @@ import { usePathname } from 'next/navigation';
 
 
 const settings = [{ label: 'Profil', link: '/profile' }];
-const userPages = [{ label: 'Wyszukiwarka', link: '/' }, { label: 'Wyszukiwarka kliniczna', link: 'wyszukiwarka-kliniczna' }];
-const adminPages = [{ label: 'Repertoryzacja', link: 'repertoryzacja' }, { label: 'Statystyki', link: 'stats' }, { label: 'Lewa prawa', link: 'imageAI' }, { label: 'Zdjęcia repertorium', link: 'imageAIRepSymptoms' }];
+const userPages = [{ label: 'Wyszukiwarka', link: '/' }, { label: 'Wyszukiwarka kliniczna', link: '/wyszukiwarka-kliniczna' }];
+const adminPages = [{ label: 'Repertoryzacja', link: '/repertoryzacja' }, { label: 'Statystyki', link: '/stats' }, { label: 'Lewa prawa', link: '/imageAI' }, { label: 'Zdjęcia repertorium', link: '/imageAIRepSymptoms' }, { label: 'Remedia', link: '/remedia' }];
 // { label: 'Wyszukiwarka BETA', link: 'wyszukiwarka' }
 
 function NavigationBarResponsive() {
@@ -31,8 +31,8 @@ function NavigationBarResponsive() {
   const [providers, setProviders] = useState(null);
   const [pages, setPages] = useState(userPages)
   const currentPath = usePathname();
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -112,7 +112,7 @@ function NavigationBarResponsive() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map(({ label, link }) => (
-                <MenuItem key={label} onClick={handleCloseNavMenu} className={currentPath == '/profile' ? 'active' : ''}>
+                <MenuItem key={label} onClick={handleCloseNavMenu} className={currentPath === link ? 'active' : ''}>
                   <Typography sx={{ textAlign: 'center' }}>{label}</Typography>
                 </MenuItem>
               ))}
@@ -146,7 +146,9 @@ function NavigationBarResponsive() {
                 href={link}
                 key={label}
                 onClick={handleCloseNavMenu}
-                style={{ marginRight: 15 }}
+                style={{ margin: 7, fontWeight: currentPath === link || (currentPath.length < 2 && link.length < 2) ? 'bold' : 'normal' }}
+                onMouseEnter={(e) => (e.target.style.textDecoration = 'underline')}
+                onMouseLeave={(e) => (e.target.style.textDecoration = 'none')}
               >
                 {label}
               </Link>
@@ -182,9 +184,9 @@ function NavigationBarResponsive() {
             session?.user ? (
               <Box sx={{ flexGrow: 0 }}>
 
-                <Tooltip title="Ustawienia">
+                <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt={session?.user.email} src={session?.user.image} />
+                    <Avatar alt="Remy Sharp" src={session?.user.image} />
                   </IconButton>
                 </Tooltip>
                 <Menu

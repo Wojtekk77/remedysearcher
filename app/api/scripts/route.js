@@ -104,7 +104,7 @@ try {
 
     // // FINISHED
 
-    await createHTMLFromDocAndConvertToJSON('');
+    // await createHTMLFromDocAndConvertToJSON();
 
 
     let endTime = new Date(); 

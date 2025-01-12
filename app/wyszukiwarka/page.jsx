@@ -22,21 +22,6 @@ const illnessColumns = [
   },
 ];
 
-export const CustomToolbar = () => {
-  return (
-    <GridToolbarContainer>
-      {/* <GridToolbarExport /> */}
-      <GridToolbarQuickFilter
-        // variant="filled"
-        InputProps={{
-          disableUnderline: true
-        }}
-        // {...props.quickFilterProps}
-      />
-    </GridToolbarContainer>
-  );
-}
-
 const ClinicSearcher = () => {
   const { data: session } = useSession();
 

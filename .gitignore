@@ -10,7 +10,7 @@
 
 /app/api/scripts/AIImagesToConvert
 /app/api/scripts/AIUsedRepertoryPhoto
-
+/app/api/scripts/AIDocx
 
 # testing
 /coverage

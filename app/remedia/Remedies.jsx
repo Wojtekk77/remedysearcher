@@ -4,9 +4,9 @@ import React, { useCallback, useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
 
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import useReperytoryRemedyColumns from '@app/hooks/useReperytoryRemedyColumns';
+import useRemedyColumns from '@app/hooks/useRemedyColumns';
 
-const RepertoryRemediesDataGrid = ({ repertorySugestedRemedies, setRepertorySugestedRemedies }) => {
+const Remedies = ({ remedies }) => {
   
   const { data: session } = useSession();
   // const [removeId, setRemoveId] = useState();
@@ -15,7 +15,7 @@ const RepertoryRemediesDataGrid = ({ repertorySugestedRemedies, setRepertorySuge
   //   setRemoveId(id)
   // }, []);
 
-  const { columns } = useReperytoryRemedyColumns({ session });
+  const { columns } = useRemedyColumns({ session });
 
   // useEffect(() => {
   //   if (removeId) {
@@ -35,20 +35,20 @@ const RepertoryRemediesDataGrid = ({ repertorySugestedRemedies, setRepertorySuge
           },
         }}
         getRowId={(row) => row._id}
-        rows={repertorySugestedRemedies || []}
+        rows={remedies || []}
         columns={columns}
         disableColumnMenu={true}
-        disableColumnFilter
+        // disableColumnFilter
         disableColumnSelector
         disableDensitySelector
         disableExportIcon
         // checkboxSelection
         disableRowSelectionOnClick
-        style={{ maxHeight: '60vh' }}
+        style={{ maxHeight: '60vh', minWidth: '50vw' }}
         disableToolbarButton={true}
         slotProps={{
           toolbar: {
-            showQuickFilter: false,
+            showQuickFilter: true,
             quickFilterProps: { debounceMs: 500 },
           },
         }}
@@ -57,4 +57,4 @@ const RepertoryRemediesDataGrid = ({ repertorySugestedRemedies, setRepertorySuge
   );
 };
 
-export default React.memo(RepertoryRemediesDataGrid);
+export default React.memo(Remedies);

@@ -45,7 +45,7 @@ export const repertorySymptomDeleteColumn = (handleDeleteClick) => {
         field: 'actions',
         type: 'actions',
         headerName: '',
-        width: 50,
+        width: 60,
         sortable: false,
         cellClassName: 'actions',
         renderCell: ({ row }) => {
@@ -71,7 +71,7 @@ export const repertorySymptomStrengthColumn = (onClick) => {
       field: 'strength',
       type: 'strength',
       headerName: 'Siła',
-      width: 60,
+      width: 70,
       sortable: false,
       cellClassName: 'actions',
       renderCell: ({ row }) => {

@@ -49,16 +49,9 @@ const Repertory = () => {
         <Grid size={6}>
           <RepertoryRemediesDataGridView repertorySymptomIds={selectedRepertorySymptomIds} />
         </Grid>
-        <Grid size={6}>
-          <Item>size=8</Item>
-        </Grid>
       </Grid>
     </Box>
   );
 };
 
 export default Repertory;
-
-const Item = () => {
-  return <div style={{ width: '100%', backgroundColor: 'grey' }}></div>
-}

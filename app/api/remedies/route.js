@@ -3,6 +3,8 @@ import { connectToDB } from "@utils/database";
 import Statistics from '@models/statistics';
 import mongoose from 'mongoose';
 import { getDescProperties, getModalities, getSearchProps, getWordsFamiliesWithSentences, highlightText } from './helpers';
+import Remedy from '@models/remedy';
+import DescriptionMamk from '@models/descriptionMamk';
 
 export const POST = async (request) => {
     const jsonRequest = await request.json();
@@ -241,3 +243,17 @@ try {
         return new Response("Failed to get remedies", { status: 500 });
     }
 }
+
+
+
+export const GET = async (request) => {
+    try {
+        await connectToDB()
+
+        const remedies = await DescriptionMamk.find({ }).select({ _id: 1, remedyName: 1 }).sort({ remedyName: 1 })
+
+        return new Response(JSON.stringify({ remedies }), { status: 200 })
+    } catch (error) {
+        return new Response("Failed to fetch all comments", { status: 500 })
+    }
+} 

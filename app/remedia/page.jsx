@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from "react";
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import RemediesView from './RemediesView';
 
 const Repertory = () => {
 
@@ -20,21 +21,9 @@ const Repertory = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
-        {/* <Grid size={6} >
-          <RepertorySymptomSearchView setSelectedReprtorySymptomIds={handleSetSelectedReprtorySymptomIds} />
+        <Grid size={6} >
+          <RemediesView />
         </Grid>
-        <Grid size={6}>
-          <Box>
-            <div style={{ height: 70 }}></div>
-            <RepertorySymptomSelectedDataGridView repertorySymptomIds={selectedRepertorySymptomIds} setSelectedReprtorySymptomIds={handleSetSelectedReprtorySymptomIds} />
-          </Box>
-        </Grid>
-        <Grid size={6}>
-          <RepertoryRemediesDataGridView repertorySymptomIds={selectedRepertorySymptomIds} />
-        </Grid>
-        <Grid size={6}>
-          <Item>size=8</Item>
-        </Grid> */}
       </Grid>
     </Box>
   );

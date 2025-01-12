@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { DataGrid, GridToolbarContainer, GridToolbarQuickFilter  } from '@mui/x-data-grid';
+import { DataGrid  } from '@mui/x-data-grid';
 import Link from 'next/link';
 import { FaAngleRight } from 'react-icons/fa';
+import { CustomToolbar } from '@components/CustomToolbar';
 
 const illnessColumns = [
   {
@@ -20,21 +21,6 @@ const illnessColumns = [
     },
   },
 ];
-
-export const CustomToolbar = () => {
-  return (
-    <GridToolbarContainer>
-      {/* <GridToolbarExport /> */}
-      <GridToolbarQuickFilter
-        // variant="filled"
-        InputProps={{
-          disableUnderline: true
-        }}
-        // {...props.quickFilterProps}
-      />
-    </GridToolbarContainer>
-  );
-}
 
 const ClinicSearcher = () => {
   const { data: session } = useSession();
